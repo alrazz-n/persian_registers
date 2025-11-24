@@ -121,8 +121,8 @@ for split_name, split_labels in [("Train", y_train), ("Dev", y_dev), ("Test", y_
         count = split_labels[:, i].sum().item()
         print(f"  {label}: {int(count):,}")
 
-# Load ModernBERT
-model_name = "answerdotai/ModernBERT-base"
+# Load XLM-RoBERTa-large
+model_name = "xlm-roberta-large"
 print(f"\nLoading model: {model_name}")
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
@@ -166,16 +166,19 @@ test_dataset = MultiLabelDataset(X_test, y_test, tokenizer)
 # Training arguments
 training_args = TrainingArguments(
     output_dir="./results",
-    num_train_epochs=3,
-    per_device_train_batch_size=8,
-    per_device_eval_batch_size=16,
-    learning_rate=2e-4,
+    num_train_epochs=5,
+    per_device_train_batch_size=4,
+    per_device_eval_batch_size=8,
+    learning_rate=2e-5,
     eval_strategy="epoch",
     save_strategy="epoch",
     load_best_model_at_end=True,
     metric_for_best_model="f1",
     greater_is_better=True,
     tf32=True if torch.cuda.is_available() else False,
+    gradient_accumulation_steps=2,
+    warmup_ratio=0.1,
+    weight_decay=0.01,
     report_to="none",
 )
 
@@ -244,7 +247,7 @@ trainer = Trainer(
 )
 
 print("\n" + "=" * 60)
-print("Training ModernBERT on Persian Register Classification...")
+print("Training XLM-RoBERTa-large on Persian Register Classification...")
 print("=" * 60)
 trainer.train()
 
