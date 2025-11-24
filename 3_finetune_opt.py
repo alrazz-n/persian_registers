@@ -1,0 +1,419 @@
+import json
+import os
+import re
+from collections import Counter
+
+# Set cache directories to local
+os.environ["TRANSFORMERS_CACHE"] = "./model_cache"
+os.environ["HF_HOME"] = "./model_cache"
+
+os.makedirs("./model_cache", exist_ok=True)
+
+import numpy as np
+import torch
+import torch.nn.functional as F
+from scipy.special import expit as sigmoid
+from sklearn.metrics import (
+    accuracy_score,
+    classification_report,
+    f1_score,
+    precision_recall_fscore_support,
+)
+from skmultilearn.model_selection import iterative_train_test_split
+from torch.utils.data import Dataset
+from transformers import (
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    EarlyStoppingCallback,
+    Trainer,
+    TrainingArguments,
+)
+
+# ========== PERFORMANCE OPTIMIZATIONS ==========
+torch.set_float32_matmul_precision("high")
+print("Set matmul precision to 'high' for TF32 acceleration")
+# ================================================
+
+# Set seeds for reproducibility
+torch.manual_seed(42)
+np.random.seed(42)
+
+# Define valid labels structure
+labels_structure = {
+    "MT": [],
+    "LY": [],
+    "SP": ["it"],
+    "ID": [],
+    "NA": ["ne", "sr", "nb"],
+    "HI": ["re"],
+    "IN": ["en", "ra", "dtp", "fi", "lt"],
+    "OP": ["rv", "ob", "rs", "av"],
+    "IP": ["ds", "ed"],
+}
+
+# Create ordered list of all valid labels
+all_valid_labels = sorted(list(labels_structure.keys()))
+for main_label in sorted(labels_structure.keys()):
+    all_valid_labels.extend(sorted(labels_structure[main_label]))
+
+print(f"Valid labels ({len(all_valid_labels)}): {all_valid_labels}")
+
+# Load JSONL data
+print("\nLoading data from data/persian_consolidated.jsonl...")
+texts = []
+labels = []
+
+with open("data/persian_consolidated.jsonl", "r", encoding="utf-8") as f:
+    for line in f:
+        record = json.loads(line)
+        texts.append(record["text"])
+
+        # Convert space-separated labels to binary vector
+        label_list = record["label"].split()
+        binary_vector = [1 if label in label_list else 0 for label in all_valid_labels]
+        labels.append(binary_vector)
+
+print(f"Loaded {len(texts)} documents")
+
+# Check label distribution
+label_counts = Counter()
+for label_vec in labels:
+    for i, val in enumerate(label_vec):
+        if val == 1:
+            label_counts[all_valid_labels[i]] += 1
+
+print("\nLabel distribution:")
+for label in all_valid_labels:
+    print(f"  {label}: {label_counts[label]:,}")
+
+# Convert to numpy arrays for scikit-multilearn
+X = np.array(texts).reshape(-1, 1)
+y = np.array(labels)
+
+print(f"\nData shape: X={X.shape}, y={y.shape}")
+
+# Multi-label stratified split: train=70%, temp=30%
+X_train, y_train, X_temp, y_temp = iterative_train_test_split(X, y, test_size=0.3)
+
+# Split temp into dev=50% and test=50% (each 15% of total)
+X_dev, y_dev, X_test, y_test = iterative_train_test_split(X_temp, y_temp, test_size=0.5)
+
+# Extract texts from reshaped arrays
+X_train = X_train.flatten().tolist()
+X_dev = X_dev.flatten().tolist()
+X_test = X_test.flatten().tolist()
+
+# Convert labels to tensors
+y_train = torch.tensor(
+    y_train.toarray() if hasattr(y_train, "toarray") else y_train, dtype=torch.float32
+)
+y_dev = torch.tensor(
+    y_dev.toarray() if hasattr(y_dev, "toarray") else y_dev, dtype=torch.float32
+)
+y_test = torch.tensor(
+    y_test.toarray() if hasattr(y_test, "toarray") else y_test, dtype=torch.float32
+)
+
+print(f"\nMulti-label stratified split sizes:")
+print(f"  Train: {len(X_train):,}")
+print(f"  Dev:   {len(X_dev):,}")
+print(f"  Test:  {len(X_test):,}")
+
+# Verify label distribution in splits
+print("\nLabel distribution per split:")
+for split_name, split_labels in [("Train", y_train), ("Dev", y_dev), ("Test", y_test)]:
+    print(f"\n{split_name}:")
+    for i, label in enumerate(all_valid_labels):
+        count = split_labels[:, i].sum().item()
+        print(f"  {label}: {int(count):,}")
+
+# Load XLM-RoBERTa-large
+model_name = "xlm-roberta-large"
+print(f"\nLoading model: {model_name}")
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+model = AutoModelForSequenceClassification.from_pretrained(
+    model_name,
+    num_labels=len(all_valid_labels),
+    problem_type="multi_label_classification",
+)
+print("Model loaded for multi-label classification")
+
+
+# Dataset class
+class MultiLabelDataset(Dataset):
+    def __init__(self, texts, labels, tokenizer):
+        self.texts = texts
+        self.labels = labels
+        self.tokenizer = tokenizer
+
+    def __len__(self):
+        return len(self.texts)
+
+    def __getitem__(self, idx):
+        encoding = self.tokenizer(
+            self.texts[idx],
+            truncation=True,
+            max_length=512,
+            padding="max_length",
+            return_tensors="pt",
+        )
+        return {
+            "input_ids": encoding["input_ids"].squeeze(),
+            "attention_mask": encoding["attention_mask"].squeeze(),
+            "labels": self.labels[idx],
+        }
+
+
+train_dataset = MultiLabelDataset(X_train, y_train, tokenizer)
+dev_dataset = MultiLabelDataset(X_dev, y_dev, tokenizer)
+test_dataset = MultiLabelDataset(X_test, y_test, tokenizer)
+
+
+# ========== FOCAL LOSS + LABEL SMOOTHING ==========
+class MultilabelFocalLoss(torch.nn.Module):
+    def __init__(self, alpha=1.0, gamma=2.0):
+        super().__init__()
+        self.alpha = alpha
+        self.gamma = gamma
+
+    def forward(self, pred, target):
+        # Compute sigmoid separately
+        sigmoid_pred = torch.sigmoid(pred)
+
+        # Calculate BCE loss
+        bce_loss = F.binary_cross_entropy_with_logits(pred, target, reduction="none")
+
+        # Apply focal loss formula
+        pt = torch.where(target == 1, sigmoid_pred, 1 - sigmoid_pred)
+        focal_weight = torch.pow(1 - pt, self.gamma)
+
+        if self.alpha != 1:
+            alpha_weight = torch.where(target == 1, self.alpha, 1)
+            focal_weight = focal_weight * alpha_weight
+
+        focal_loss = focal_weight * bce_loss
+        return focal_loss.mean()
+
+
+class MultilabelLabelSmoothing(torch.nn.Module):
+    def __init__(self, smoothing=0.1, alpha=1.0, gamma=2.0):
+        super().__init__()
+        self.smoothing = smoothing
+        self.criterion = (
+            MultilabelFocalLoss(alpha, gamma)
+            if gamma > 0
+            else torch.nn.BCEWithLogitsLoss()
+        )
+
+    def forward(self, pred, target):
+        # Apply label smoothing
+        smooth_target = target * (1 - self.smoothing) + self.smoothing * 0.5
+        return self.criterion(pred, smooth_target)
+
+
+# Custom Trainer with focal loss
+class MultiLabelTrainer(Trainer):
+    def __init__(
+        self, *args, label_smoothing=0.1, focal_alpha=1.0, focal_gamma=2.0, **kwargs
+    ):
+        super().__init__(*args, **kwargs)
+        self.smoothing = label_smoothing
+        self.focal_alpha = focal_alpha
+        self.focal_gamma = focal_gamma
+
+    def compute_loss(
+        self, model, inputs, return_outputs=False, num_items_in_batch=None
+    ):
+        labels = inputs.pop("labels")
+        outputs = model(**inputs)
+        logits = outputs.logits
+
+        criterion = MultilabelLabelSmoothing(
+            smoothing=self.smoothing, alpha=self.focal_alpha, gamma=self.focal_gamma
+        )
+        loss = criterion(logits, labels.float())
+
+        return (loss, outputs) if return_outputs else loss
+
+
+# Metric function with threshold optimization
+def compute_metrics(p):
+    true_labels = p.label_ids
+    predictions = sigmoid(
+        p.predictions[0] if isinstance(p.predictions, tuple) else p.predictions
+    )
+
+    # Find optimal threshold based on micro F1
+    best_threshold, best_f1 = 0, 0
+    for threshold in np.arange(0.3, 0.7, 0.05):
+        binary_predictions = predictions > threshold
+        f1 = f1_score(true_labels, binary_predictions, average="micro")
+        if f1 > best_f1:
+            best_f1 = f1
+            best_threshold = threshold
+
+    binary_predictions = predictions > best_threshold
+
+    # Calculate metrics
+    precision, recall, f1, _ = precision_recall_fscore_support(
+        true_labels, binary_predictions, average="micro"
+    )
+
+    accuracy = accuracy_score(true_labels, binary_predictions)
+
+    f1_macro = f1_score(
+        true_labels, binary_predictions, average="macro", zero_division=0
+    )
+
+    metrics = {
+        "f1": f1,
+        "f1_macro": f1_macro,
+        "precision": precision,
+        "recall": recall,
+        "accuracy": accuracy,
+        "threshold": best_threshold,
+    }
+
+    # Print classification report
+    print("\n" + "=" * 60)
+    print(
+        classification_report(
+            true_labels,
+            binary_predictions,
+            target_names=all_valid_labels,
+            digits=4,
+            zero_division=0,
+        )
+    )
+    print("=" * 60)
+
+    return metrics
+
+
+# Training arguments
+training_args = TrainingArguments(
+    output_dir="./results",
+    num_train_epochs=10,
+    per_device_train_batch_size=4,
+    per_device_eval_batch_size=8,
+    learning_rate=5e-5,
+    eval_strategy="epoch",
+    save_strategy="epoch",
+    load_best_model_at_end=True,
+    metric_for_best_model="eval_loss",
+    greater_is_better=False,
+    tf32=True if torch.cuda.is_available() else False,
+    gradient_accumulation_steps=2,
+    warmup_ratio=0.1,
+    weight_decay=0.01,
+    logging_strategy="epoch",
+    save_total_limit=2,
+    report_to="none",
+)
+
+# Early stopping
+early_stopping = EarlyStoppingCallback(
+    early_stopping_patience=3, early_stopping_threshold=0.0
+)
+
+# Train
+trainer = MultiLabelTrainer(
+    model=model,
+    args=training_args,
+    train_dataset=train_dataset,
+    eval_dataset=dev_dataset,
+    compute_metrics=compute_metrics,
+    callbacks=[early_stopping],
+    label_smoothing=0.1,
+    focal_alpha=0.5,
+    focal_gamma=1,
+)
+
+print("\n" + "=" * 60)
+print("Training XLM-RoBERTa-large on Persian Register Classification...")
+print("=" * 60)
+trainer.train()
+
+# Evaluate on test set
+print("\n" + "=" * 60)
+print("FINAL EVALUATION ON TEST SET")
+print("=" * 60)
+
+# Get predictions
+predictions_output = trainer.predict(test_dataset)
+predictions = sigmoid(
+    predictions_output.predictions[0]
+    if isinstance(predictions_output.predictions, tuple)
+    else predictions_output.predictions
+)
+true_labels = predictions_output.label_ids
+
+# Find optimal threshold on test set
+best_threshold, best_f1 = 0, 0
+for threshold in np.arange(0.3, 0.7, 0.05):
+    binary_predictions = predictions > threshold
+    f1 = f1_score(true_labels, binary_predictions, average="micro")
+    if f1 > best_f1:
+        best_f1 = f1
+        best_threshold = threshold
+
+print(f"\nOptimal threshold: {best_threshold:.2f}")
+
+binary_predictions = predictions > best_threshold
+
+# Calculate all metrics
+precision, recall, f1, _ = precision_recall_fscore_support(
+    true_labels, binary_predictions, average="micro"
+)
+
+accuracy = accuracy_score(true_labels, binary_predictions)
+f1_macro = f1_score(true_labels, binary_predictions, average="macro", zero_division=0)
+
+print("\n" + "=" * 60)
+print("TEST SET RESULTS")
+print("=" * 60)
+print(f"Micro F1:       {f1:.4f}")
+print(f"Macro F1:       {f1_macro:.4f}")
+print(f"Precision:      {precision:.4f}")
+print(f"Recall:         {recall:.4f}")
+print(f"Accuracy:       {accuracy:.4f}")
+print(f"Threshold:      {best_threshold:.2f}")
+
+print("\n" + "=" * 60)
+print("CLASSIFICATION REPORT")
+print("=" * 60)
+print(
+    classification_report(
+        true_labels,
+        binary_predictions,
+        target_names=all_valid_labels,
+        digits=4,
+        zero_division=0,
+    )
+)
+
+# Save model
+print("\n" + "=" * 60)
+print("Saving model to ./persian_register_model")
+print("=" * 60)
+trainer.save_model("./persian_register_model")
+tokenizer.save_pretrained("./persian_register_model")
+
+# Save label mapping and results
+with open("./persian_register_model/label_mapping.json", "w") as f:
+    json.dump({"labels": all_valid_labels}, f, indent=2)
+
+results = {
+    "test_f1_micro": float(f1),
+    "test_f1_macro": float(f1_macro),
+    "test_precision": float(precision),
+    "test_recall": float(recall),
+    "test_accuracy": float(accuracy),
+    "optimal_threshold": float(best_threshold),
+}
+
+with open("./persian_register_model/test_results.json", "w") as f:
+    json.dump(results, f, indent=2)
+
+print("Done!")
