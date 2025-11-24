@@ -1,6 +1,5 @@
 import json
 import os
-import random
 import re
 from collections import Counter
 
@@ -12,13 +11,7 @@ os.makedirs("./model_cache", exist_ok=True)
 
 import numpy as np
 import torch
-from scipy.special import expit as sigmoid
-from sklearn.metrics import (
-    accuracy_score,
-    classification_report,
-    f1_score,
-    precision_recall_fscore_support,
-)
+from sklearn.metrics import classification_report, f1_score, hamming_loss
 from skmultilearn.model_selection import iterative_train_test_split
 from torch.utils.data import Dataset
 from transformers import (
@@ -27,15 +20,6 @@ from transformers import (
     Trainer,
     TrainingArguments,
 )
-
-# Set seed for reproducibility
-SEED = 42
-torch.manual_seed(SEED)
-np.random.seed(SEED)
-random.seed(SEED)
-torch.cuda.manual_seed_all(SEED)
-torch.backends.cudnn.deterministic = True
-torch.backends.cudnn.benchmark = False
 
 # Define valid labels structure
 labels_structure = {
@@ -172,76 +156,38 @@ test_dataset = MultiLabelDataset(X_test, y_test, tokenizer)
 # Training arguments
 training_args = TrainingArguments(
     output_dir="./results",
-    num_train_epochs=5,  # Increased from 3
+    num_train_epochs=3,
     per_device_train_batch_size=8,
     per_device_eval_batch_size=16,
-    learning_rate=1e-4,
-    weight_decay=0.01,
-    warmup_ratio=0.1,
+    learning_rate=2e-5,
     eval_strategy="epoch",
     save_strategy="epoch",
     load_best_model_at_end=True,
-    metric_for_best_model="f1",
-    greater_is_better=True,
+    metric_for_best_model="eval_loss",
     bf16=True,
-    logging_steps=50,
     report_to="none",
-    seed=SEED,
 )
 
 
-# Metric function with threshold optimization
-def compute_metrics(p):
-    true_labels = p.label_ids
-    predictions = sigmoid(
-        p.predictions[0] if isinstance(p.predictions, tuple) else p.predictions
-    )
+# Metric function with classification report
+def compute_metrics(eval_pred):
+    predictions, labels = eval_pred
+    # Apply sigmoid and threshold at 0.5
+    predictions = torch.sigmoid(torch.tensor(predictions)) > 0.5
+    predictions = predictions.float().numpy()
 
-    # Find optimal threshold based on micro F1
-    best_threshold, best_f1 = 0, 0
-    for threshold in np.arange(0.3, 0.7, 0.05):
-        binary_predictions = predictions > threshold
-        f1 = f1_score(true_labels, binary_predictions, average="micro")
-        if f1 > best_f1:
-            best_f1 = f1
-            best_threshold = threshold
+    # Hamming loss (fraction of wrong labels)
+    h_loss = hamming_loss(labels, predictions)
 
-    binary_predictions = predictions > best_threshold
+    # Micro and Macro F1
+    f1_micro = f1_score(labels, predictions, average="micro", zero_division=0)
+    f1_macro = f1_score(labels, predictions, average="macro", zero_division=0)
 
-    # Calculate metrics
-    precision, recall, f1, _ = precision_recall_fscore_support(
-        true_labels, binary_predictions, average="micro"
-    )
-
-    accuracy = accuracy_score(true_labels, binary_predictions)
-
-    f1_macro = f1_score(
-        true_labels, binary_predictions, average="macro", zero_division=0
-    )
-
-    metrics = {
-        "f1": f1,
+    return {
+        "hamming_loss": h_loss,
+        "f1_micro": f1_micro,
         "f1_macro": f1_macro,
-        "precision": precision,
-        "recall": recall,
-        "accuracy": accuracy,
-        "threshold": best_threshold,
     }
-
-    # Print classification report
-    print("\n" + "=" * 60)
-    print(
-        classification_report(
-            true_labels,
-            binary_predictions,
-            target_names=all_valid_labels,
-            digits=4,
-            zero_division=0,
-        )
-    )
-    print("=" * 60)
-
-    return metrics
 
 
 # Train
@@ -260,59 +206,31 @@ trainer.train()
 
 # Evaluate on test set
 print("\n" + "=" * 60)
-print("FINAL EVALUATION ON TEST SET")
+print("Evaluating on test set...")
 print("=" * 60)
-
-# Get predictions
-predictions_output = trainer.predict(test_dataset)
-predictions = sigmoid(
-    predictions_output.predictions[0]
-    if isinstance(predictions_output.predictions, tuple)
-    else predictions_output.predictions
-)
-true_labels = predictions_output.label_ids
-
-# Find optimal threshold on test set
-best_threshold, best_f1 = 0, 0
-for threshold in np.arange(0.3, 0.7, 0.05):
-    binary_predictions = predictions > threshold
-    f1 = f1_score(true_labels, binary_predictions, average="micro")
-    if f1 > best_f1:
-        best_f1 = f1
-        best_threshold = threshold
-
-print(f"\nOptimal threshold: {best_threshold:.2f}")
-
-binary_predictions = predictions > best_threshold
-
-# Calculate all metrics
-precision, recall, f1, _ = precision_recall_fscore_support(
-    true_labels, binary_predictions, average="micro"
-)
-
-accuracy = accuracy_score(true_labels, binary_predictions)
-f1_macro = f1_score(true_labels, binary_predictions, average="macro", zero_division=0)
+predictions = trainer.predict(test_dataset)
+y_pred = torch.sigmoid(torch.tensor(predictions.predictions)) > 0.5
+y_pred = y_pred.float().numpy()
 
 print("\n" + "=" * 60)
 print("TEST SET RESULTS")
 print("=" * 60)
-print(f"Micro F1:       {f1:.4f}")
-print(f"Macro F1:       {f1_macro:.4f}")
-print(f"Precision:      {precision:.4f}")
-print(f"Recall:         {recall:.4f}")
-print(f"Accuracy:       {accuracy:.4f}")
-print(f"Threshold:      {best_threshold:.2f}")
+print(f"Hamming Loss: {hamming_loss(y_test.numpy(), y_pred):.4f}")
+print(
+    f"F1 Micro: {f1_score(y_test.numpy(), y_pred, average='micro', zero_division=0):.4f}"
+)
+print(
+    f"F1 Macro: {f1_score(y_test.numpy(), y_pred, average='macro', zero_division=0):.4f}"
+)
+print()
 
-print("\n" + "=" * 60)
-print("CLASSIFICATION REPORT")
+# Classification report for each label
+print("=" * 60)
+print("PER-LABEL CLASSIFICATION REPORT")
 print("=" * 60)
 print(
     classification_report(
-        true_labels,
-        binary_predictions,
-        target_names=all_valid_labels,
-        digits=4,
-        zero_division=0,
+        y_test.numpy(), y_pred, target_names=all_valid_labels, zero_division=0, digits=4
     )
 )
 
@@ -323,20 +241,8 @@ print("=" * 60)
 trainer.save_model("./persian_register_model")
 tokenizer.save_pretrained("./persian_register_model")
 
-# Save label mapping and results
+# Save label mapping
 with open("./persian_register_model/label_mapping.json", "w") as f:
     json.dump({"labels": all_valid_labels}, f, indent=2)
-
-results = {
-    "test_f1_micro": float(f1),
-    "test_f1_macro": float(f1_macro),
-    "test_precision": float(precision),
-    "test_recall": float(recall),
-    "test_accuracy": float(accuracy),
-    "optimal_threshold": float(best_threshold),
-}
-
-with open("./persian_register_model/test_results.json", "w") as f:
-    json.dump(results, f, indent=2)
 
 print("Done!")
