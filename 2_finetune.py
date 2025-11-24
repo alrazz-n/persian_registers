@@ -11,7 +11,7 @@ os.makedirs("./model_cache", exist_ok=True)
 
 import numpy as np
 import torch
-from sklearn.metrics import classification_report, f1_score, hamming_loss
+from sklearn.metrics import accuracy_score, classification_report, hamming_loss
 from skmultilearn.model_selection import iterative_train_test_split
 from torch.utils.data import Dataset
 from transformers import (
@@ -70,7 +70,7 @@ for label in all_valid_labels:
     print(f"  {label}: {label_counts[label]:,}")
 
 # Convert to numpy arrays for scikit-multilearn
-X = np.array(texts).reshape(-1, 1)
+X = np.array(texts).reshape(-1, 1)  # reshape for iterative_train_test_split
 y = np.array(labels)
 
 print(f"\nData shape: X={X.shape}, y={y.shape}")
@@ -169,7 +169,7 @@ training_args = TrainingArguments(
 )
 
 
-# Metric function with classification report
+# Metric function
 def compute_metrics(eval_pred):
     predictions, labels = eval_pred
     # Apply sigmoid and threshold at 0.5
@@ -179,15 +179,7 @@ def compute_metrics(eval_pred):
     # Hamming loss (fraction of wrong labels)
     h_loss = hamming_loss(labels, predictions)
 
-    # Micro and Macro F1
-    f1_micro = f1_score(labels, predictions, average="micro", zero_division=0)
-    f1_macro = f1_score(labels, predictions, average="macro", zero_division=0)
-
-    return {
-        "hamming_loss": h_loss,
-        "f1_micro": f1_micro,
-        "f1_macro": f1_macro,
-    }
+    return {"hamming_loss": h_loss}
 
 
 # Train
@@ -216,23 +208,16 @@ print("\n" + "=" * 60)
 print("TEST SET RESULTS")
 print("=" * 60)
 print(f"Hamming Loss: {hamming_loss(y_test.numpy(), y_pred):.4f}")
-print(
-    f"F1 Micro: {f1_score(y_test.numpy(), y_pred, average='micro', zero_division=0):.4f}"
-)
-print(
-    f"F1 Macro: {f1_score(y_test.numpy(), y_pred, average='macro', zero_division=0):.4f}"
-)
 print()
 
-# Classification report for each label
-print("=" * 60)
-print("PER-LABEL CLASSIFICATION REPORT")
-print("=" * 60)
-print(
-    classification_report(
-        y_test.numpy(), y_pred, target_names=all_valid_labels, zero_division=0, digits=4
-    )
-)
+print("Per-label metrics:")
+for i, label in enumerate(all_valid_labels):
+    y_true_label = y_test[:, i].numpy()
+    y_pred_label = y_pred[:, i]
+
+    if y_true_label.sum() > 0:  # Only show labels that appear in test set
+        acc = accuracy_score(y_true_label, y_pred_label)
+        print(f"  {label:6s}: accuracy={acc:.4f}, support={int(y_true_label.sum())}")
 
 # Save model
 print("\n" + "=" * 60)
