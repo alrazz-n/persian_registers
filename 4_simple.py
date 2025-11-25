@@ -197,8 +197,8 @@ def compute_metrics(p):
 training_args = TrainingArguments(
     output_dir="./results",
     num_train_epochs=15,
-    per_device_train_batch_size=4,
-    per_device_eval_batch_size=8,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=16,
     learning_rate=5e-5,
     eval_strategy="epoch",
     save_strategy="epoch",
@@ -206,12 +206,8 @@ training_args = TrainingArguments(
     metric_for_best_model="eval_loss",
     greater_is_better=False,
     tf32=True if torch.cuda.is_available() else False,
-    gradient_accumulation_steps=2,
-    warmup_ratio=0.1,
-    weight_decay=0.01,
     logging_strategy="epoch",
     save_total_limit=2,
-    report_to="none",
     seed=42,
 )
 
