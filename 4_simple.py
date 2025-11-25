@@ -42,11 +42,6 @@ all_valid_labels = sorted(
     + [sublabel for sublabels in labels_structure.values() for sublabel in sublabels]
 )
 
-print(f"Valid labels ({len(all_valid_labels)}): {all_valid_labels}")
-
-# Load JSONL data
-print("\nLoading data from data/persian_consolidated.jsonl...")
-
 
 def load_jsonl_data(filepath):
     """Load JSONL file and return texts and label vectors"""
@@ -204,7 +199,7 @@ training_args = TrainingArguments(
     num_train_epochs=15,
     per_device_train_batch_size=4,
     per_device_eval_batch_size=8,
-    learning_rate=1e-5,
+    learning_rate=5e-5,
     eval_strategy="epoch",
     save_strategy="epoch",
     load_best_model_at_end=True,
