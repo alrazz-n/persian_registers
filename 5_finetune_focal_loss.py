@@ -161,7 +161,7 @@ test_dataset = test_dataset.map(tokenize_function, batched=True)
 trainer = FocalLossTrainer(
     model=model,
     args=TrainingArguments(
-        output_dir="./results",
+        output_dir="./results_focal",
         num_train_epochs=15,
         per_device_train_batch_size=8,
         per_device_eval_batch_size=16,
@@ -188,10 +188,10 @@ test_results = trainer.predict(test_dataset)
 model.config.label2id = {label: i for i, label in enumerate(all_valid_labels)}
 model.config.id2label = {i: label for i, label in enumerate(all_valid_labels)}
 
-trainer.save_model("./persian_register_model")
-tokenizer.save_pretrained("./persian_register_model")
+trainer.save_model("./persian_register_model_focal")
+tokenizer.save_pretrained("./persian_register_model_focal")
 
-with open("./persian_register_model/test_results.json", "w") as f:
+with open("./persian_register_model_focal/test_results.json", "w") as f:
     json.dump(
         {k.replace("test_", ""): float(v) for k, v in test_results.metrics.items()},
         f,
