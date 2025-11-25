@@ -2,7 +2,6 @@ import json
 import os
 
 # Set cache directories to local
-os.environ["TRANSFORMERS_CACHE"] = "./model_cache"
 os.environ["HF_HOME"] = "./model_cache"
 os.makedirs("./model_cache", exist_ok=True)
 
@@ -62,7 +61,7 @@ def load_jsonl_data(filepath):
             # Convert space-separated labels to binary vector
             label_list = record["label"].split()
             binary_vector = [
-                1 if label in label_list else 0 for label in all_valid_labels
+                1.0 if label in label_list else 0.0 for label in all_valid_labels
             ]
             labels.append(binary_vector)
 
