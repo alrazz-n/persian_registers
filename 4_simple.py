@@ -200,20 +200,10 @@ training_args = TrainingArguments(
     per_device_train_batch_size=8,
     per_device_eval_batch_size=16,
     learning_rate=5e-5,
-    eval_strategy="epoch",
-    save_strategy="epoch",
     load_best_model_at_end=True,
-    metric_for_best_model="eval_loss",
-    greater_is_better=False,
-    tf32=True if torch.cuda.is_available() else False,
-    logging_strategy="epoch",
+    tf32=True,
     save_total_limit=2,
     seed=42,
-)
-
-# Early stopping
-early_stopping = EarlyStoppingCallback(
-    early_stopping_patience=3, early_stopping_threshold=0.0
 )
 
 # Initialize standard Trainer
@@ -223,12 +213,9 @@ trainer = Trainer(
     train_dataset=train_dataset,
     eval_dataset=dev_dataset,
     compute_metrics=compute_metrics,
-    callbacks=[early_stopping],
+    callbacks=[EarlyStoppingCallback(early_stopping_patience=5)],
 )
 
-print("\n" + "=" * 60)
-print("Training XLM-RoBERTa-large on Persian Register Classification...")
-print("=" * 60)
 trainer.train()
 
 # Evaluate on test set
@@ -239,12 +226,6 @@ print("=" * 60)
 # Use trainer.predict which will call compute_metrics automatically
 test_results = trainer.predict(test_dataset)
 test_metrics = test_results.metrics
-
-# Print summary (detailed classification report already printed by compute_metrics)
-print(f"\nTest Set Summary:")
-print(
-    f"  Micro F1: {test_metrics['test_f1_micro']:.4f} | Threshold: {test_metrics['test_threshold']:.2f}"
-)
 
 # Save model
 print("\n" + "=" * 60)
