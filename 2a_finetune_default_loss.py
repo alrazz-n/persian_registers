@@ -19,7 +19,7 @@ from transformers import (
 
 torch.manual_seed(42)
 np.random.seed(42)
-
+print("hello")
 labels_structure = {
     "MT": [],
     "LY": [],
