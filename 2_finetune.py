@@ -114,7 +114,7 @@ print(
 )
 
 # Load model
-model_name = "xlm-roberta-large"
+model_name = "BAAI/bge-m3-retromae"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForSequenceClassification.from_pretrained(
     model_name,
@@ -126,7 +126,7 @@ model = AutoModelForSequenceClassification.from_pretrained(
 # Tokenize
 def tokenize_function(examples):
     return tokenizer(
-        examples["text"], truncation=True, max_length=512, padding="max_length"
+        examples["text"], truncation=True, max_length=4096, padding="max_length"
     )
 
 
@@ -146,12 +146,12 @@ trainer = Trainer(
         num_train_epochs=15,
         per_device_train_batch_size=8,
         per_device_eval_batch_size=16,
-        learning_rate=1e-7,
+        learning_rate=1e-5,
         eval_strategy="epoch",
         save_strategy="epoch",
         logging_strategy="epoch",
         load_best_model_at_end=True,
-        # tf32=True,
+        tf32=True,
         save_total_limit=2,
         seed=42,
     ),
