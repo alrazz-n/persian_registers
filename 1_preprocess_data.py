@@ -57,7 +57,15 @@ def consolidate_labels(group):
 
 
 # Select only the relevant columns and drop duplicates based on 'id'
-consolidated = df[["id", "text"]].drop_duplicates(subset=["id"], keep="first")
+consolidated = (
+    df.groupby("id")
+    .agg(
+        {
+            "text": "first",  # Take the first text (they should all be the same)
+        }
+    )
+    .reset_index()
+)
 
 # Add the consolidated label column
 consolidated["label"] = df.groupby("id").apply(consolidate_labels).values
