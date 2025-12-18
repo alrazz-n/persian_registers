@@ -126,7 +126,7 @@ model = AutoModelForSequenceClassification.from_pretrained(
 # Tokenize
 def tokenize_function(examples):
     return tokenizer(
-        examples["text"], truncation=True, max_length=2048, padding="max_length"
+        examples["text"], truncation=True, max_length=1024, padding="max_length"
     )
 
 
@@ -146,7 +146,7 @@ trainer = Trainer(
         num_train_epochs=15,
         per_device_train_batch_size=8,
         per_device_eval_batch_size=16,
-        learning_rate=1e-3,
+        learning_rate=1e-5,
         eval_strategy="epoch",
         save_strategy="epoch",
         logging_strategy="epoch",
