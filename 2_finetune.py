@@ -47,7 +47,7 @@ def load_jsonl_data(filepath):
             label_list = record["label"].split()
             binary_vector = [
                 1.0 if label in label_list else 0.0 for label in all_valid_labels
-            ] # Note: these are floats for compatibility with Trainer
+            ]  # Note: these are floats for compatibility with Trainer
             labels.append(binary_vector)
     return np.array(texts), np.array(labels, dtype=np.float32)
 
@@ -146,7 +146,7 @@ trainer = Trainer(
         num_train_epochs=15,
         per_device_train_batch_size=8,
         per_device_eval_batch_size=16,
-        learning_rate=1e-5,
+        learning_rate=5e-5,
         eval_strategy="epoch",
         save_strategy="epoch",
         logging_strategy="epoch",
