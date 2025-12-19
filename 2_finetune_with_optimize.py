@@ -142,21 +142,27 @@ def objective(trial):
     )
 
     training_args = TrainingArguments(
-        output_dir=f"./optuna_runs/trial_{trial.number}",
-        num_train_epochs=10,
-        per_device_train_batch_size=8,
-        per_device_eval_batch_size=16,
-        learning_rate=learning_rate,
-        weight_decay=weight_decay,
-        warmup_ratio=warmup_ratio,
-        eval_strategy="epoch",
-        save_strategy="epoch",
-        logging_strategy="epoch",
-        load_best_model_at_end=True,
-        metric_for_best_model="f1_micro",
-        greater_is_better=True,
-        report_to="none",
-        seed=42,
+    output_dir=f"./optuna_runs/trial_{trial.number}",
+
+    # 🔴 IMPORTANT: disable saving
+    save_strategy="no",
+    save_total_limit=0,
+    load_best_model_at_end=False,
+
+    num_train_epochs=10,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=16,
+    learning_rate=learning_rate,
+    weight_decay=weight_decay,
+    warmup_ratio=warmup_ratio,
+
+    eval_strategy="epoch",
+    logging_strategy="epoch",
+    metric_for_best_model="f1_micro",
+    greater_is_better=True,
+
+    report_to="none",
+    seed=42,
     )
 
     trainer = Trainer(
