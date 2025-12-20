@@ -28,7 +28,8 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.model_selection import cross_val_predict
-from cleanlab.multilabel_classification import find_label_issues
+#from cleanlab.multilabel_classification import find_label_issues
+#from cleanlab.filter import find_label_issues
 
 from cleanlab import Datalab
 from cleanlab.internal.multilabel_utils import int2onehot, onehot2int
