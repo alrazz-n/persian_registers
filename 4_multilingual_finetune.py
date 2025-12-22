@@ -141,30 +141,31 @@ def compute_metrics(p, verbose=False):
     }
 
 
-# Load old JSONL data
-X_jsonl, y_jsonl = load_jsonl_data("/data/persian")
-print(f"Loaded JSONL: {len(X_jsonl)} samples")
+# Shuffle JSONL data
+perm_jsonl = np.random.permutation(len(X_jsonl))
+X_jsonl = X_jsonl[perm_jsonl]
+y_jsonl = y_jsonl[perm_jsonl]
 
-# Load multilingual-CORE data
-X_tsv, y_tsv = load_multicore_tsv("data\multilingual-CORE")
-print(f"Loaded CORE TSV: {len(X_tsv)} samples")
+# Split JSONL into dev/test
+X_dev, y_dev, X_test, y_test = iterative_train_test_split(
+    X_jsonl, y_jsonl, test_size=0.5
+)
 
-# 🔗 Combine
-X = np.concatenate([X_jsonl, X_tsv], axis=0)
-y = np.concatenate([y_jsonl, y_tsv], axis=0)
+# The remaining JSONL data for training
+X_train_jsonl, y_train_jsonl, _, _ = iterative_train_test_split(
+    X_jsonl, y_jsonl, test_size=(len(X_dev) + len(X_test)) / len(X_jsonl)
+)
 
-print(f"Total combined dataset: {len(X)} samples")
+# Combine training JSONL with CORE data for the final training set
+X_train = np.concatenate([X_train_jsonl, X_tsv], axis=0)
+y_train = np.concatenate([y_train_jsonl, y_tsv], axis=0)
 
+# Shuffle final training set
+perm_train = np.random.permutation(len(X_train))
+X_train = X_train[perm_train]
+y_train = y_train[perm_train]
 
-#Shuffle data
-perm = np.random.permutation(len(X))
-X = X[perm]
-y = y[perm]
-
-
-X_train, y_train, X_temp, y_temp = iterative_train_test_split(X, y, test_size=0.3)
-X_dev, y_dev, X_test, y_test = iterative_train_test_split(X_temp, y_temp, test_size=0.5)
-
+# Create datasets
 train_dataset = create_dataset(X_train, y_train)
 dev_dataset = create_dataset(X_dev, y_dev)
 test_dataset = create_dataset(X_test, y_test)

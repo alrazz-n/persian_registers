@@ -69,7 +69,9 @@ def load_jsonl_data(filepath):
             ]
             labels.append(binary_vector)
 
-    return np.array(texts), np.array(labels, dtype=int)
+    # IMPORTANT: X must be 2D for skmultilearn
+    return np.array(texts).reshape(-1, 1), np.array(labels, dtype=int)
+
 
 
 def create_dataset(X_split, y_split):
@@ -103,7 +105,7 @@ print(
     f"{len(test_dataset)} test"
 )
 
-texts_train = X_train.tolist()
+texts_train = X_train.flatten().tolist()
 
 # =========================
 # Sentence embeddings
@@ -141,7 +143,10 @@ pred_probs_train = cross_val_predict(
 # Cleanlab Datalab (CORRECT)
 # =========================
 lab = Datalab(
-    data={"text": texts_train},
+    data={
+        "text": texts_train,  # features
+        "labels": y_train     # labels
+    },
     label_name="labels",
 )
 
