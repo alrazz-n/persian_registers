@@ -140,11 +140,25 @@ def compute_metrics(p, verbose=False):
         "f1_micro": best_f1,
     }
 
+# Load old JSONL data
+X_jsonl, y_jsonl = load_jsonl_data("./data/persian_consolidated.jsonl")
+print(f"Loaded JSONL: {len(X_jsonl)} samples")
 
-# Shuffle JSONL data
-perm_jsonl = np.random.permutation(len(X_jsonl))
-X_jsonl = X_jsonl[perm_jsonl]
-y_jsonl = y_jsonl[perm_jsonl]
+# Load multilingual-CORE data
+X_tsv, y_tsv = load_multicore_tsv("data\multilingual-CORE")
+print(f"Loaded CORE TSV: {len(X_tsv)} samples")
+
+# 🔗 Combine
+X = np.concatenate([X_jsonl, X_tsv], axis=0)
+y = np.concatenate([y_jsonl, y_tsv], axis=0)
+
+print(f"Total combined dataset: {len(X)} samples")
+
+
+# Shuffle JSONL data #To avoid OOM
+#perm_jsonl = np.random.permutation(len(X_jsonl))
+#X_jsonl = X_jsonl[perm_jsonl]
+#y_jsonl = y_jsonl[perm_jsonl]
 
 # Split JSONL into dev/test
 X_dev, y_dev, X_test, y_test = iterative_train_test_split(
@@ -160,10 +174,10 @@ X_train_jsonl, y_train_jsonl, _, _ = iterative_train_test_split(
 X_train = np.concatenate([X_train_jsonl, X_tsv], axis=0)
 y_train = np.concatenate([y_train_jsonl, y_tsv], axis=0)
 
-# Shuffle final training set
-perm_train = np.random.permutation(len(X_train))
-X_train = X_train[perm_train]
-y_train = y_train[perm_train]
+# Shuffle final training set #Avoid OOM
+#perm_train = np.random.permutation(len(X_train))
+#X_train = X_train[perm_train]
+#y_train = y_train[perm_train]
 
 # Create datasets
 train_dataset = create_dataset(X_train, y_train)
@@ -188,8 +202,8 @@ model = AutoModelForSequenceClassification.from_pretrained(
 # Tokenize
 def tokenize_function(examples):
     return tokenizer(
-        examples["text"], truncation=True, max_length=2048, padding="max_length"
-    )
+        examples["text"], truncation=True, max_length=1024, padding="max_length"
+    ) #max_length=2048
 
 
 train_dataset = train_dataset.map(tokenize_function, batched=True)

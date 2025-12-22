@@ -11,16 +11,16 @@ import numpy as np
 import torch
 
 from datasets import Dataset
-from scipy.special import expit as sigmoid
-from sklearn.metrics import classification_report, f1_score
-from skmultilearn.model_selection import iterative_train_test_split
-
 from sklearn.linear_model import LogisticRegression
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.model_selection import cross_val_predict
+from skmultilearn.model_selection import iterative_train_test_split
 
 from sentence_transformers import SentenceTransformer
-from cleanlab import Datalab
+
+# Cleanlab multilabel API (THIS is the key)
+from cleanlab.multilabel_classification.filter import find_label_issues
+from cleanlab.multilabel_classification.rank import get_label_quality_scores
 
 # =========================
 # Reproducibility
@@ -69,18 +69,8 @@ def load_jsonl_data(filepath):
             ]
             labels.append(binary_vector)
 
-    # IMPORTANT: X must be 2D for skmultilearn
+    # X must be 2D for skmultilearn
     return np.array(texts).reshape(-1, 1), np.array(labels, dtype=int)
-
-
-
-def create_dataset(X_split, y_split):
-    return Dataset.from_dict(
-        {
-            "text": X_split.tolist(),
-            "labels": y_split.tolist(),
-        }
-    )
 
 # =========================
 # Load + split data
@@ -95,17 +85,13 @@ X_dev, y_dev, X_test, y_test = iterative_train_test_split(
     X_temp, y_temp, test_size=0.5
 )
 
-train_dataset = create_dataset(X_train, y_train)
-dev_dataset = create_dataset(X_dev, y_dev)
-test_dataset = create_dataset(X_test, y_test)
+texts_train = X_train.flatten().tolist()
 
 print(
-    f"Split: {len(train_dataset)} train, "
-    f"{len(dev_dataset)} dev, "
-    f"{len(test_dataset)} test"
+    f"Split: {len(X_train)} train, "
+    f"{len(X_dev)} dev, "
+    f"{len(X_test)} test"
 )
-
-texts_train = X_train.flatten().tolist()
 
 # =========================
 # Sentence embeddings
@@ -129,7 +115,7 @@ clf = OneVsRestClassifier(
     )
 )
 
-# Cross-validated predicted probabilities
+# Cross-validated predicted probabilities (REQUIRED by Cleanlab)
 pred_probs_train = cross_val_predict(
     clf,
     X_train_emb,
@@ -140,43 +126,43 @@ pred_probs_train = cross_val_predict(
 )
 
 # =========================
-# Cleanlab Datalab (CORRECT)
+# Convert labels to Cleanlab multilabel format
 # =========================
-lab = Datalab(
-    data={
-        "text": texts_train,  # features
-        "labels": y_train     # labels
-    },
-    label_name="labels",
-)
+# Cleanlab expects: List[List[int]]
+labels_list = [
+    [i for i, v in enumerate(row) if v == 1]
+    for row in y_train
+]
 
-lab.find_issues(
-    labels=y_train,
+# =========================
+# Cleanlab: Find label issues
+# =========================
+issue_indices = find_label_issues(
+    labels=labels_list,
     pred_probs=pred_probs_train,
-    issue_types={"label": {}},
+    return_indices_ranked_by="self_confidence",
 )
 
-issues_df = lab.get_issues("label")
-
-# Rank by most suspicious (lowest confidence)
-issue_indices = (
-    issues_df.sort_values("label_score", ascending=True)
-    .index.tolist()
+# Optional: per-example label quality scores
+label_quality_scores = get_label_quality_scores(
+    labels_list,
+    pred_probs_train,
 )
 
 # =========================
-# Inspect top label issues
+# Inspect top suspicious examples
 # =========================
 for idx in issue_indices[:20]:
     print("TEXT:")
     print(texts_train[idx][:300])
 
     print("GIVEN LABELS:")
-    print(
-        [l for l, v in zip(all_valid_labels, y_train[idx]) if v == 1]
-    )
+    print([all_valid_labels[i] for i in labels_list[idx]])
 
-    print("MODEL CONFIDENCE:")
+    print("LABEL QUALITY SCORE:")
+    print(f"{label_quality_scores[idx]:.4f}")
+
+    print("MODEL CONFIDENCE (>0.3):")
     for l, p in zip(all_valid_labels, pred_probs_train[idx]):
         if p > 0.3:
             print(f"  {l}: {p:.2f}")

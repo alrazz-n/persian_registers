@@ -9,11 +9,11 @@
 #SBATCH --mem=16G
 #SBATCH --time=00:15:00
 #SBATCH --gres=gpu:a100:1
-#SBATCH --output=finetune_%j.out
-#SBATCH --error=finetune_%j.err
+#SBATCH --output=Cleanlab_%j.out
+#SBATCH --error=Cleanlab_%j.err
 
 # Activate virtual environment
-source venv/bin/activate
+source cleanlab-venv/bin/activate
 
 # Load modules
 module purge
