@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=finetune
+#SBATCH --job-name=finetune_multilingual
 #SBATCH --account=project_2002026
 #SBATCH --partition=gpusmall
 #SBATCH --nodes=1
