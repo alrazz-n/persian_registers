@@ -194,14 +194,15 @@ def objective(trial):
 
     args = TrainingArguments(
         output_dir=f"./optuna_runs/trial_{trial.number}",
-        num_train_epochs=10,
+        num_train_epochs=3,
         per_device_train_batch_size=4,
         per_device_eval_batch_size=8,
         gradient_accumulation_steps=4,
         learning_rate=trial.suggest_float("learning_rate", 3e-6, 3e-5, log=True),
         weight_decay=trial.suggest_float("weight_decay", 0.0, 0.1),
         warmup_ratio=trial.suggest_float("warmup_ratio", 0.0, 0.1),
-        eval_strategy="epoch",
+        eval_strategy="steps",
+        eval_steps=1000,
         logging_strategy="epoch",
         save_strategy="no",
         report_to="none",
@@ -218,7 +219,7 @@ def objective(trial):
         train_dataset=train_dataset,
         eval_dataset=dev_dataset,
         compute_metrics=compute_metrics,
-        callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=1)],
     )
 
     trainer.train()
