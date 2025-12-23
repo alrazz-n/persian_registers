@@ -165,7 +165,11 @@ y_train = np.concatenate([y_train_jsonl, y_tsv])
 
 train_dataset = create_dataset(X_train, y_train)
 dev_dataset = create_dataset(X_dev, y_dev)
+test_dataset = create_dataset(X_test, y_test)
 
+print(
+    f"Split: {len(train_dataset)} train, {len(dev_dataset)} dev, {len(test_dataset)} test"
+)
 # ------------------------------------------------
 # Tokenization
 # ------------------------------------------------
@@ -178,7 +182,7 @@ def tokenize(batch):
         batch["text"],
         truncation=True,
         padding="max_length",
-        max_length=2048,
+        max_length=1024, #2048
     )
 
 train_dataset = train_dataset.map(tokenize, batched=True)
@@ -203,9 +207,9 @@ model = AutoModelForSequenceClassification.from_pretrained(
 training_args = TrainingArguments(
     output_dir="./single_run",
     num_train_epochs=5,
-    per_device_train_batch_size=4,
+    per_device_train_batch_size=8,
     per_device_eval_batch_size=8,
-    gradient_accumulation_steps=4,
+    #gradient_accumulation_steps=4,
 
     learning_rate=5e-5,
     weight_decay=0.0,
@@ -239,7 +243,7 @@ trainer = Trainer(
 # ------------------------------------------------
 
 trainer.train()
-metrics = trainer.evaluate()
+metrics = trainer.evaluate(test_dataset)
 
 print("\n===== FINAL RESULTS =====")
 print("Dev F1 (micro):", metrics["eval_f1_micro"])
