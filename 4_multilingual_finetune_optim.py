@@ -8,6 +8,7 @@ from datasets import Dataset
 from scipy.special import expit as sigmoid
 from sklearn.metrics import classification_report, f1_score
 from skmultilearn.model_selection import iterative_train_test_split
+import optuna
 from transformers import (
     AutoModelForSequenceClassification,
     AutoTokenizer,
@@ -16,16 +17,8 @@ from transformers import (
     TrainingArguments,
 )
 
-# ------------------------------------------------
-# Reproducibility
-# ------------------------------------------------
-
 torch.manual_seed(44)
 np.random.seed(44)
-
-# ------------------------------------------------
-# Labels
-# ------------------------------------------------
 
 labels_structure = {
     "MT": [],
@@ -41,7 +34,7 @@ labels_structure = {
 
 all_valid_labels = sorted(
     list(labels_structure.keys())
-    + [s for subs in labels_structure.values() for s in subs]
+    + [sublabel for sublabels in labels_structure.values() for sublabel in sublabels]
 )
 
 # ------------------------------------------------
@@ -98,12 +91,8 @@ def load_jsonl_data(filepath):
 
 
 def create_dataset(X, y):
-    return Dataset.from_dict(
-        {
-            "text": X.tolist(),
-            "labels": y.tolist(),
-        }
-    )
+    return Dataset.from_dict({"text": X.tolist(), "labels": y.tolist()})
+
 
 # ------------------------------------------------
 # Metrics
@@ -111,13 +100,13 @@ def create_dataset(X, y):
 
 def compute_metrics(p, verbose=False):
     y_true = p.label_ids
-    y_prob = sigmoid(p.predictions)
+    y_pred = sigmoid(p.predictions)
 
     best_f1 = 0.0
     best_threshold = 0.5
 
     for t in np.arange(0.3, 0.7, 0.05):
-        f1 = f1_score(y_true, y_prob > t, average="micro")
+        f1 = f1_score(y_true, y_pred > t, average="micro")
         if f1 > best_f1:
             best_f1 = f1
             best_threshold = t
@@ -126,13 +115,14 @@ def compute_metrics(p, verbose=False):
         print(
             classification_report(
                 y_true,
-                y_prob > best_threshold,
+                y_pred > best_threshold,
                 target_names=all_valid_labels,
                 zero_division=0,
             )
         )
 
     return {"f1_micro": best_f1}
+
 
 # ------------------------------------------------
 # Load data
@@ -141,7 +131,10 @@ def compute_metrics(p, verbose=False):
 X_jsonl, y_jsonl = load_jsonl_data("./data/persian_consolidated.jsonl")
 X_tsv, y_tsv = load_multicore_tsv("data/multilingual-CORE")
 
-# skmultilearn requires 2D X
+# ------------------------------------------------
+# FIX: skmultilearn needs 2D X
+# ------------------------------------------------
+
 X_jsonl_2d = X_jsonl.reshape(-1, 1)
 
 X_dev, y_dev, X_test, y_test = iterative_train_test_split(
@@ -159,7 +152,7 @@ X_train_jsonl, y_train_jsonl, _, _ = iterative_train_test_split(
 
 X_train_jsonl = X_train_jsonl.flatten()
 
-# Combine JSONL training + CORE
+# Combine training JSONL + CORE
 X_train = np.concatenate([X_train_jsonl, X_tsv])
 y_train = np.concatenate([y_train_jsonl, y_tsv])
 
@@ -178,69 +171,73 @@ def tokenize(batch):
         batch["text"],
         truncation=True,
         padding="max_length",
-        max_length=2048,
+        max_length=1024,
     )
 
 train_dataset = train_dataset.map(tokenize, batched=True)
 dev_dataset = dev_dataset.map(tokenize, batched=True)
 
 for ds in (train_dataset, dev_dataset):
-    ds.set_format(
-        "torch",
-        columns=["input_ids", "attention_mask", "labels"],
+    ds.set_format("torch", columns=["input_ids", "attention_mask", "labels"])
+
+
+# ------------------------------------------------
+# Optuna objective
+# ------------------------------------------------
+
+def objective(trial):
+    model = AutoModelForSequenceClassification.from_pretrained(
+        model_name,
+        num_labels=len(all_valid_labels),
+        problem_type="multi_label_classification",
     )
 
-# ------------------------------------------------
-# Model & Training
-# ------------------------------------------------
+    args = TrainingArguments(
+        output_dir=f"./optuna_runs/trial_{trial.number}",
+        num_train_epochs=3,
+        per_device_train_batch_size=4,
+        per_device_eval_batch_size=8,
+        gradient_accumulation_steps=4,
+        learning_rate=trial.suggest_float("learning_rate", 3e-6, 3e-5, log=True),
+        weight_decay=trial.suggest_float("weight_decay", 0.0, 0.1),
+        warmup_ratio=trial.suggest_float("warmup_ratio", 0.0, 0.1),
+        eval_strategy="steps",
+        eval_steps=1000,
+        logging_strategy="epoch",
+        save_strategy="no",
+        report_to="none",
+        seed=42,
 
-model = AutoModelForSequenceClassification.from_pretrained(
-    model_name,
-    num_labels=len(all_valid_labels),
-    problem_type="multi_label_classification",
-)
+        # EarlyStoppingCallback
+        metric_for_best_model="f1_micro",
+        greater_is_better=True,
+    )
 
-training_args = TrainingArguments(
-    output_dir="./single_run",
-    num_train_epochs=5,
-    per_device_train_batch_size=4,
-    per_device_eval_batch_size=8,
-    gradient_accumulation_steps=4,
+    trainer = Trainer(
+        model=model,
+        args=args,
+        train_dataset=train_dataset,
+        eval_dataset=dev_dataset,
+        compute_metrics=compute_metrics,
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=1)],
+    )
 
-    learning_rate=5e-5,
-    weight_decay=0.0,
-    warmup_ratio=0.0,
+    trainer.train()
+    metrics = trainer.evaluate()
+    return metrics["eval_f1_micro"]
 
-    # Disable gradient clipping
-    max_grad_norm=0.0,
-
-    eval_strategy="epoch",
-    #eval_steps=1000,
-    logging_strategy="epoch",
-    save_strategy="no",
-    report_to="none",
-    seed=42,
-
-    metric_for_best_model="f1_micro",
-    greater_is_better=True,
-)
-
-trainer = Trainer(
-    model=model,
-    args=training_args,
-    train_dataset=train_dataset,
-    eval_dataset=dev_dataset,
-    compute_metrics=compute_metrics,
-    callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
-)
 
 # ------------------------------------------------
-# Train & Evaluate
+# Run Optuna
 # ------------------------------------------------
 
-trainer.train()
-metrics = trainer.evaluate()
+study = optuna.create_study(direction="maximize")
+study.optimize(objective, n_trials=10)
 
-print("\n===== FINAL RESULTS =====")
-print("Dev F1 (micro):", metrics["eval_f1_micro"])
-print("Done.")
+print("\n===== OPTUNA RESULTS =====")
+print("Best F1 (dev):", study.best_value)
+print("Best hyperparameters:")
+for k, v in study.best_trial.params.items():
+    print(f"  {k}: {v}")
+
+print("\nDone.")
