@@ -174,7 +174,10 @@ print(
 # Tokenization
 # ------------------------------------------------
 
-model_name = "BAAI/bge-m3-retromae"
+model_name = "FacebookAI/xlm-roberta-large" #"BAAI/bge-m3-retromae"
+print(
+    f"Model name:{model_name}"
+)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 def tokenize(batch):
@@ -182,7 +185,7 @@ def tokenize(batch):
         batch["text"],
         truncation=True,
         padding="max_length",
-        max_length=1024, #2048
+        max_length= 512 #1024, #2048 #512 for XLMR
     )
 
 train_dataset = train_dataset.map(tokenize, batched=True)
@@ -212,6 +215,7 @@ training_args = TrainingArguments(
     #gradient_accumulation_steps=4,
 
     learning_rate=5e-5,
+    lr_scheduler_type="linear", #"constant"
     weight_decay=0.0,
     warmup_ratio=0.0,
 
