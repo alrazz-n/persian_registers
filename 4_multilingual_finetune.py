@@ -144,20 +144,24 @@ X_tsv, y_tsv = load_multicore_tsv("data/multilingual-CORE")
 # skmultilearn requires 2D X
 X_jsonl_2d = X_jsonl.reshape(-1, 1)
 
-X_dev, y_dev, X_test, y_test = iterative_train_test_split(
-    X_jsonl_2d, y_jsonl, test_size=0.5
-)
-
-X_dev = X_dev.flatten()
-X_test = X_test.flatten()
-
-X_train_jsonl, y_train_jsonl, _, _ = iterative_train_test_split(
+# 1) Train vs temp (dev+test)
+X_train_jsonl, y_train_jsonl, X_temp, y_temp = iterative_train_test_split(
     X_jsonl_2d,
     y_jsonl,
-    test_size=(len(X_dev) + len(X_test)) / len(X_jsonl),
+    test_size=0.5
 )
 
+# 2) Dev vs test
+X_dev, y_dev, X_test, y_test = iterative_train_test_split(
+    X_temp,
+    y_temp,
+    test_size=0.5
+)
+
+# Flatten
 X_train_jsonl = X_train_jsonl.flatten()
+X_dev = X_dev.flatten()
+X_test = X_test.flatten()
 
 # Combine JSONL training + CORE
 X_train = np.concatenate([X_train_jsonl, X_tsv])
