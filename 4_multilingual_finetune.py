@@ -16,6 +16,8 @@ from transformers import (
     TrainingArguments,
 )
 
+from transformers import TrainerCallback
+
 # ------------------------------------------------
 # Reproducibility
 # ------------------------------------------------
@@ -132,7 +134,46 @@ def compute_metrics(p, verbose=False):
             )
         )
 
-    return {"f1_micro": best_f1}
+    return {"f1_micro": best_f1,
+    "best_threshold": best_threshold,
+    }
+
+class ClassificationReportCallback(TrainerCallback):
+    def __init__(self, trainer, label_names, threshold=0.5):
+        self.trainer = trainer
+        self.label_names = label_names
+        self.threshold = threshold
+
+    def on_evaluate(self, args, state, control, **kwargs):
+        # Get predictions on eval dataset
+        preds = self.trainer.predict(self.trainer.eval_dataset)
+
+        y_true = preds.label_ids
+        y_prob = sigmoid(preds.predictions)
+
+        # Optional: re-tune threshold per epoch
+        best_f1 = 0.0
+        best_threshold = self.threshold
+        for t in np.arange(0.3, 0.7, 0.05):
+            f1 = f1_score(y_true, y_prob > t, average="micro")
+            if f1 > best_f1:
+                best_f1 = f1
+                best_threshold = t
+
+        y_pred = y_prob > best_threshold
+
+        print("\n" + "=" * 80)
+        print(f"Classification report — epoch {int(state.epoch)}")
+        print(f"Best threshold: {best_threshold:.2f}")
+        print(
+            classification_report(
+                y_true,
+                y_pred,
+                target_names=self.label_names,
+                zero_division=0,
+            )
+        )
+        print("=" * 80 + "\n")
 
 # ------------------------------------------------
 # Load data
@@ -171,9 +212,15 @@ train_dataset = create_dataset(X_train, y_train)
 dev_dataset = create_dataset(X_dev, y_dev)
 test_dataset = create_dataset(X_test, y_test)
 
+shuffled_train = train_dataset.shuffle(seed=42)
+shuffled_dev = dev_dataset.shuffle(seed=42)
+shuffled_test = test_dataset.shuffle(seed=42)
+
 print(
-    f"Split: {len(train_dataset)} train, {len(dev_dataset)} dev, {len(test_dataset)} test"
+    f"Split: {len(shuffled_train)} train, {len(shuffled_dev)} dev, {len(shuffled_test)} test"
 )
+
+
 # ------------------------------------------------
 # Tokenization
 # ------------------------------------------------
@@ -192,10 +239,10 @@ def tokenize(batch):
         max_length= 512 #1024, #2048 #512 for XLMR
     )
 
-train_dataset = train_dataset.map(tokenize, batched=True)
-dev_dataset = dev_dataset.map(tokenize, batched=True)
+shuffled_train = shuffled_train.map(tokenize, batched=True)
+shuffled_dev = shuffled_dev.map(tokenize, batched=True)
 
-for ds in (train_dataset, dev_dataset):
+for ds in (shuffled_train, shuffled_dev):
     ds.set_format(
         "torch",
         columns=["input_ids", "attention_mask", "labels"],
@@ -211,12 +258,13 @@ model = AutoModelForSequenceClassification.from_pretrained(
     problem_type="multi_label_classification",
 )
 
+
 training_args = TrainingArguments(
     output_dir="./single_run",
     num_train_epochs=5,
-    per_device_train_batch_size=8,
-    per_device_eval_batch_size=8,
-    #gradient_accumulation_steps=4,
+    per_device_train_batch_size=16,
+    per_device_eval_batch_size=16,
+    gradient_accumulation_steps=2,
 
     learning_rate=5e-5,
     lr_scheduler_type="linear", #"constant"
@@ -232,6 +280,7 @@ training_args = TrainingArguments(
     save_strategy="no",
     report_to="none",
     seed=42,
+    bf16=True,
 
     metric_for_best_model="f1_micro",
     greater_is_better=True,
@@ -240,10 +289,18 @@ training_args = TrainingArguments(
 trainer = Trainer(
     model=model,
     args=training_args,
-    train_dataset=train_dataset,
-    eval_dataset=dev_dataset,
+    train_dataset=shuffled_train,
+    eval_dataset=shuffled_dev,
     compute_metrics=compute_metrics,
     callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
+)
+# Attach report callback
+trainer.add_callback(
+    ClassificationReportCallback(
+        trainer=trainer,
+        label_names=all_valid_labels,
+        threshold=0.5,  # starting threshold
+    )
 )
 
 # ------------------------------------------------
@@ -251,7 +308,7 @@ trainer = Trainer(
 # ------------------------------------------------
 
 trainer.train()
-metrics = trainer.evaluate(test_dataset)
+metrics = trainer.evaluate(shuffled_test)
 
 print("\n===== FINAL RESULTS =====")
 print("Dev F1 (micro):", metrics["eval_f1_micro"])
