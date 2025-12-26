@@ -270,7 +270,7 @@ output_path = f"./results_{job_id}"
 training_args = TrainingArguments(
     output_dir=output_path,
     overwrite_output_dir=True,
-    num_train_epochs=5,
+    num_train_epochs=10,
     per_device_train_batch_size=8,
     per_device_eval_batch_size=32,
     gradient_accumulation_steps=8,
@@ -281,7 +281,7 @@ training_args = TrainingArguments(
     warmup_ratio=0.1,
 
     # Disable gradient clipping
-    max_grad_norm=0.0,
+    max_grad_norm=1.0,
 
     eval_strategy="epoch",
     #eval_steps=1000,

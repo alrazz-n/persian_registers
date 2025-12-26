@@ -228,7 +228,7 @@ print(
 # Tokenization
 # ------------------------------------------------
 
-model_name = "FacebookAI/xlm-roberta-large" #"BAAI/bge-m3-retromae"
+model_name = "BAAI/bge-m3-retromae"
 print(
     f"Model name:{model_name}"
 )
@@ -239,7 +239,7 @@ def tokenize(batch):
         batch["text"],
         truncation=True,
         padding="max_length",
-        max_length= 512 #1024, #2048 #512 for XLMR
+        max_length= 2048 #512 for XLMR
     )
 
 shuffled_train = shuffled_train.map(tokenize, batched=True)

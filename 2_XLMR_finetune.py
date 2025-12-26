@@ -53,39 +53,6 @@ all_valid_labels = sorted(
 # Data loading
 # ------------------------------------------------
 
-#def load_multicore_tsv(root_dir):
-#    texts, labels = [], []
-#    root_dir = Path(root_dir)
-
-#    for lang_dir in root_dir.iterdir():
-#        if not lang_dir.is_dir():
-#            continue
-#        if lang_dir.name == "fa":
-#            continue
-
-#        tsv_gz_files = list(lang_dir.glob("*.tsv.gz"))
-#        if not tsv_gz_files:
-#            continue
-
-#        with gzip.open(tsv_gz_files[0], "rt", encoding="utf-8") as f:
-#            for line in f:
-#                line = line.strip()
-#                if not line:
-#                    continue
-#                try:
-#                    label_str, text = line.split("\t", 1)
-#                except ValueError:
-#                    continue
-#
-#                label_list = label_str.split()
-#                labels.append(
-#                    [1.0 if l in label_list else 0.0 for l in all_valid_labels]
-#                )
-#                texts.append(text)
-#
-#    return np.array(texts), np.array(labels, dtype=np.float32)
-
-
 def load_jsonl_data(filepath):
     texts, labels = [], []
 
@@ -183,7 +150,6 @@ class ClassificationReportCallback(TrainerCallback):
 # ------------------------------------------------
 
 X_jsonl, y_jsonl = load_jsonl_data("./data/persian_consolidated.jsonl")
-#X_tsv, y_tsv = load_multicore_tsv("data/multilingual-CORE")
 
 # skmultilearn requires 2D X
 X_jsonl_2d = X_jsonl.reshape(-1, 1)
@@ -192,14 +158,14 @@ X_jsonl_2d = X_jsonl.reshape(-1, 1)
 X_train_jsonl, y_train_jsonl, X_temp, y_temp = iterative_train_test_split(
     X_jsonl_2d,
     y_jsonl,
-    test_size=0.2
+    test_size=0.3
 )
 
 # 2) Dev vs test
 X_dev, y_dev, X_test, y_test = iterative_train_test_split(
     X_temp,
     y_temp,
-    test_size=0.2
+    test_size=0.5
 )
 
 # Flatten
@@ -207,9 +173,9 @@ X_train_jsonl = X_train_jsonl.flatten()
 X_dev = X_dev.flatten()
 X_test = X_test.flatten()
 
-# Combine JSONL training + CORE
+#Rename
 X_train = X_train_jsonl
-y_train = y_train_jsonl, y_tsv
+y_train = y_train_jsonl
 
 train_dataset = create_dataset(X_train, y_train)
 dev_dataset = create_dataset(X_dev, y_dev)
@@ -273,18 +239,18 @@ output_path = f"./results_{job_id}"
 training_args = TrainingArguments(
     output_dir=output_path,
     overwrite_output_dir=True,
-    num_train_epochs=5,
+    num_train_epochs=10,
     per_device_train_batch_size=8,
     per_device_eval_batch_size=32,
-    gradient_accumulation_steps=8,
+    gradient_accumulation_steps=2,
 
-    learning_rate=2e-5,
-    lr_scheduler_type="linear", #"constant"
+    learning_rate=1e-5,
+    lr_scheduler_type="cosine", #linear #"constant"
     weight_decay=0.01,
-    warmup_ratio=0.1,
+    warmup_steps=100,
 
     # Disable gradient clipping
-    max_grad_norm=0.0,
+    max_grad_norm=1.0,
 
     eval_strategy="epoch",
     #eval_steps=1000,
@@ -311,7 +277,7 @@ trainer.add_callback(
     ClassificationReportCallback(
         trainer=trainer,
         label_names=all_valid_labels,
-        threshold=0.5,  # starting threshold
+        threshold=0.5, # starting threshold
     )
 )
 

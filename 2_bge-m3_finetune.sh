@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=XLMR_finetune
+#SBATCH --job-name=bge-m3_finetune
 #SBATCH --account=project_2002026
 #SBATCH --partition=gputest
 #SBATCH --nodes=1
@@ -9,8 +9,8 @@
 #SBATCH --mem=256G
 #SBATCH --time=00:15:00
 #SBATCH --gres=gpu:a100:1
-#SBATCH --output=XLMR_finetune_%j.out
-#SBATCH --error=XLMR_finetune_%j.err
+#SBATCH --output=bge-m3_finetune%j.out
+#SBATCH --error=bge-m3_finetune%j.err
 
 # 1. Load modules
 module purge
@@ -21,4 +21,4 @@ module load pytorch/2.6
 source cleanlab-venv/bin/activate
 
 # 4. Run script
-python3 2_XLMR_finetune.py
+python3 2_bge-m3_finetune.py

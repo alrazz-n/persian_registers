@@ -187,32 +187,29 @@ X_tsv, y_tsv = load_multicore_tsv("data/multilingual-CORE")
 
 # skmultilearn requires 2D X
 X_jsonl_2d = X_jsonl.reshape(-1, 1)
+X_tsv_2d = X_tsv.reshape(-1, 1)
 
-# 1) Train vs temp (dev+test)
-X_train_jsonl, y_train_jsonl, X_temp, y_temp = iterative_train_test_split(
-    X_jsonl_2d,
-    y_jsonl,
-    test_size=0.5
+#Train and DEv
+X_train_tsv, y_train_tsv, X_dev_tsv, y_dev_tsv = iterative_train_test_split(
+    X_tsv_2d,
+    y_tsv,
+    test_size=0.2   
 )
+X_train = X_train_tsv.flatten()
+X_dev = X_dev_tsv.flatten()
 
-# 2) Dev vs test
-X_dev, y_dev, X_test, y_test = iterative_train_test_split(
-    X_temp,
-    y_temp,
-    test_size=0.5
-)
+# Test
+X_test = X_jsonl_2d
+y_test = y_jsonl
 
 # Flatten
-X_train_jsonl = X_train_jsonl.flatten()
+X_train = X_train.flatten()
 X_dev = X_dev.flatten()
 X_test = X_test.flatten()
 
-# Combine JSONL training + CORE
-X_train = np.concatenate([X_train_jsonl, X_tsv])
-y_train = np.concatenate([y_train_jsonl, y_tsv])
 
-train_dataset = create_dataset(X_train, y_train)
-dev_dataset = create_dataset(X_dev, y_dev)
+train_dataset = create_dataset(X_train, y_train_tsv)
+dev_dataset = create_dataset(X_dev, y_dev_tsv)
 test_dataset = create_dataset(X_test, y_test)
 
 shuffled_train = train_dataset.shuffle(seed=42)
@@ -228,7 +225,7 @@ print(
 # Tokenization
 # ------------------------------------------------
 
-model_name = "FacebookAI/xlm-roberta-large" #"BAAI/bge-m3-retromae"
+model_name = "BAAI/bge-m3-retromae"
 print(
     f"Model name:{model_name}"
 )
@@ -239,7 +236,7 @@ def tokenize(batch):
         batch["text"],
         truncation=True,
         padding="max_length",
-        max_length= 512 #1024, #2048 #512 for XLMR
+        max_length= 2048 #512 for XLMR
     )
 
 shuffled_train = shuffled_train.map(tokenize, batched=True)
