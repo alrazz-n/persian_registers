@@ -1,6 +1,8 @@
 import json
 import gzip
 from pathlib import Path
+import os
+import argparse
 
 import numpy as np
 import torch
@@ -24,6 +26,7 @@ from transformers import TrainerCallback
 
 torch.manual_seed(44)
 np.random.seed(44)
+
 
 # ------------------------------------------------
 # Labels
@@ -241,8 +244,9 @@ def tokenize(batch):
 
 shuffled_train = shuffled_train.map(tokenize, batched=True)
 shuffled_dev = shuffled_dev.map(tokenize, batched=True)
+shuffled_test = shuffled_test.map(tokenize, batched=True)
 
-for ds in (shuffled_train, shuffled_dev):
+for ds in (shuffled_train, shuffled_dev, shuffled_test):
     ds.set_format(
         "torch",
         columns=["input_ids", "attention_mask", "labels"],
@@ -258,18 +262,26 @@ model = AutoModelForSequenceClassification.from_pretrained(
     problem_type="multi_label_classification",
 )
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+model.to(device)
+
+
+# Get the Job ID from environment variables, default to 'debug' if running locally
+job_id = os.getenv("SLURM_JOB_ID", "debug")
+output_path = f"./results_{job_id}"
 
 training_args = TrainingArguments(
-    output_dir="./single_run",
+    output_dir=output_path,
+    overwrite_output_dir=True,
     num_train_epochs=5,
-    per_device_train_batch_size=16,
-    per_device_eval_batch_size=16,
-    gradient_accumulation_steps=2,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=32,
+    gradient_accumulation_steps=8,
 
-    learning_rate=5e-5,
+    learning_rate=2e-5,
     lr_scheduler_type="linear", #"constant"
-    weight_decay=0.0,
-    warmup_ratio=0.0,
+    weight_decay=0.01,
+    warmup_ratio=0.1,
 
     # Disable gradient clipping
     max_grad_norm=0.0,
@@ -308,8 +320,22 @@ trainer.add_callback(
 # ------------------------------------------------
 
 trainer.train()
-metrics = trainer.evaluate(shuffled_test)
 
-print("\n===== FINAL RESULTS =====")
-print("Dev F1 (micro):", metrics["eval_f1_micro"])
-print("Done.")
+test_preds = trainer.predict(shuffled_test)
+
+y_true = test_preds.label_ids
+y_prob = sigmoid(test_preds.predictions)
+y_pred = y_prob > 0.5
+
+print("\n===== TEST SET CLASSIFICATION REPORT =====")
+print(
+    classification_report(
+        y_true,
+        y_pred,
+        target_names=all_valid_labels,
+        zero_division=0,
+    )
+)
+
+
+print("Done!")
