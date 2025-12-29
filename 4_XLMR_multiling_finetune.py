@@ -278,7 +278,7 @@ training_args = TrainingArguments(
     per_device_eval_batch_size=32,
     gradient_accumulation_steps=8,
 
-    learning_rate=2e-5,
+    learning_rate=1e-5, #2e-5
     lr_scheduler_type="linear", #"constant"
     weight_decay=0.01,
     warmup_ratio=0.1,
