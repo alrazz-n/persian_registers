@@ -152,7 +152,7 @@ label_quality_scores = get_label_quality_scores(
 # =========================
 # Inspect top suspicious examples
 # =========================
-for idx in issue_indices[:20]:
+for idx in issue_indices[:100]:
     print("TEXT:")
     print(texts_train[idx][:300])
 
@@ -168,3 +168,4 @@ for idx in issue_indices[:20]:
             print(f"  {l}: {p:.2f}")
 
     print("-" * 70)
+print("DOne!")

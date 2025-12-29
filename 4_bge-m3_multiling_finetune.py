@@ -273,13 +273,13 @@ output_path = f"./results_{job_id}"
 training_args = TrainingArguments(
     output_dir=output_path,
     overwrite_output_dir=True,
-    num_train_epochs=10,
+    num_train_epochs=20, #10
     per_device_train_batch_size=8,
     per_device_eval_batch_size=32,
     gradient_accumulation_steps=8,
 
     learning_rate=2e-5,
-    lr_scheduler_type="linear", #"constant"
+    lr_scheduler_type= "cosine", #"linear" #"constant"
     weight_decay=0.01,
     warmup_ratio=0.1,
 
