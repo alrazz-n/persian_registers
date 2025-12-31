@@ -7,7 +7,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=256G
-#SBATCH --time=12:00:00
+#SBATCH --time=18:00:00
 #SBATCH --gres=gpu:a100:1
 #SBATCH --output=bge-m3_optim_multi_ling_%j.out
 #SBATCH --error=bge-m3_optim_multi_ling_%j.err

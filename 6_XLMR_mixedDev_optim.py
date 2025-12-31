@@ -164,9 +164,9 @@ X_test = X_test.flatten()
 
 
 # Combine JSONL training + CORE
-X_train = np.concatenate([X_train_jsonl, X_tsv])
-y_train = np.concatenate([y_train_jsonl, y_tsv])
-X_dev_final = np.concatenate([X_dev, X_dev_tsv.flatten()])
+X_train = np.concatenate([X_train_jsonl, X_train_tsv.flatten()]) #train on persian and core
+y_train = np.concatenate([y_train_jsonl, y_train_tsv])
+X_dev_final = np.concatenate([X_dev, X_dev_tsv.flatten()]) #dev on persian and core
 y_dev_final = np.concatenate([y_dev, y_dev_tsv])
 
 
