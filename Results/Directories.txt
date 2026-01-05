@@ -1,0 +1,20 @@
+XLMR results:
+
+scp mahti:/projappl/project_2005092/nima/persian_registers/XLMR_optim_zero_5692421.out "C:\Users\alrazz\Seafile\My Library\Data\First try\Results"
+scp mahti:/projappl/project_2005092/nima/persian_registers/XLMR_optim_zero_5694149.out "C:\Users\alrazz\Seafile\My Library\Data\First try\Results"
+scp mahti:/projappl/project_2005092/nima/persian_registers/XLMR_optim_multi_ling_5694136.out "C:\Users\alrazz\Seafile\My Library\Data\First try\Results"
+scp mahti:/projappl/project_2005092/nima/persian_registers/XLMR_optim_multi_ling_5691704.out "C:\Users\alrazz\Seafile\My Library\Data\First try\Results"
+scp mahti:/projappl/project_2005092/nima/persian_registers/XLMR_optim_mixedDev_5694099.out "C:\Users\alrazz\Seafile\My Library\Data\First try\Results"
+scp mahti:/projappl/project_2005092/nima/persian_registers/XLMR_optim_5694165.out "C:\Users\alrazz\Seafile\My Library\Data\First try\Results"
+scp mahti:/projappl/project_2005092/nima/persian_registers/XLMR_optim_5692354.out "C:\Users\alrazz\Seafile\My Library\Data\First try\Results"
+
+
+bge-m3 results:
+
+scp mahti:/projappl/project_2005092/nima/persian_registers/bge-m3_optim_zero_5692440.out "C:\Users\alrazz\Seafile\My Library\Data\First try\Results"
+scp mahti:/projappl/project_2005092/nima/persian_registers/bge-m3_optim_zero_5694151.out "C:\Users\alrazz\Seafile\My Library\Data\First try\Results"
+scp mahti:/projappl/project_2005092/nima/persian_registers/bge-m3_multi_ling_5686660.out "C:\Users\alrazz\Seafile\My Library\Data\First try\Results"
+scp mahti:/projappl/project_2005092/nima/persian_registers/bge-m3_multi_ling_5690390.out "C:\Users\alrazz\Seafile\My Library\Data\First try\Results"
+scp mahti:/projappl/project_2005092/nima/persian_registers/bge-m3_optim_mixedDev_5694100.out "C:\Users\alrazz\Seafile\My Library\Data\First try\Results"
+scp mahti:/projappl/project_2005092/nima/persian_registers/bge-m3_optim_5692408.out "C:\Users\alrazz\Seafile\My Library\Data\First try\Results"
+scp mahti:/projappl/project_2005092/nima/persian_registers/bge-m3_optim_5694152.out "C:\Users\alrazz\Seafile\My Library\Data\First try\Results"
