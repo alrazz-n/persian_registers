@@ -18,7 +18,7 @@ module use /appl/local/csc/modulefiles
 module load pytorch/2.6
 
 # 2. Activate venv
-source cleanlab-venv/bin/activate
+source /projappl/project_2005092/nima/persian_registers/cleanlab-venv/bin/activate
 
 # 4. Run script
 python3 2_XLMR_finetune.py

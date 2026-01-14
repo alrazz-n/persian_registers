@@ -32,22 +32,25 @@ np.random.seed(44)
 # Labels
 # ------------------------------------------------
 
+# Define valid labels
 labels_structure = {
     "MT": [],
     "LY": [],
-    "SP": ["it"],
+    "SP": ["it", "os"],
     "ID": [],
-    "NA": ["ne", "sr", "nb"],
-    "HI": ["re"],
-    "IN": ["en", "ra", "dtp", "fi", "lt"],
-    "OP": ["rv", "ob", "rs", "av"],
-    "IP": ["ds", "ed"],
+    "NA": ["ne", "sr", "nb", "on"],
+    "HI": ["re", "oh"],
+    "IN": ["en", "ra", "dtp", "fi", "lt", "oi"],
+    "OP": ["rv", "ob", "rs", "av", "oo"],
+    "IP": ["ds", "ed", "oe"],
 }
 
-all_valid_labels = sorted(
-    list(labels_structure.keys())
-    + [s for subs in labels_structure.values() for s in subs]
-)
+
+
+# Create a set of mian and sub-level
+all_valid_labels = set(labels_structure.keys())
+for sub_labels in labels_structure.values():
+    all_valid_labels.update(sub_labels)
 
 # ------------------------------------------------
 # Data loading
@@ -149,7 +152,7 @@ class ClassificationReportCallback(TrainerCallback):
 # Load data
 # ------------------------------------------------
 
-X_jsonl, y_jsonl = load_jsonl_data("./data/persian_consolidated.jsonl")
+X_jsonl, y_jsonl = load_jsonl_data("./data/persian_main_and_sub_consolidated.jsonl")
 
 # skmultilearn requires 2D X
 X_jsonl_2d = X_jsonl.reshape(-1, 1)
@@ -239,21 +242,23 @@ output_path = f"./results_{job_id}"
 training_args = TrainingArguments(
     output_dir=output_path,
     overwrite_output_dir=True,
-    num_train_epochs=10,
-    per_device_train_batch_size=8,
+    num_train_epochs=15,
+
+    # Match best trial
+    per_device_train_batch_size=4,
+    gradient_accumulation_steps=4,
+
+    learning_rate=1.6814780278358017e-05,
+    weight_decay=0.06468358746992135,
+    warmup_ratio=0.037209164547217975,
+
+    lr_scheduler_type="cosine",
+
     per_device_eval_batch_size=32,
-    gradient_accumulation_steps=2,
 
-    learning_rate=1e-5,
-    lr_scheduler_type="cosine", #linear #"constant"
-    weight_decay=0.01,
-    warmup_steps=100,
-
-    # Disable gradient clipping
     max_grad_norm=1.0,
 
     eval_strategy="epoch",
-    #eval_steps=1000,
     logging_strategy="epoch",
     save_strategy="no",
     report_to="none",
@@ -270,7 +275,7 @@ trainer = Trainer(
     train_dataset=shuffled_train,
     eval_dataset=shuffled_dev,
     compute_metrics=compute_metrics,
-    callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
+    callbacks=[EarlyStoppingCallback(early_stopping_patience=4)],
 )
 # Attach report callback
 trainer.add_callback(

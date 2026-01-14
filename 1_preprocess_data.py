@@ -4,22 +4,23 @@ import re
 import pandas as pd
 
 # Load the CSV file with keep_default_na=False to prevent "NA" from being treated as NaN
-df = pd.read_csv("data/persian.csv", keep_default_na=False, na_values=[""])
+df = pd.read_csv(r"C:\Users\alrazz\Seafile\My Library\Data\Second try\results_Final.CSV", keep_default_na=False, na_values=[""])
 
 # Define valid labels
 labels_structure = {
     "MT": [],
     "LY": [],
-    "SP": ["it"],
+    "SP": ["it", "os"],
     "ID": [],
-    "NA": ["ne", "sr", "nb"],
-    "HI": ["re"],
-    "IN": ["en", "ra", "dtp", "fi", "lt"],
-    "OP": ["rv", "ob", "rs", "av"],
-    "IP": ["ds", "ed"],
+    "NA": ["ne", "sr", "nb", "on"],
+    "HI": ["re", "oh"],
+    "IN": ["en", "ra", "dtp", "fi", "lt", "oi"],
+    "OP": ["rv", "ob", "rs", "av", "oo"],
+    "IP": ["ds", "ed", "oe"],
 }
 
-# Create a set of all valid labels (main + sub)
+
+# Create a set of mian and sub-level
 valid_labels = set(labels_structure.keys())
 for sub_labels in labels_structure.values():
     valid_labels.update(sub_labels)
@@ -74,7 +75,7 @@ consolidated["label"] = df.groupby("id").apply(consolidate_labels).values
 records = consolidated.to_dict("records")
 
 # Save to JSONL
-output_file = "data/persian_consolidated.jsonl"
+output_file = r"C:\Users\alrazz\Seafile\My Library\Data\Second try/persian_main_and_sub_consolidated.jsonl"
 with open(output_file, "w", encoding="utf-8") as f:
     for record in records:
         json.dump(record, f, ensure_ascii=False)
