@@ -35,7 +35,7 @@ blocked_domains = (
     "jeje2.blogreader.ir", "softestan.com", "persiankhatoon.com",
     "lindyhopamersfoort.nl", "hofruiters.nl", "sadowahouse.pl",
     "fewo-gruss-aus-partenkirchen.de", "hein-vom-rhein.de", "sidonline",
-    "ferienwohnung-stueck.de", "orthopediebosdam.be"
+    "ferienwohnung-stueck.de", "orthopediebosdam.be", "kwaekensteyn.nl"
 )
 
 def item_contains_blocked_domain(item):
