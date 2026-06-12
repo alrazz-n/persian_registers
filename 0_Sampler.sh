@@ -3,7 +3,7 @@
 #SBATCH --account=project_2002026
 #SBATCH --partition=test
 #SBATCH --nodes=1
-#SBATCH --mem=128
+#SBATCH --mem=256
 #SBATCH --time=01:00:00
 #SBATCH --output=Sampler_%j.out
 #SBATCH --error=bSampler_%j.err
@@ -17,4 +17,4 @@ module load pytorch/2.6
 source /projappl/project_2005092/nima/persian_registers/cleanlab-venv/bin/activate
 
 # 4. Run script
-python3 /projappl/project_2005092/nima/testing/0_Sampler.py
+python3 /projappl/project_2005092/nima/testing/0_Sampler.py #0_Sampler_reg.py #0_Sampler_reg_complex.py
