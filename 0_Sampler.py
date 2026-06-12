@@ -25,7 +25,7 @@ OUTPUT_FILE = f"{OUTPUT_DIR}/sample_{webreg_suffix}_{job_id}.jsonl"
 PROGRESS_FILE = f"{OUTPUT_DIR}/progress_{webreg_suffix}_{job_id}.txt"
 
 blocked_domains = (
-    "netgarmi.ir", "netct.ir", "nahamta.ir", "topdars.com", "sibfun.ir",
+    "netgarmi", "netct.ir", "nahamta.ir", "topdars.com", "sibfun.ir",
     "chefsona.com", "30m30.com", "dlkon.ir", "patoghy.ir", "sargarmifull.ir",
     "parsipatogh.ir", "gizmotoon.ir", "1tvmarket.ir", "campec.ir",
     "radnetworking.com", "funtarin.ir", "azcloob.ir", "cnnic.in",
