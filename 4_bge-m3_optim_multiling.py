@@ -135,7 +135,7 @@ X_jsonl_2d = X_jsonl.reshape(-1, 1)
 X_train_jsonl, y_train_jsonl, X_temp, y_temp = iterative_train_test_split(
     X_jsonl_2d, y_jsonl, test_size=0.5
 )
-X_dev, y_dev, _, _ = iterative_train_test_split(
+X_dev, y_dev, X_test, y_test = iterative_train_test_split(
     X_temp, y_temp, test_size=0.5
 )
 
