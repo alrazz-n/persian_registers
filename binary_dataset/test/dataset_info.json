@@ -1,0 +1,51 @@
+{
+  "citation": "",
+  "description": "",
+  "features": {
+    "u": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "id": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "ts": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "text": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "Turku_NLP": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "Turku_NLP_sub": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "Tags": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "web-register": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "Binary": {
+      "names": [
+        "0",
+        "1"
+      ],
+      "_type": "ClassLabel"
+    },
+    "source": {
+      "dtype": "string",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": ""
+}
