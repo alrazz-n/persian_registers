@@ -46,7 +46,7 @@ def tokenize(batch):
         batch["text"],
         truncation=True,
         padding="max_length",
-        max_length=1024,
+        max_length=512, #for XLMR
     )
 
 train_dataset = train_dataset.map(tokenize, batched=True)
