@@ -1,16 +1,16 @@
-import json
-import gzip
+#import json
+#import gzip
 import os
-from pathlib import Path
+#from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import torch
 from datasets import Dataset
-from scipy.special import expit as sigmoid
-from sklearn.metrics import f1_score
+#from scipy.special import expit as sigmoid
+#from sklearn.metrics import f1_score
 from sklearn.metrics import classification_report, confusion_matrix
-from skmultilearn.model_selection import iterative_train_test_split
+#from skmultilearn.model_selection import iterative_train_test_split
 import optuna
 
 
@@ -23,6 +23,7 @@ from transformers import (
 )
 
 from datasets import load_from_disk
+import shutil
 
 dataset = load_from_disk("/scratch/project_2005092/nima/binary_dataset")
 
@@ -46,7 +47,7 @@ def tokenize(batch):
         batch["text"],
         truncation=True,
         padding="max_length",
-        max_length=512, #for XLMR
+        max_length=512,
     )
 
 train_dataset = train_dataset.map(tokenize, batched=True)
@@ -59,10 +60,10 @@ for ds in (train_dataset, dev_dataset, test_dataset):
         columns=["input_ids", "attention_mask", "labels"],
     )
 
-model = AutoModelForSequenceClassification.from_pretrained(
-    MODEL_NAME,
-    num_labels=2,
-)
+#model = AutoModelForSequenceClassification.from_pretrained(
+#    MODEL_NAME,
+#    num_labels=2,
+#)
 
 from sklearn.metrics import recall_score
 import numpy as np
@@ -112,6 +113,7 @@ def objective(trial):
         save_strategy="epoch",
         save_total_limit=1,   # keep only one checkpoint for better
         load_best_model_at_end=True,
+        #save_strategy="best",
         metric_for_best_model="eval_recall_0",
         report_to="none",
 
@@ -131,12 +133,12 @@ def objective(trial):
     )
 
     trainer.train()
-    trainer.save_model(f"./saved_models/trial_{trial.number}")
-    tokenizer.save_pretrained(f"./saved_models/trial_{trial.number}")
-    #metrics = trainer.evaluate()
+    best_metric = trainer.state.best_metric
 
-    #return metrics["eval_recall_0"]
-    return trainer.state.best_metric
+    # Delete temporary checkpoints
+    shutil.rmtree(args.output_dir, ignore_errors=True)
+
+    return best_metric
 
 
 # 1) Get the best checkpoint from your Optuna trial (example assumes you kept it)
@@ -146,39 +148,89 @@ def objective(trial):
 study = optuna.create_study(direction="maximize")
 study.optimize(objective, n_trials=8)  # set n_trials
 
+best_params = study.best_trial.params
+
+print(best_params)
+
 # --- load best checkpoint ---
-#best_ckpt = f"./XLMR_optuna_ham_spam/trial_{study.best_trial.number}"
+#best_ckpt = f"./bge-m3_optuna_ham_spam/trial_{study.best_trial.number}"
 #best_model = AutoModelForSequenceClassification.from_pretrained(best_ckpt)
+
+#best_dir = f"./saved_models/trial_{study.best_trial.number}"
+
 best_model = AutoModelForSequenceClassification.from_pretrained(
-    f"./saved_models/trial_{study.best_trial.number}"
+    MODEL_NAME,
+    num_labels=NUM_LABELS,
+    problem_type="single_label_classification",
 )
 
-# --- evaluate on test and print classification table ---
-trainer = Trainer(
-    model=best_model,
-    args=TrainingArguments(output_dir="./tmp", report_to="none"),
-    tokenizer=tokenizer,
+#tokenizer.save_pretrained(best_dir)
+
+final_args = TrainingArguments(
+    output_dir="./final_model",
+
+    num_train_epochs=10,
+
+    per_device_train_batch_size=best_params["batch_size"],
+    per_device_eval_batch_size=16,
+    gradient_accumulation_steps=best_params["grad_accum"],
+
+    learning_rate=best_params["learning_rate"],
+    weight_decay=best_params["weight_decay"],
+    warmup_ratio=best_params["warmup_ratio"],
+
+    eval_strategy="epoch",
+    save_strategy="epoch",
+    save_total_limit=1,
+    load_best_model_at_end=True,
+
+    metric_for_best_model="eval_recall_0",
+    greater_is_better=True,
+
+    report_to="none",
+    bf16=True,
+    seed=42,
 )
+
+final_trainer = Trainer(
+    model=best_model,
+    args=final_args,
+    train_dataset=train_dataset,
+    eval_dataset=dev_dataset,
+    tokenizer=tokenizer,
+    compute_metrics=compute_metrics,
+    callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
+)
+
+final_trainer.train()
+
+final_trainer.save_model("./saved_models/best_model")
+shutil.rmtree("./final_model", ignore_errors=True)
+tokenizer.save_pretrained("./saved_models/best_model")
+
+# --- evaluate on test and print classification table ---
+#trainer = Trainer(
+#    model=best_model,
+#    args=TrainingArguments(output_dir="./tmp", report_to="none"),
+#    tokenizer=tokenizer,
+#)
 
 print("\n===== BEST TRIAL =====")
 print(study.best_trial.params)
 print("Best Recall:", study.best_value)
+final_metrics = final_trainer.evaluate()
+print(final_metrics)
 
-pred = trainer.predict(test_dataset)
+pred = final_trainer.predict(test_dataset)
+
 y_true = pred.label_ids
 y_pred = np.argmax(pred.predictions, axis=-1)
 
 print("\n=============")
 print("Confusion matrix:\n", confusion_matrix(y_true, y_pred))
 
-
 target_names = ["class_0", "class_1"]
-print(classification_report(y_true, y_pred, target_names=target_names, digits=4))
-
-df_cm = pd.DataFrame(
-    confusion_matrix(y_true, y_pred),
-    index=target_names,
-    columns=target_names
-)
-print(df_cm)
+print(classification_report(y_true, y_pred,
+                            target_names=target_names,
+                            digits=4))
 
