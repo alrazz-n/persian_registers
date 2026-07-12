@@ -1,16 +1,16 @@
 #!/bin/bash
-#SBATCH --job-name=ham_spam_optim
+#SBATCH --job-name=bge-m3_ham_spam_optim
 #SBATCH --account=project_2002026
-#SBATCH --partition=gputest
+#SBATCH --partition=gpusmall
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=256G
-#SBATCH --time=00:15:00
+#SBATCH --time=08:00:00
 #SBATCH --gres=gpu:a100:1
-#SBATCH --output=ham_spam_optim_%j.out
-#SBATCH --error=ham_spam_optim_%j.err
+#SBATCH --output=bge-m3_ham_spam_optim_%j.out
+#SBATCH --error=bge-m3_ham_spam_optim_%j.err
 
 # 1. Load modules
 module purge
@@ -21,4 +21,4 @@ module load pytorch/2.6
 source /projappl/project_2005092/nima/persian_registers/cleanlab-venv/bin/activate
 
 # 4. Run script
-python3 2_ham_spam.py
+python3 2_bge-m3_ham_spam.py

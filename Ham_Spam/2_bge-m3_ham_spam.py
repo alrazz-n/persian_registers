@@ -94,7 +94,7 @@ def objective(trial):
     )
 
     args = TrainingArguments(
-        output_dir=f"./optuna_ham_spam/trial_{trial.number}",
+        output_dir=f"./bge-m3_optuna_ham_spam/trial_{trial.number}",
         overwrite_output_dir=True,
 
         num_train_epochs=10,
@@ -143,7 +143,7 @@ study = optuna.create_study(direction="maximize")
 study.optimize(objective, n_trials=8)  # set n_trials
 
 # --- load best checkpoint ---
-best_ckpt = f"./optuna_ham_spam/trial_{study.best_trial.number}"
+best_ckpt = f"./bge-m3_optuna_ham_spam/trial_{study.best_trial.number}"
 best_model = AutoModelForSequenceClassification.from_pretrained(best_ckpt)
 
 # --- evaluate on test and print classification table ---
