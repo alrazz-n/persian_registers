@@ -106,7 +106,7 @@ def objective(trial):
         weight_decay=weight_decay,
         warmup_ratio=warmup_ratio,
 
-        evaluation_strategy="epoch",
+        eval_strategy="epoch",
         logging_strategy="epoch",
 
         save_strategy="epoch",
