@@ -110,6 +110,7 @@ def objective(trial):
         logging_strategy="epoch",
 
         save_strategy="epoch",
+        save_total_limit=1,   # keep only one checkpoint for better
         load_best_model_at_end=True,
         metric_for_best_model="eval_recall_0",
         report_to="none",
@@ -130,9 +131,12 @@ def objective(trial):
     )
 
     trainer.train()
-    metrics = trainer.evaluate()
+    trainer.save_model(f"./saved_models/trial_{trial.number}")
+    tokenizer.save_pretrained(f"./saved_models/trial_{trial.number}")
+    #metrics = trainer.evaluate()
 
-    return metrics["eval_recall_0"]
+    #return metrics["eval_recall_0"]
+    return trainer.state.best_metric
 
 
 # 1) Get the best checkpoint from your Optuna trial (example assumes you kept it)
@@ -143,8 +147,12 @@ study = optuna.create_study(direction="maximize")
 study.optimize(objective, n_trials=8)  # set n_trials
 
 # --- load best checkpoint ---
-best_ckpt = f"./bge-m3_optuna_ham_spam/trial_{study.best_trial.number}"
-best_model = AutoModelForSequenceClassification.from_pretrained(best_ckpt)
+#best_ckpt = f"./bge-m3_optuna_ham_spam/trial_{study.best_trial.number}"
+#best_model = AutoModelForSequenceClassification.from_pretrained(best_ckpt)
+
+best_model = AutoModelForSequenceClassification.from_pretrained(
+    f"./saved_models/trial_{study.best_trial.number}"
+)
 
 # --- evaluate on test and print classification table ---
 trainer = Trainer(
