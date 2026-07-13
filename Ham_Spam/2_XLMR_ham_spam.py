@@ -1,6 +1,7 @@
 #import json
 #import gzip
 import os
+import random
 #from pathlib import Path
 
 import numpy as np
@@ -24,6 +25,11 @@ from transformers import (
 
 from datasets import load_from_disk
 import shutil
+
+random.seed(42)
+np.random.seed(42)
+torch.manual_seed(42)
+torch.cuda.manual_seed_all(42)
 
 dataset = load_from_disk("/scratch/project_2005092/nima/binary_dataset")
 
@@ -166,6 +172,9 @@ best_model = AutoModelForSequenceClassification.from_pretrained(
 
 #tokenizer.save_pretrained(best_dir)
 
+#Retrain the best model due to limited storage instead of saving
+#Hyperparameters were optimized using Optuna on the training and validation sets.
+#After selecting the best hyperparameter configuration, a final model was trained from scratch using those hyperparameters and evaluated on the held-out test set.
 final_args = TrainingArguments(
     output_dir="./final_model",
 
@@ -204,9 +213,9 @@ final_trainer = Trainer(
 
 final_trainer.train()
 
-final_trainer.save_model("./saved_models/best_model")
+final_trainer.save_model("./saved_models/XLMR_best_model")
 shutil.rmtree("./final_model", ignore_errors=True)
-tokenizer.save_pretrained("./saved_models/best_model")
+tokenizer.save_pretrained("./saved_models/XLMR_best_model")
 
 # --- evaluate on test and print classification table ---
 #trainer = Trainer(
