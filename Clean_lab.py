@@ -1,6 +1,10 @@
 from datasets import load_from_disk
 from datasets import concatenate_datasets
 
+import os
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
+
 dataset = load_from_disk("/scratch/project_2005092/nima/binary_dataset")
 train_dataset = dataset["train"]
 dev_dataset = dataset["validation"]
@@ -37,19 +41,7 @@ labels_structure = {
 }
 
 
-all_valid_labels = sorted(
-    list(labels_structure.keys())
-    + [
-        s
-        for subs in labels_structure.values()
-        for s in subs
-    ]
-)
-
-
-#print(all_valid_labels)
-
-labels_to_remove = {
+labels_to_remove = { #To make it like multiCore
     "oi",
     "os",
     "on",
@@ -57,6 +49,25 @@ labels_to_remove = {
     "oo",
     "oe"
 }
+
+all_valid_labels = sorted(
+    [
+        label
+        for label in (
+            list(labels_structure.keys())
+            + [
+                s
+                for subs in labels_structure.values()
+                for s in subs
+            ]
+        )
+        if label not in labels_to_remove
+    ]
+)
+
+#print(all_valid_labels)
+
+
 
 def extract_labels(row):
 
@@ -179,6 +190,9 @@ issue_indices = find_label_issues(
     return_indices_ranked_by="self_confidence"
 )
 
+issue_indices = [int(i) for i in issue_indices]
+
+
 
 quality_scores = get_label_quality_scores(
     labels_list,
@@ -200,12 +214,12 @@ issues_df = pd.DataFrame(
             for i in issue_indices
         ],
         "source": [
-            full_dataset[i]["source"]
-            for i in issue_indices
+             full_dataset[i]["source"]
+             for i in issue_indices
         ],
         "text": [
             full_dataset[i]["text"]
-            for i in issue_indices
+             for i in issue_indices
         ],
         "given_labels": [
             cleaned_labels[i]
@@ -250,6 +264,7 @@ issues_df["label_probabilities"] = [
     get_label_probabilities(i)
     for i in issue_indices
 ]
+
 
 issues_df = issues_df.sort_values(
     "quality_score"
