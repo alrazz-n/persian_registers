@@ -20,9 +20,9 @@ OUTPUT_FILE = f"{OUTPUT_DIR}/sample_JNK_{job_id}.jsonl"
 PROGRESS_FILE = f"{OUTPUT_DIR}/progress_JNK_{job_id}.txt"
 
 blocked_domains = (
-    "netgarmi", "netct.ir", "nahamta.ir", "topdars.com", "sibfun.ir",
-    "chefsona.com", "dlkon.ir", "patoghy.ir", "sargarmifull.ir",
-    "parsipatogh.ir", "gizmotoon.ir", "1tvmarket.ir", "campec.ir",
+    "nahamta.ir", "sibfun.ir",
+    "chefsona.com", "dlkon.ir", "sargarmifull.ir",
+    "gizmotoon.ir", "1tvmarket.ir", "campec.ir",
     "radnetworking.com", "funtarin.ir", "azcloob.ir", "cnnic.in",
     "ahang.bottega--veneta.net", "film-serial1.b19.ir",
     "sbmstudio.biz", "kancelaria-radomsko.pl",
