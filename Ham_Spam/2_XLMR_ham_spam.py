@@ -1,16 +1,16 @@
-#import json
+import json
 #import gzip
 import os
 import random
 #from pathlib import Path
 
 import numpy as np
-import pandas as pd
+#import pandas as pd
 import torch
-from datasets import Dataset
+#from datasets import Dataset
 #from scipy.special import expit as sigmoid
 #from sklearn.metrics import f1_score
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix, recall_score
 #from skmultilearn.model_selection import iterative_train_test_split
 import optuna
 
@@ -45,6 +45,23 @@ test_dataset = test_dataset.rename_column("Binary", "labels")
 NUM_LABELS = 2
 
 MODEL_NAME = "FacebookAI/xlm-roberta-large"
+MODEL_ID = MODEL_NAME.split("/")[-1] 
+SAVE_NAME = f"{MODEL_ID}_spamham"
+
+
+save_dir = f"/scratch/project_2005092/nima/saved_models/{SAVE_NAME}"
+os.makedirs(save_dir, exist_ok=True)
+
+MODEL_CONFIG = {
+    "BAAI/bge-m3-retromae": {
+        "max_length": 1024,
+    },
+    "FacebookAI/xlm-roberta-base": {
+        "max_length": 512,
+    },
+}
+
+MAX_LENGTH = MODEL_CONFIG[MODEL_NAME]["max_length"]
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
@@ -53,7 +70,7 @@ def tokenize(batch):
         batch["text"],
         truncation=True,
         padding="max_length",
-        max_length=512,
+        max_length=MAX_LENGTH,
     )
 
 train_dataset = train_dataset.map(tokenize, batched=True)
@@ -71,17 +88,19 @@ for ds in (train_dataset, dev_dataset, test_dataset):
 #    num_labels=2,
 #)
 
-from sklearn.metrics import recall_score
-import numpy as np
+#import numpy as np
 
 def compute_metrics(eval_pred):
     logits, labels = eval_pred
 
     predictions = np.argmax(logits, axis=-1)
 
-#Do not want to leave any Junk behind
+# Optimize for recall of class 0 ("junk")
     return {"recall_0": recall_score(labels, predictions, pos_label=0)} #recall for class 0
 
+
+TMP_DIR = f"/scratch/project_2005092/nima/tmp/{SAVE_NAME}"
+os.makedirs(TMP_DIR, exist_ok=True)
 
 # Optuna objective
 #Bayesian optimization (sample hyperparameters intelligently across trials)
@@ -101,7 +120,7 @@ def objective(trial):
     )
 
     args = TrainingArguments(
-        output_dir=f"./XLMR_optuna_ham_spam/trial_{trial.number}",
+        output_dir=f"{TMP_DIR}/optuna/trial_{trial.number}",
         overwrite_output_dir=True,
 
         num_train_epochs=10,
@@ -158,6 +177,10 @@ best_params = study.best_trial.params
 
 print(best_params)
 
+
+with open(f"{save_dir}/best_params.json", "w") as f:
+    json.dump(best_params, f, indent=2)
+
 # --- load best checkpoint ---
 #best_ckpt = f"./bge-m3_optuna_ham_spam/trial_{study.best_trial.number}"
 #best_model = AutoModelForSequenceClassification.from_pretrained(best_ckpt)
@@ -176,7 +199,7 @@ best_model = AutoModelForSequenceClassification.from_pretrained(
 #Hyperparameters were optimized using Optuna on the training and validation sets.
 #After selecting the best hyperparameter configuration, a final model was trained from scratch using those hyperparameters and evaluated on the held-out test set.
 final_args = TrainingArguments(
-    output_dir="./final_model",
+    output_dir=f"{TMP_DIR}/final_model",
 
     num_train_epochs=10,
 
@@ -213,9 +236,14 @@ final_trainer = Trainer(
 
 final_trainer.train()
 
-final_trainer.save_model("./saved_models/XLMR_best_model")
-shutil.rmtree("./final_model", ignore_errors=True)
-tokenizer.save_pretrained("./saved_models/XLMR_best_model")
+pred = final_trainer.predict(dev_dataset) #save Dev predictions for Threshhold tuning afterwards
+
+#Do not need to load the model this way for threshold tuning
+np.save(f"{save_dir}/dev_logits.npy", pred.predictions)
+np.save(f"{save_dir}/dev_labels.npy", pred.label_ids)
+
+final_trainer.save_model(save_dir)
+tokenizer.save_pretrained(save_dir)
 
 # --- evaluate on test and print classification table ---
 #trainer = Trainer(
@@ -232,6 +260,10 @@ print(final_metrics)
 
 pred = final_trainer.predict(test_dataset)
 
+#For error analysis
+np.save(f"{save_dir}/test_logits.npy", pred.predictions)
+np.save(f"{save_dir}/test_labels.npy", pred.label_ids)
+
 y_true = pred.label_ids
 y_pred = np.argmax(pred.predictions, axis=-1)
 
@@ -243,3 +275,5 @@ print(classification_report(y_true, y_pred,
                             target_names=target_names,
                             digits=4))
 
+print(f"\nModel saved to: {save_dir}")
+shutil.rmtree(TMP_DIR, ignore_errors=True)

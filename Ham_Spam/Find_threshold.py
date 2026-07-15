@@ -1,116 +1,56 @@
 #Avoid threshold tuning as it is now giving 0.005 and only focusing on one label for better results... maybe it works after adding more JUNKS
-from transformers import (
-    Trainer,
-    TrainingArguments,
-    AutoModelForSequenceClassification,
-    AutoTokenizer,
-)
+#from transformers import (
+#    Trainer,
+#    TrainingArguments,
+#    AutoModelForSequenceClassification,
+#    AutoTokenizer,
+#)
 
 import numpy as np
 from datasets import load_from_disk
-from sklearn.metrics import recall_score
+from sklearn.metrics import (
+    recall_score,
+    confusion_matrix,
+    classification_report,
+)
 import json
+from scipy.special import softmax
 
-MODEL_NAME = "alrazz-n/bge-m3_spamham_best_model"
+#MODEL_NAME = "alrazz-n/bge-m3_spamham_best_model"
 
+MODEL_NAME = "BAAI/bge-m3-retromae"
 
-# -------------------------
-# Load model and tokenizer
-# -------------------------
+MODEL_ID = MODEL_NAME.split("/")[-1]
+SAVE_NAME = f"{MODEL_ID}_spamham"
 
-model = AutoModelForSequenceClassification.from_pretrained(
-    MODEL_NAME,
-    num_labels=2,
-)
+SAVE_DIR = f"/scratch/project_2005092/nima/saved_models/{SAVE_NAME}"
 
-model.eval()
+# Threshold tuning configuration
+MIN_RECALL_1 = 0.90
+NUM_THRESHOLDS = 1001 #how many possible threshold values to test
 
-tokenizer = AutoTokenizer.from_pretrained(
-    MODEL_NAME
-)
+logits = np.load(f"{SAVE_DIR}/dev_logits.npy")
+labels = np.load(f"{SAVE_DIR}/dev_labels.npy")
 
-
-# -------------------------
-# Load validation dataset
-# -------------------------
-
-dataset = load_from_disk(
-    "/scratch/project_2005092/nima/binary_dataset"
-)
-
-dev_dataset = dataset["validation"]
-
-dev_dataset = dev_dataset.rename_column(
-    "Binary",
-    "labels"
-)
-
-
-# -------------------------
-# Tokenize validation data
-# -------------------------
-
-def tokenize(batch):
-
-    return tokenizer(
-        batch["text"],
-        truncation=True,
-        padding="max_length",
-        max_length=1024,
-    )
-
-
-dev_dataset = dev_dataset.map(
-    tokenize,
-    batched=True
-)
-
-
-dev_dataset.set_format(
-    type="torch",
-    columns=[
-        "input_ids",
-        "attention_mask",
-        "labels",
-    ],
-)
-
-
-# -------------------------
-# Run threshold tuning
-# -------------------------
-
-inf_args = TrainingArguments(
-    output_dir="/scratch/project_2005092/nima/tmp_threshold",
-    per_device_eval_batch_size=16,
-    bf16=True,
-    report_to="none",
-    save_strategy="no",
-)
-
-
-dev_trainer = Trainer(
-    model=model,
-    args=inf_args,
-    tokenizer=tokenizer,
-)
 
 def probs_class0_from_logits(logits):
+    return softmax(logits, axis=-1)[:, 0]
+
+# def probs_class0_from_logits(logits):
     # logits: (N,2)
-    exp = np.exp(logits - logits.max(axis=-1, keepdims=True))
-    probs = exp / exp.sum(axis=-1, keepdims=True)
-    return probs[:, 0]
+    #exp = np.exp(logits - logits.max(axis=-1, keepdims=True))
+    #probs = exp / exp.sum(axis=-1, keepdims=True)
+    #return probs[:, 0]
 
-def tune_threshold_recall0_under_keep90(trainer, dev_dataset, thresholds=None, min_recall1=0.90):
+def tune_threshold_recall0_under_keep90(
+    logits,
+    labels,
+    thresholds=None,
+    min_recall1=MIN_RECALL_1,
+):
     if thresholds is None:
-        thresholds = np.linspace(0.0, 1.0, 201)
+        thresholds = np.linspace(0.0, 1.0, NUM_THRESHOLDS)
 
-    out = trainer.predict(dev_dataset)
-    logits = out.predictions
-    if isinstance(logits, (tuple, list)):
-        logits = logits[0]  # take first element if needed
-
-    labels = out.label_ids  # 0/1
 
     p0 = probs_class0_from_logits(logits)  # P(class=0=junk)
 
@@ -128,10 +68,10 @@ def tune_threshold_recall0_under_keep90(trainer, dev_dataset, thresholds=None, m
 
 
 best = tune_threshold_recall0_under_keep90(
-    trainer=dev_trainer,
-    dev_dataset=dev_dataset,
-    thresholds=np.linspace(0,1,201),
-    min_recall1=0.90
+    logits=logits,
+    labels=labels,
+    thresholds=np.linspace(0,1,NUM_THRESHOLDS),
+    min_recall1=MIN_RECALL_1
 )
 
 if best is None:
@@ -141,22 +81,30 @@ if best is None:
 
 threshold = best["threshold"]
 
-print(model.config.id2label)
 print(best)
 
 
 # Save for future HPLT annotation
-with open("threshold.json", "w") as f:
+
+best["constraint"] =  f"recall_1 >= {MIN_RECALL_1}"
+best["num_thresholds"] = NUM_THRESHOLDS
+best["num_samples"] = len(labels)
+best["class_distribution"] = {
+    "class_0": int(np.sum(labels == 0)),
+    "class_1": int(np.sum(labels == 1)),
+}
+
+with open(f"{SAVE_DIR}/threshold.json", "w") as f:
     json.dump(best, f, indent=2)
 
 #########################
 
-from sklearn.metrics import confusion_matrix, classification_report
 
-pred = dev_trainer.predict(dev_dataset)
+y_true = labels
 
-y_true = pred.label_ids
-y_pred = np.argmax(pred.predictions, axis=-1)
+p0 = probs_class0_from_logits(logits)
+y_pred = np.where(p0 >= threshold, 0, 1)
+#y_pred = np.argmax(pred.predictions, axis=-1)
 
 print(confusion_matrix(y_true, y_pred))
 
@@ -168,17 +116,21 @@ print(
     )
 )
 
-import numpy as np
 
 print(np.bincount(y_true))
 
-
-logits = pred.predictions
-
 p0 = probs_class0_from_logits(logits)
 
-for i in np.argsort(p0)[-10:]:
+dataset = load_from_disk(
+    "/scratch/project_2005092/nima/binary_dataset"
+)
+
+dev_texts = dataset["validation"]["text"]
+
+#Error Analysis
+print("\nLowest P(class0) examples:")
+for i in np.argsort(p0)[:10]:
     print("P(class0):", p0[i])
-    print(dev_dataset[i]["labels"])
-    print(dev_dataset[i]["text"][:300])
+    print("Label:", labels[i])
+    print(dev_texts[i][:300])
     print("----")
