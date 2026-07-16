@@ -23,7 +23,7 @@ MODEL_NAME = "BAAI/bge-m3-retromae"
 MODEL_ID = MODEL_NAME.split("/")[-1]
 SAVE_NAME = f"{MODEL_ID}_spamham"
 
-SAVE_DIR = f"/scratch/project_2005092/nima/saved_models/{SAVE_NAME}"
+SAVE_DIR = f"/scratch/project_2005092/nima/saved_models/{SAVE_NAME}" #where they are stored
 
 # Threshold tuning configuration
 MIN_RECALL_1 = 0.90

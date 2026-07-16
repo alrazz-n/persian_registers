@@ -21,4 +21,4 @@ module load pytorch/2.6
 source /projappl/project_2005092/nima/persian_registers/cleanlab-venv/bin/activate
 
 # 4. Run script
-python3 Find_threshold.py
+python3 3_Find_threshold.py
