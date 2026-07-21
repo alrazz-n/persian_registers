@@ -90,18 +90,18 @@ def predict_batch(texts):
 
 shards = [
             "https://data.hplt-project.org/three/sorted/pes_Arab/10_1.jsonl.zst",
-            #"https://data.hplt-project.org/three/sorted/pes_Arab/5_1.jsonl.zst",
-            #"https://data.hplt-project.org/three/sorted/pes_Arab/6_1.jsonl.zst",
-            #"https://data.hplt-project.org/three/sorted/pes_Arab/6_2.jsonl.zst",
-            #"https://data.hplt-project.org/three/sorted/pes_Arab/7_1.jsonl.zst",
-            #"https://data.hplt-project.org/three/sorted/pes_Arab/7_2.jsonl.zst",
-            #"https://data.hplt-project.org/three/sorted/pes_Arab/7_3.jsonl.zst",
-            #"https://data.hplt-project.org/three/sorted/pes_Arab/8_1.jsonl.zst",
-            #"https://data.hplt-project.org/three/sorted/pes_Arab/8_2.jsonl.zst",
-            #"https://data.hplt-project.org/three/sorted/pes_Arab/8_3.jsonl.zst",
-            #"https://data.hplt-project.org/three/sorted/pes_Arab/8_4.jsonl.zst",
-            #"https://data.hplt-project.org/three/sorted/pes_Arab/9_1.jsonl.zst",
-            #"https://data.hplt-project.org/three/sorted/pes_Arab/9_2.jsonl.zst"
+            "https://data.hplt-project.org/three/sorted/pes_Arab/5_1.jsonl.zst",
+            "https://data.hplt-project.org/three/sorted/pes_Arab/6_1.jsonl.zst",
+            "https://data.hplt-project.org/three/sorted/pes_Arab/6_2.jsonl.zst",
+            "https://data.hplt-project.org/three/sorted/pes_Arab/7_1.jsonl.zst",
+            "https://data.hplt-project.org/three/sorted/pes_Arab/7_2.jsonl.zst",
+            "https://data.hplt-project.org/three/sorted/pes_Arab/7_3.jsonl.zst",
+            "https://data.hplt-project.org/three/sorted/pes_Arab/8_1.jsonl.zst",
+            "https://data.hplt-project.org/three/sorted/pes_Arab/8_2.jsonl.zst",
+            "https://data.hplt-project.org/three/sorted/pes_Arab/8_3.jsonl.zst",
+            "https://data.hplt-project.org/three/sorted/pes_Arab/8_4.jsonl.zst",
+            "https://data.hplt-project.org/three/sorted/pes_Arab/9_1.jsonl.zst",
+            "https://data.hplt-project.org/three/sorted/pes_Arab/9_2.jsonl.zst"
 ]
 
 
@@ -190,7 +190,9 @@ for shard in shards:
                         removed_count += 1
                         junk_record = {
                             "id": doc["id"],
+                            "doc_scores": doc["doc_scores"],
                             "junk_probability": float(score),
+                            "web-register": doc["web-register"],
                             "source_shard": basename
                         }
                         fjunk.write(
@@ -238,8 +240,10 @@ for shard in shards:
                     removed_count += 1
                     junk_record = {
                         "id": doc["id"],
-                        "junk_probability": float(score),
-                        "source_shard": basename
+                            "doc_scores": doc["doc_scores"],
+                            "junk_probability": float(score),
+                            "web-register": doc["web-register"],
+                            "source_shard": basename
                     }
                     fjunk.write(
                         (json.dumps(junk_record, ensure_ascii=False, default=json_serializer) + "\n").encode("utf-8")
