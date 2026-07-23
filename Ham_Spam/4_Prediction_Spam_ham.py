@@ -7,6 +7,7 @@ from transformers import (
     AutoModelForSequenceClassification,
 )
 import os
+import io
 from tqdm import tqdm
 from datetime import datetime
 import zstandard as zstd
@@ -23,18 +24,31 @@ def open_zst(path, mode="ab"):
     return cctx.stream_writer(fh, closefd=True)
 
 
+
 def count_zst_lines(path):
-    """Count JSONL records in a .zst file."""
     if not os.path.exists(path):
         return 0
 
-    count = 0
     dctx = zstd.ZstdDecompressor()
+    count = 0
 
     with open(path, "rb") as fh:
-        with dctx.stream_reader(fh) as reader:
-            for _ in reader:
+        reader = dctx.stream_reader(fh)
+        text = io.TextIOWrapper(
+            reader,
+            encoding="utf-8",
+            errors="ignore",
+            newline=""
+        )
+
+        try:
+            for _ in text:
                 count += 1
+        except (UnicodeDecodeError, zstd.ZstdError):
+            print(f"Warning: truncated file {path}, recovered {count:,} lines.")
+
+        text.detach()
+        reader.close()
 
     return count
 
@@ -145,14 +159,19 @@ for shard in shards:
     if os.path.exists(metadata_file):
         print(f"Skipping completed shard: {basename}")
         continue
+    
     kept_file = os.path.join(KEPT_DIR,  basename.replace(".jsonl", ".jsonl.zst"))
     junk_file = os.path.join(JUNK_DIR,  basename.replace(".jsonl", ".junk.jsonl.zst"))
-    kept_count = count_zst_lines(kept_file)
-    removed_count = count_zst_lines(junk_file)
+
+    existing_kept = count_zst_lines(kept_file)
+    existing_removed = count_zst_lines(junk_file)
+
+    kept_count = existing_kept
+    removed_count = existing_removed
     processed = kept_count + removed_count
     print(
-        f"Found {kept_count:,} kept and "
-        f"{removed_count:,} junk documents "
+        f"Found {existing_kept:,} kept and "
+        f"{existing_removed:,} junk documents "
         f"({processed:,} total)."
     )
     last_report = processed
@@ -218,7 +237,7 @@ for shard in shards:
                         0 if score >= threshold else 1
                     )
 
-                    #doc["junk_probability"] = float(score)
+                    doc["junk_probability"] = float(score)
 
 
                     if score < threshold:
