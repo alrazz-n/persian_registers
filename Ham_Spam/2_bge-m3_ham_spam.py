@@ -56,10 +56,11 @@ MODEL_CONFIG = {
     "BAAI/bge-m3-retromae": {
         "max_length": 1024,
     },
-    "FacebookAI/xlm-roberta-base": {
+    "FacebookAI/xlm-roberta-large": {
         "max_length": 512,
     },
 }
+
 
 MAX_LENGTH = MODEL_CONFIG[MODEL_NAME]["max_length"]
 

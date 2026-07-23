@@ -10,16 +10,33 @@ import os
 from tqdm import tqdm
 from datetime import datetime
 import zstandard as zstd
+from itertools import islice
 
 def json_serializer(obj):
     if isinstance(obj, datetime):
         return obj.isoformat()
     raise TypeError(f"Type {type(obj)} not serializable")
 
-def open_zst(path):
-    fh = open(path, "wb")
+def open_zst(path, mode="ab"):
+    fh = open(path, mode)
     cctx = zstd.ZstdCompressor(level=3)
     return cctx.stream_writer(fh, closefd=True)
+
+
+def count_zst_lines(path):
+    """Count JSONL records in a .zst file."""
+    if not os.path.exists(path):
+        return 0
+
+    count = 0
+    dctx = zstd.ZstdDecompressor()
+
+    with open(path, "rb") as fh:
+        with dctx.stream_reader(fh) as reader:
+            for _ in reader:
+                count += 1
+
+    return count
 
 MODEL_DIR = "/scratch/project_2005092/nima/saved_models/bge-m3-retromae_spamham"
 
@@ -118,11 +135,32 @@ os.makedirs(META_DIR, exist_ok=True)
 
 BATCH_SIZE = 128
 
+
 for shard in shards:
-    kept_count = 0
-    removed_count = 0
-    last_report = 0
-    last_flush = 0
+    basename = shard.split("/")[-1].replace(".jsonl.zst", ".jsonl")
+    metadata_file = os.path.join(
+                META_DIR,
+                basename.replace(".jsonl", ".stats.json")
+            )
+    if os.path.exists(metadata_file):
+        print(f"Skipping completed shard: {basename}")
+        continue
+    kept_file = os.path.join(KEPT_DIR,  basename.replace(".jsonl", ".jsonl.zst"))
+    junk_file = os.path.join(JUNK_DIR,  basename.replace(".jsonl", ".junk.jsonl.zst"))
+    kept_count = count_zst_lines(kept_file)
+    removed_count = count_zst_lines(junk_file)
+    processed = kept_count + removed_count
+    print(
+        f"Found {kept_count:,} kept and "
+        f"{removed_count:,} junk documents "
+        f"({processed:,} total)."
+    )
+    last_report = processed
+    last_flush = processed
+
+    if processed > 0:
+        print(f"Resuming {basename}")
+        print(f"Already processed: {processed:,} documents")
 
     print("Processing:", shard)
 
@@ -132,6 +170,9 @@ for shard in shards:
         split="train",
         streaming=True
     )
+    if processed > 0:
+        print(f"Skipping {processed:,} documents...")
+        dataset = islice(dataset, processed, None)
 
     #OUTPUT_DIR = f"/scratch/project_2005092/nima/annotated_data"
 
@@ -149,15 +190,14 @@ for shard in shards:
 
 
 
-    basename = shard.split("/")[-1].replace(".jsonl.zst", ".jsonl")
-    kept_file = os.path.join(KEPT_DIR,  basename.replace(".jsonl", ".jsonl.zst"))
-    junk_file = os.path.join(JUNK_DIR,  basename.replace(".jsonl", ".junk.jsonl.zst"))
+
 
     #kept_count = 0
     #removed_count = 0
 
-    with open_zst(kept_file) as fkeep, \
-     open_zst(junk_file) as fjunk:
+    mode = "ab" if processed > 0 else "wb"
+    with open_zst(kept_file, mode) as fkeep, \
+     open_zst(junk_file, mode) as fjunk:
 
 
         for example in tqdm(dataset, desc=basename, unit="docs"):
@@ -290,10 +330,7 @@ for shard in shards:
         fkeep.flush()
         fjunk.flush()
 
-        metadata_file = os.path.join(
-            META_DIR,
-            basename.replace(".jsonl", ".stats.json")
-        )
+        
 
         with open(metadata_file, "w", encoding="utf-8") as f:
             json.dump(metadata, f, indent=2, ensure_ascii=False, default=json_serializer)

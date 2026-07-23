@@ -51,19 +51,21 @@ SAVE_NAME = f"{MODEL_ID}_spamham"
 
 save_dir = f"/scratch/project_2005092/nima/saved_models/{SAVE_NAME}"
 os.makedirs(save_dir, exist_ok=True)
-
+os.environ["HF_HUB_CACHE"] = "/scratch/project_2005092/nima/huggingface/hub"
 MODEL_CONFIG = {
     "BAAI/bge-m3-retromae": {
         "max_length": 1024,
     },
-    "FacebookAI/xlm-roberta-base": {
+    "FacebookAI/xlm-roberta-large": {
         "max_length": 512,
     },
 }
 
 MAX_LENGTH = MODEL_CONFIG[MODEL_NAME]["max_length"]
 
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME,
+                                          cache_dir="/scratch/project_2005092/nima/huggingface"
+                                          )
 
 def tokenize(batch):
     return tokenizer(
@@ -116,6 +118,7 @@ def objective(trial):
     model = AutoModelForSequenceClassification.from_pretrained(
         MODEL_NAME,
         num_labels=NUM_LABELS,
+        cache_dir="/scratch/project_2005092/nima/huggingface",
         problem_type="single_label_classification",
     )
 
