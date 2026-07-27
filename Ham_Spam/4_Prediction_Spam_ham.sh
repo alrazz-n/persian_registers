@@ -7,7 +7,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=16 
 #SBATCH --mem=256G
-#SBATCH --time=08:00:00
+#SBATCH --time=36:00:00
 #SBATCH --gres=gpu:a100:1
 #SBATCH --output=Predict_spam_ham_%j.out
 #SBATCH --error=Predict_spam_ham_%j.err
