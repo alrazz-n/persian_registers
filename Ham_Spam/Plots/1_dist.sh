@@ -1,10 +1,11 @@
 #!/bin/bash
 #SBATCH --job-name=Dist
 #SBATCH --account=project_2002026
-#SBATCH --partition=test
+#SBATCH --partition=small
+#SBATCH --cpus-per-task=16
 #SBATCH --nodes=1
 #SBATCH --mem=64G
-#SBATCH --time=01:00:00
+#SBATCH --time=04:00:00
 #SBATCH --output=distribution_%j.out
 #SBATCH --error=distribution_%j.err
 
