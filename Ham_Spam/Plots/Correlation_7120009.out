@@ -1,0 +1,13 @@
+Processing 26 shards with 32 workers
+                   score  pearson_r          N
+0              WDS score  -0.278987  127957098
+1             lang_score  -0.085276  127957098
+2              url_score   0.002373  127957098
+3      punctuation_score  -0.418596  127957098
+4   singular_chars_score   0.014272  127957098
+5          numbers_score  -0.044398  127957098
+6         repeated_score  -0.229922  127957098
+7  informativeness_score   0.142415  127957098
+8   n_long_segment_score   0.100184  127957098
+9    great_segment_score  -0.140525  127957098
+Finished.

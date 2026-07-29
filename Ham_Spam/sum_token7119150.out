@@ -1,0 +1,10 @@
+Shards        : 13
+Documents     : 102,364,179
+Total tokens  : 105,890,635,886
+Mean          : 1034.5
+Median        : 522.0
+Min           : 92
+Max           : 839611
+P90: 2209
+P95: 3286
+P99: 7473
