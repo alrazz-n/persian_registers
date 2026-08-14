@@ -1,0 +1,785 @@
+﻿filename,id,matched_label,Turku_NLP,Turku_NLP_sub
+ed.db,110ae9e775485f536c4f1cdea087cbd7,ID,IP ; ID,ed ; -
+ed.db,9afaecf7d64a78e22fa71dec39be048b,SP,IP ; SP ; NA,ed ; os ; on
+ed.db,b448bc630d8d121c42826b657926ffcd,ID,IP ; ID,ed ; -
+ed.db,008e815a2729837de664ef62a8a307ce,SP,SP,os
+ed_2.db,a4081cf02ab9f546bf81779632dee25e,ID,OP ; ID,ob ; -
+ed_2.db,87a0fd7d02da869e7f13609b6451a365,ID,IP ; ID ; OP,ed ; - ; oo
+ed_2.db,801e82bc9ac9286cec876f3f6a734ae9,ID,OP ; ID,ob ; -
+ed_2.db,b1afe0fb6714accb7c940deacdcfb1ac,ID,OP ; ID,ob ; -
+ed_2.db,8650bfe12f6d1b8068b23b4fae9205a6,ID,IP ; ID,ed ; -
+ed_2.db,438262fa1117f86ef8fd91a97b52f660,ID,NA ; LY ; ID,ne ; - ; -
+ed_2.db,3ddaa704268fa4a28cd157931fb2f6a1,SP,SP,os
+ed_2.db,5e63fb670b1bbc7db90050bf86818253,SP,SP,os
+ed_2.db,691bca7238662fc9cba1f4a68f842e83,ID,IP ; ID,ed ; -
+ed_2.db,1b36b1734687a0024609ef17ee4ebc1a,ID,OP ; ID,ob ; -
+ed_2.db,b3775da0af7ea73967f269ecce7bc15e,ID,IP ; ID,ed ; -
+ed_2.db,28f05e6d40b6fe05bf6956a750c8288c,ID,IP ; ID,ed ; -
+ed_2.db,d19fb4ee760ff0f178d17b0479707b46,ID,IP ; ID,ed ; -
+en_5.db,4460051aab829be12ada68f23fa42a00,ID,IN ; NA ; ID,en ; ne ; -
+en_9.db,e138f6f9106dfe2bd5deac20754e2af1,ID,IN ; ID,en ; -
+fi.db,fd298a05ac2b9a246f6a28dbca2e89ab,ID,IN ; IN ; IN ; ID,fi ; dtp ; oi ; -
+fi.db,4d64a3f8de484bc2b51af97e7617b4ce,ID,IN ; OP ; IN ; ID,fi ; av ; oi ; -
+fi.db,75b50ac030db115e972957f7965bb9e7,ID,IN ; IN ; IN ; ID,fi ; dtp ; oi ; -
+fi.db,84b4bb67f90ef5bec78cc0fb3618877f,SP,IN ; SP,fi ; it
+fi.db,d93b4c5556c848cb9f7257efe9b87219,ID,IN ; IN ; ID,fi ; dtp ; -
+fi.db,59552e1f1ebdfa82c893739f69804331,SP,SP,it
+fi.db,2fd3a6695d39b53fe85742715795d28e,ID,IN ; ID,fi ; -
+fi.db,bc8c54632bf32ce4bdcab9abbe14f0b6,ID,IN ; IN ; ID,lt ; oi ; -
+fi.db,77a1751d1c54127d11fc67b5eb8c07bc,ID,IN ; IN ; ID,fi ; oi ; -
+fi.db,88554ac4848e030de2128478b2490061,ID,IN ; ID,fi ; -
+fi.db,28b650bfcb46b54028031ceaa0cb7748,ID,IN ; ID,fi ; -
+fi.db,aa170755b938f277af218f3ef9189324,ID,HI ; ID,oh ; -
+fi.db,71e54ae1863873fdff2521d9a0e4a998,ID,IN ; IN ; OP ; ID,fi ; dtp ; av ; -
+fi.db,e5cc3c77a6ef7a467629ead889e192aa,ID,IN ; IN ; ID,fi ; oi ; -
+fi.db,50f78c776fc1b201443f92c00dd054ec,ID,IN ; IN ; ID,fi ; oi ; -
+fi.db,6a0742bca64a41b2d647f1f796c2dfd2,ID,IN ; ID,fi ; -
+fi.db,db8bb62cdf7315dfc68aa1f36285fecd,ID,IN ; ID,fi ; -
+fi.db,8deaf4e97c2a0c2046d0ca92972bf0fc,ID,ID ; NA ; IN,- ; nb ; oi
+fi.db,221665a44c1bee6ef082897a20b8317e,ID,IN ; IN ; HI ; ID,fi ; oi ; oh ; -
+fi.db,64fb6834bd54999cbc62770860de12c4,ID,IN ; IN ; ID,fi ; oi ; -
+fi.db,416e35d6d01b25129727189f2651a92c,ID,IN ; IN ; ID,fi ; dtp ; -
+fi.db,a805488608f898a8bbb1279a3192c4a6,ID,IN ; IP ; ID,fi ; ds ; -
+fi.db,ad8f780465bd0b26a50b324cd6796bcc,ID,IN ; OP ; ID ; IP,fi ; rv ; - ; ds
+HI_2_clean_dedup.db,76efafc8d6c05a00b6d6d1e8aa871652,ID,IP ; HI ; ID,ds ; oh ; -
+HI_2_clean_dedup.db,693d6f28524c6c65f5bf4c8bdc02b011,ID,HI ; ID,oh ; -
+HI_2_clean_dedup.db,7cb185740c3d6b499531157089dd5993,ID,ID,-
+HI_2_clean_dedup.db,90978fbd75518e5dafddd31a0dc9b79d,ID,IN ; HI ; ID,dtp ; oh ; -
+HI_2_clean_dedup.db,4ff44315a90b4c091d1716143dc9a553,ID,IN ; HI ; ID,fi ; oh ; -
+HI_2_clean_dedup.db,dc9a7bf5ac4d0b801d415818114b302d,ID,HI ; ID,oh ; -
+HI_2_clean_dedup.db,ae7366e355956551f2fe4246e3bf2b2c,ID,HI ; ID,oh ; -
+HI_2_clean_dedup.db,e198ba1c077213f04553e6e6f1da5d96,ID,IP ; HI ; ID,oe ; oh ; -
+HI_2_clean_dedup.db,ec64cb4634ad48717f53f4c59e98d812,ID,IP ; HI ; ID,oe ; oh ; -
+HI_2_clean_dedup.db,c29a6dc3364093922e244bdd53f892d2,ID,IP ; IN ; ID,ds ; dtp ; -
+HI_2_clean_dedup.db,96a52c7a12c984c75decf22cef26ad45,ID,OP ; ID,av ; -
+HI_2_clean_dedup.db,986848adfee4e8045b11a7333a084f81,ID,IN ; IN ; HI ; ID,dtp ; fi ; oh ; -
+HI_2_clean_dedup.db,7299da5d7b3586597e28def2ad19bc31,ID,IN ; IN ; HI ; ID ; OP,fi ; oi ; oh ; - ; oo
+HI_2_clean_dedup.db,ca3d5285b8f61c6079a7712d0a8c9cf2,ID,HI ; IN ; ID,oh ; fi ; -
+HI_clean_dedup.db,80cd4b9b8ea5e609ff02b33277c0d3ed,ID,HI ; IN ; IP ; ID,oh ; oi ; oe ; -
+HI_clean_dedup.db,cc9b6620569dbcc0f37dcb3f49190800,ID,HI ; ID,oh ; -
+HI_clean_dedup.db,ac41c16fc2a39777eea1f1995bb953de,ID,HI ; ID ; IN,oh ; - ; dtp
+HI_clean_dedup.db,c5408f13abdb99c0e8f9786994fb587a,ID,HI ; ID ; IN ; IN,oh ; - ; fi ; oi
+HI_clean_dedup.db,e9883ecb3f261463075c43e326afe9cf,ID,OP ; ID,av ; -
+HI_clean_dedup.db,d0ffda7908beefe2c07787835872886a,ID,OP ; OP ; ID,av ; ob ; -
+HI_clean_dedup.db,ac5a62558141c5de69fcd331dc1b6ea2,ID,HI ; ID ; IN,oh ; - ; oi
+HI_clean_dedup.db,7255a23b766709e222fe90069a1d8437,ID,IN ; HI ; ID,dtp ; oh ; -
+HI_clean_dedup.db,638d77eda69703f2a4bde16dfe67f41c,ID,IP ; ID,oe ; -
+HI_clean_dedup.db,8020f755ce16e650c7d838b88e4b27dc,ID,IN ; ID,dtp ; -
+HI_clean_dedup.db,c079ebf831355bd675b8421c15c92c9b,ID,OP ; ID,oo ; -
+ID_clean_dedup.db,fca0356992f07cad44c9bedf6379ffc8,ID,OP ; ID,ob ; -
+ID_clean_dedup.db,ac2d15c2d800b725cf26387fa7616c47,ID,OP ; ID,av ; -
+ID_clean_dedup.db,8df2f7741fa562e9d80217e4f2c7eae7,SP,SP,it
+ID_clean_dedup.db,cc54cc88925834384fdfc8ec07c6adb5,SP,SP,it
+ID_clean_dedup.db,45f87e78f85349c2dd1574c72d9c1318,SP,SP ; ID,it ; -
+ID_clean_dedup.db,45f87e78f85349c2dd1574c72d9c1318,ID,SP ; ID,it ; -
+ID_clean_dedup.db,8207d7723c5777b1333f7ac9a8d84a59,ID,ID,-
+ID_clean_dedup.db,b89d3b9a67a4cd459a7704b63d124672,SP,SP,it
+ID_clean_dedup.db,63e2b28e02273f06d8851cb3fdfea21a,ID,OP ; OP ; ID,rs ; av ; -
+ID_clean_dedup.db,97cdc4ace3bbff9ea6054006545bd22a,SP,SP,it
+ID_clean_dedup.db,63e7b423c1f36ca68a22d94e43bfe7b4,SP,SP,it
+ID_clean_dedup.db,a6c743cbbdbe0054d9401408a6bc37d1,SP,IP ; SP,oe ; it
+ID_clean_dedup.db,84ad49a1f92759e16707e8060fe7e79b,ID,OP ; ID ; NA ; OP,av ; - ; nb ; rv
+ID_clean_dedup.db,e763aef3a395ec3af72bbe7fda1fce7a,SP,SP,it
+ID_clean_dedup.db,26ced57c91c04d0c5874ba5e0ec76d83,SP,SP,it
+ID_clean_dedup.db,ab0b374ead2fd1430cfd315fd1f87dad,SP,SP,it
+ID_clean_dedup.db,b9b8c4180b3fbe3feef9809beaf4d6bc,SP,NA ; SP,ne ; it
+ID_clean_dedup.db,c3de3519badb87f9fbd62cea15f38c2f,ID,IP ; ID,ed ; -
+ID_clean_dedup.db,f34f87ca99a48443153635473b570476,ID,OP ; ID,ob ; -
+ID_clean_dedup.db,a36e13c91d9960782168446db4ede3b5,SP,SP,it
+ID_clean_dedup.db,144d7b5b9272bd42cd78d56ddb42fc49,ID,IN ; ID,en ; -
+ID_clean_dedup.db,bd837650ad61f1fcd3b8a814b25ec228,ID,NA ; OP ; ID,ne ; ob ; -
+ID_clean_dedup.db,e3c43c0be073b49d7e89436e13d42a1f,SP,SP,it
+ID_clean_dedup.db,d37abdaf73636a8a380e8b33767d266a,SP,SP,it
+ID_clean_dedup.db,ae2b11455075ba05d5e3347e838eb7f1,SP,NA ; SP,on ; it
+ID_clean_dedup.db,50c3f539ae57dfa894eeb09d55c6660d,SP,SP,it
+ID_clean_dedup.db,c8bb5b2116d8c9358b6ab5ba5ffbcb95,ID,IN ; ID,fi ; -
+ID_clean_dedup.db,7484398bc52b32e1be58a21df3bc279a,SP,IP ; SP ; ID,ed ; it ; -
+ID_clean_dedup.db,7484398bc52b32e1be58a21df3bc279a,ID,IP ; SP ; ID,ed ; it ; -
+ID_clean_dedup.db,c49275321bc24b937a97de52ec9ed722,SP,SP,it
+ID_clean_dedup.db,79a344372fd5c4d0a58221de234f2fa9,SP,SP ; ID,it ; -
+ID_clean_dedup.db,79a344372fd5c4d0a58221de234f2fa9,ID,SP ; ID,it ; -
+ID_clean_dedup.db,dfe481f4ee68792150fa9a96d93a2b50,SP,SP ; OP,it ; rs
+ID_clean_dedup.db,bba017924429b0ef0569919cc1058ccf,ID,OP ; ID,ob ; -
+ID_clean_dedup.db,76cca96b94ab60f6b76c3840c1d491a6,SP,SP,it
+ID_clean_dedup.db,8147fad61e98ad8baab8534df8a1380d,SP,SP,it
+ID_clean_dedup.db,fea4458a38970163a9b35ccf2d0db95d,SP,SP,it
+ID_clean_dedup.db,477910f13989f36583053bcb2018f2a9,ID,ID,-
+ID_clean_dedup.db,aec9ec258e21ae28bf28c29665240690,SP,NA ; SP ; ID,on ; it ; -
+ID_clean_dedup.db,aec9ec258e21ae28bf28c29665240690,ID,NA ; SP ; ID,on ; it ; -
+ID_clean_dedup.db,a410d66499e19d3264e96868307c6b85,ID,IP ; ID,ds ; -
+ID_clean_dedup.db,8244978a9f4132c539fa56d3edab49bb,ID,IP ; ID,ds ; -
+ID_clean_dedup.db,aa22d78b38d62aec1f47ed2736345cc3,ID,IP ; ID ; OP,oe ; - ; rv
+ID_clean_dedup.db,0aae2172fd1588ec14b35c494c89ec3c,ID,IN ; ID ; HI,oi ; - ; oh
+ID_clean_dedup.db,ebba1f75cafdf311a210df7e66f22101,ID,ID,-
+ID_clean_dedup.db,ba6f215f660441948c79d298b60d3aa5,ID,OP ; ID ; LY,av ; - ; -
+ID_clean_dedup.db,e637572a390a5ca2ef204a89cd154e54,ID,HI ; ID ; OP,re ; - ; oo
+ID_clean_dedup.db,a389bfe0d7753117fcf8a96adedf0afe,ID,OP ; ID,av ; -
+ID_clean_dedup.db,71f41c070ea17c62ed12888677fa6591,ID,IP ; ID,oe ; -
+ID_clean_dedup.db,e1b188a219858957167916d29881ed48,ID,IN ; ID,dtp ; -
+ID_clean_dedup.db,e164ed06b8230b53e0b999a9f7f90a1e,ID,IP ; ID,ds ; -
+ID_clean_dedup.db,14e7b4d57579de4b45e7bb35bab26589,ID,NA ; OP ; ID,nb ; rv ; -
+ID_clean_dedup.db,b9fe90910240c2d43934b4ad592382ee,ID,LY ; ID,- ; -
+ID_clean_dedup.db,362b3c3f95a4770e0d71ef9176188fba,ID,NA ; OP ; ID,ne ; oo ; -
+ID_clean_dedup.db,9c35cc97d1d68ff16d7572f0b49fe273,ID,LY ; ID,- ; -
+ID_clean_dedup.db,34feadf1dc529bc474b2f72ecd462496,ID,IP ; ID,ds ; -
+ID_clean_dedup.db,d3ab69b8c4dbb2a0e45a8dbac0b7a9ed,ID,OP ; ID,av ; -
+ID_clean_dedup.db,305bee59e8ece3ce263c3b5c4c8abf19,ID,IP ; ID,oe ; -
+ID_clean_dedup.db,bced51a601a5d0429cc61845695bffd3,ID,OP ; ID ; OP,av ; - ; oo
+ID_clean_dedup.db,6f6ffedc4f697a29df1863e9f9abe393,ID,IN ; ID,oi ; -
+ID_clean_dedup.db,a968d357cebacc6de1dbb9350b005ad0,ID,IP ; ID,ds ; -
+ID_clean_dedup.db,50c4e96fbbaa687c1ec088cba98d47b0,ID,LY ; ID,- ; -
+ID_clean_dedup.db,b05fb94276b6c900861397fd81daec7a,ID,IP ; ID,ds ; -
+ID_clean_dedup.db,5c746b03f436ca6720f00bfe17c343fd,ID,IP ; ID,ds ; -
+ID_clean_dedup.db,03e84d1bcfc704db11ce2fa26cf36ab4,ID,IP ; ID ; OP,oe ; - ; rv
+ID_clean_dedup.db,decdde636fa5b5595bea9b460d68ce54,ID,NA ; HI ; ID ; OP,nb ; oh ; - ; oo
+ID_clean_dedup.db,816743cb6d1281a9420700c38c24b531,ID,ID ; IN ; OP,- ; dtp ; oo
+ID_clean_dedup.db,9b81f4a7de7c466ed17d57928bdd198d,ID,ID,-
+ID_clean_dedup.db,24c6eb20956cf511c17faa36df0d6b87,ID,LY ; ID,- ; -
+ID_clean_dedup.db,f56862945abaf36e9aed6906b3582241,ID,IN ; ID,dtp ; -
+ID_clean_dedup.db,07f4ca47e0231bd7466fc6c4fa008c22,ID,IP ; IN ; ID,oe ; dtp ; -
+ID_clean_dedup.db,67c7c7ec16c2ae2a8610265c1d3a117f,ID,ID,-
+ID_clean_dedup.db,9b78cb69077b2fdb27aa51a83ca5775d,ID,ID ; LY ; OP,- ; - ; oo
+ID_clean_dedup.db,b0d98b11192aff26573a0bd00e5e84ad,ID,ID,-
+ID_clean_dedup.db,c6b834c07e659ae134892bc5172618d8,ID,LY ; ID,- ; -
+ID_clean_dedup.db,74a8f3db4544dbf3e35359e49cc04b81,ID,IN ; IN ; ID ; OP,dtp ; oi ; - ; rv
+ID_clean_dedup.db,8df90d63357a116208e074d18f6704fb,ID,OP ; ID,av ; -
+ID_clean_dedup.db,d36c1f188007051a5eb0bf117a968f5c,ID,ID ; OP,- ; rs
+ID_clean_dedup.db,25a1661c17e4a9d65d4e64e69e28bee2,ID,LY ; ID,- ; -
+ID_clean_dedup.db,4a3e0ab413c25d6ae37df9f1cac645e9,ID,IN ; ID,dtp ; -
+ID_clean_dedup.db,a0d47935a25ced6143b0b23d933eaf9d,ID,OP ; ID,oo ; -
+ID_clean_dedup.db,6c93dd97f04dcb7f7c5d6606a708721c,ID,IN ; ID ; OP,dtp ; - ; rv
+ID_clean_dedup.db,ff2e7192211e67c12ab69a57cc3b0fff,ID,LY ; ID,- ; -
+ID_clean_dedup.db,e13e8e6f25a50b25bf24c7750f05a47d,ID,HI ; ID,oh ; -
+ID_clean_dedup.db,a5dfa891a8d4f6430edd2f7c0626439b,ID,IP ; ID,oe ; -
+ID_clean_dedup.db,4e9da260ce84e73d984611a7c76a173c,ID,HI ; ID,re ; -
+ID_clean_dedup.db,218b1f99eb8b21c1ad06f9e5ae078298,ID,NA ; OP ; ID,nb ; oo ; -
+ID_clean_dedup.db,35a352f7ab4822a0f32a4d7c1cb68270,ID,IP ; ID ; OP,oe ; - ; oo
+ID_clean_dedup.db,95523a0826509d07c0db1162a8c51f39,ID,IN ; ID ; OP,dtp ; - ; rv
+ID_clean_dedup.db,25f1b74d462f488e30ab3f8d58ad10a8,ID,LY ; ID,- ; -
+ID_clean_dedup.db,ae08c7711595d4b6d1c60c46eba5c5f8,ID,IN ; ID ; OP ; OP,dtp ; - ; rv ; oo
+ID_clean_dedup.db,9aa41197c0d1ab457321e1c048d74a73,ID,LY ; ID,- ; -
+ID_clean_dedup.db,3c8fe5c3f7b219094917d26440ef7352,ID,IN ; NA ; ID,dtp ; on ; -
+ID_clean_dedup.db,b3148d8f4f65349acbc0be1edb3b3fb8,ID,NA ; ID,nb ; -
+ID_clean_dedup.db,ca3f60a4823a990021bf121b75a4bdde,ID,ID,-
+ID_clean_dedup.db,2547f6e5bd72517127cbfecf0c2c45d7,ID,LY ; ID,- ; -
+ID_clean_dedup.db,4450edcc1a397e8f863c211e8a6bde92,ID,IP ; ID,oe ; -
+ID_clean_dedup.db,980d672278df79f5f5e2c329c8b3fa97,ID,LY ; ID,- ; -
+ID_clean_dedup.db,f0e2796b704d821d0bf7b2c2f302382f,ID,LY ; ID,- ; -
+ID_clean_dedup.db,10d10e4d0517547646be197f39d90bcb,ID,IP ; ID,ds ; -
+ID_clean_dedup.db,cb7fe113b697eb1e9abff86fe9cd3471,ID,LY ; ID,- ; -
+ID_clean_dedup.db,46818fe831fd442f372e9a9e459c74fd,ID,IN ; ID ; OP,oi ; - ; rv
+ID_clean_dedup.db,786098d54f5a733d83afe2d8043c1f45,ID,LY ; ID,- ; -
+ID_clean_dedup.db,908a2486585430733026ca86e33fa4d8,ID,OP ; IN ; ID,rs ; oi ; -
+ID_clean_dedup.db,14029fcee7aa799fcabca3d3ad696734,ID,ID,-
+ID_clean_dedup.db,c10a0ac85bba379ebef51ef904267a70,ID,IN ; OP ; ID,dtp ; rv ; -
+ID_clean_dedup.db,e7a026f651f0f286e32e720d9cd8c638,ID,HI ; ID,oh ; -
+ID_clean_dedup.db,2e103b4c17aedd99ff8ebfab25edd942,ID,ID ; IN ; OP,- ; oi ; oo
+ID_clean_dedup.db,d50bc9381006f565d203280d1f892180,ID,HI ; ID,oh ; -
+ID_clean_dedup.db,f0277784dec2c9c2e825b6b019006eac,ID,OP ; ID,oo ; -
+ID_clean_dedup.db,384ea7cdc897cf6554da774adbaf627e,ID,LY ; ID,- ; -
+ID_clean_dedup.db,61739ea951046c6aebb7423ec192c21e,ID,IP ; ID ; OP,ds ; - ; rv
+ID_clean_dedup.db,6aeb1da6b556f2f9a0fbd6ba7c03edc8,ID,ID,-
+ID_clean_dedup.db,af4e048b1a2bb8d7d447ef3addc460a0,ID,IP ; OP ; ID ; IN,ds ; rv ; - ; oi
+ID_clean_dedup.db,7c5c88a78d52f4fe4b074be3b92e7d03,ID,IN ; ID ; IN,dtp ; - ; oi
+ID_clean_dedup.db,0f2c9f5ab714ad03f963f346edf1a058,ID,OP ; ID,rv ; -
+ID_clean_dedup.db,d9df7109a219f6f22be96768ade0ca73,ID,LY ; ID,- ; -
+ID_clean_dedup.db,2b5e9783c856a04a03aceb4cda78c513,ID,ID,-
+ID_clean_dedup.db,1b1a5c8c5b98ea5b8ee872660e673478,ID,IP ; ID,ds ; -
+ID_clean_dedup.db,f37281413062090e8bcf8209b6014c2c,ID,IN ; ID ; OP,dtp ; - ; rv
+ID_clean_dedup.db,f729329a151ae0827c8ef4f945ae0a66,ID,NA ; ID,ne ; -
+ID_clean_dedup.db,24d687c02052de55ea4ebbc99d37513b,ID,IP ; ID,ds ; -
+ID_clean_dedup.db,e53ffeaa06a5b65794f0e7f4a03d5013,ID,ID,-
+ID_clean_dedup.db,a84c93407744695c3a8ec06de4bc47bd,ID,IN ; OP ; ID,dtp ; rv ; -
+ID_clean_dedup.db,3f7763254b2f54b1ec095e6aaa9760f5,ID,IN ; OP ; ID,dtp ; av ; -
+ID_clean_dedup.db,dd458a05757d899d9d036b3272b492b4,ID,ID,-
+ID_clean_dedup.db,a888500353e83f255f1bf137a5ab8cc6,ID,HI ; ID,re ; -
+ID_clean_dedup.db,853c1ba3f3a41be11d831121a87d6e43,ID,IP ; OP ; ID,ds ; rv ; -
+it.db,0925836ef9147f2cde8a5a3e15f739eb,SP,SP ; NA,it ; ne
+it.db,c199e562fda32393b858d4c85274777a,SP,SP ; OP,it ; ob
+it.db,28a06ce158ebbeea3952752632f0ee6b,SP,SP,it
+it.db,35e5259b308d30254b5b787a65ecd849,SP,SP,it
+it.db,f6a1731e92e3a544420011374463fca8,SP,SP ; ID ; OP ; OP,it ; - ; rs ; oo
+it.db,f6a1731e92e3a544420011374463fca8,ID,SP ; ID ; OP ; OP,it ; - ; rs ; oo
+it_2.db,c9ef7c4dc7373f9fde2e2ac615c67124,SP,SP ; NA,it ; ne
+it_2.db,676f1bc3409ad4cbb90ac9db7f42d68e,SP,SP,os
+it_2.db,3dcb9e5589180ada3551233ed1bf7b73,SP,SP ; IN,it ; oi
+it_2.db,c592bbb5ff539f183dde5cd1028721a5,SP,SP,it
+it_2.db,48bc4ace258defa390b3e91c1920dba7,SP,SP,it
+it_3.db,6259b92853c89b786a44a3d806e6e40f,SP,SP ; NA,it ; ne
+it_3.db,b9313a2b5a41f95c3e3b1e4482b7030b,SP,SP ; NA,it ; ne
+it_3.db,f437c1a7b7e2793f80d60dfd58d1e40a,SP,SP,os
+it_3.db,a0151067102623e86a91fa504a97dddf,SP,SP,os
+it_3.db,ced0067acb98932287632262172ec863,SP,SP,it
+it_3.db,775c11d6b3bf021f0f1611112c3000c3,SP,SP ; IP,it ; ds
+it_3.db,5588ef1f79d291063f8d47f382afc26d,SP,SP ; NA,it ; ne
+it_3.db,ca176397423734c9952789b30602e60c,SP,SP ; OP,os ; rs
+it_3.db,afd8bf6b344d27c32693eb53bd33c91d,SP,SP ; IP,it ; ed
+it_3.db,5a4371e772648506f4bde227648cd9af,SP,SP ; NA,it ; sr
+it_3.db,72572f5a87482ff97f7de8797046a75f,SP,SP ; NA,it ; ne
+it_3.db,c877ee790d09ee59abe54ce6d5fa1d08,SP,SP ; OP,it ; rs
+it_3.db,1806cf947cbf5789601bb88c3064be77,SP,SP ; NA,it ; ne
+it_3.db,06e19465d0945c271e660085d53afd7c,SP,SP,it
+it_3.db,276deed41c692c5d046790316e485e3a,SP,SP ; NA,it ; ne
+it_3.db,b6fcb3b7c3883295097dec50760ebba0,SP,SP ; NA,it ; ne
+it_3.db,3d39687e82f87c1f8b68608c4c8d53ad,SP,SP ; NA ; SP,it ; sr ; os
+it_3.db,3d39687e82f87c1f8b68608c4c8d53ad,SP,SP ; NA ; SP,it ; sr ; os
+it_3.db,5298a06796130bdcea9b7316bb9b8d7c,SP,SP ; NA,it ; ne
+it_3.db,77f16187136f019efca9b802897f269e,SP,SP ; NA,os ; ne
+it_3.db,45d8a46d961e5288a2bb99a2f664f372,SP,SP,it
+it_3.db,2199009f71d3894ca208981a01a53c4f,SP,SP,it
+it_3.db,f65b70e18485fcc61d1bd14251966217,SP,SP ; IN,it ; dtp
+it_3.db,2d0377c49804756014a11cc89340d51a,SP,SP,it
+it_3.db,842f9bea90767c741a357f7c62f199f4,SP,SP ; IP,it ; ds
+it_3.db,12672f7f3364218449cdc10ce4ac58f9,SP,SP,it
+it_3.db,ba9df55b422d5e8d5b0d2369cb595b1c,SP,SP ; NA,it ; sr
+it_3.db,55e2663234f7ce95a84f487672789172,SP,SP,it
+it_3.db,b2b327254826dad9a2014ca6f21d9a76,SP,SP,it
+it_3.db,4b157b90a20613bf68a0f1ed84e4ad84,SP,SP,it
+it_3.db,349e999b418fd06ce05e5456dc057ea0,SP,SP ; NA,it ; ne
+it_3.db,5e0b37a451571709c146f7124d8c2bda,SP,NA ; SP ; OP,nb ; os ; oo
+it_3.db,7ee1538cf18fed901f9742f1ae7addd8,SP,SP,it
+it_3.db,c648940d2c9d484c0cfd94b8f2bd2726,SP,NA ; SP,sr ; os
+it_3.db,eee73e9931f103988c5d84d0738d1c23,SP,SP,it
+it_3.db,7fd1d9b77d143c7d13110b25f45da917,SP,SP,it
+it_3.db,1b1044cc260fcd8367dbc9862f181fce,SP,NA ; SP,sr ; os
+it_3.db,697872d50782eb3d836643d48620e225,SP,SP ; NA,os ; ne
+it_3.db,af3a70d66e7beb22f62633c081d63d12,SP,SP,it
+it_3.db,fa4aba7179033034277ab7a78e3ed23a,SP,SP ; NA,os ; sr
+it_3.db,071a0ab911583c4b98be68fee3c2418a,SP,SP ; NA,it ; on
+it_3.db,9bd517ad8762c41d00f21d6b17477c73,SP,SP,it
+it_3.db,f75e66a33bd90b1510173beae3bdef91,SP,SP ; NA,it ; ne
+it_3.db,bc2a665e845c44eab4d3aa412ee66e72,SP,SP ; NA,it ; ne
+it_3.db,ba761c54439503a37852daf5b2cdfadd,SP,SP,it
+it_3.db,8c0da41bf3c3aff4e0015b9b9829cc7f,SP,SP ; NA,it ; ne
+it_3.db,a811e0fed11f76a200fc44159d967041,SP,SP ; NA,it ; sr
+it_3.db,17786c347d1da5754b31b90ae8e85d1a,SP,SP,it
+it_3.db,ad08a0f87ea523514aeaf51777a8eff0,SP,SP ; NA,it ; ne
+it_3.db,33ada5758efd862ab98f864b82e6c6e2,SP,SP ; NA,it ; ne
+it_3.db,9242dcab168ffedde5f6c329a522bed7,SP,SP,it
+it_3.db,c02aa5512d6840b6eec72f2d6fb8f27c,SP,SP ; IN,it ; oi
+it_3.db,d62c6c92b75b5ea47fa826a8ab343da0,SP,SP ; IN,it ; oi
+it_3.db,d4c5977154775822b5d008121f8894fa,SP,SP ; NA,it ; ne
+it_3.db,e74badfa983963d33be87cdb12be8d0c,SP,SP ; IN,it ; dtp
+it_3.db,d7549f89cc425695531707c844fb2851,SP,NA ; SP,ne ; os
+it_3.db,98cf798c31de961b55985aabf3e59550,SP,SP ; NA,it ; on
+it_3.db,7141b7c55c8605d60297b8a3a8953f97,SP,SP ; NA,os ; ne
+it_3.db,e60aedd803af06f243082f13b1f3ac02,SP,SP,os
+it_3.db,27fdeb9a9960c4140edaefbfa5599e39,SP,SP ; NA,it ; on
+it_3.db,77d96fdcfac5bfc9890dc18f1d2bbaf6,SP,SP ; IN,it ; dtp
+it_3.db,f8cd406401b4b536743e8b82dae7be9b,SP,SP ; NA,it ; on
+it_3.db,0028a06c460e14975b81f3dd804492af,SP,SP ; IN,it ; dtp
+it_3.db,9ddf7a611841b646a2f1b69c1a8741af,SP,SP,it
+it_3.db,70a84f8373880d8986614b8b193e5577,SP,SP ; OP,it ; ob
+it_3.db,002d77d92896de57c62bbfac2f448643,SP,SP ; NA,it ; on
+it_3.db,5f6221ed198f4e428aa014076f069440,SP,SP ; IP ; NA,it ; ed ; on
+it_3.db,b232ceb74d501acef497f2304bf9f64a,SP,SP,it
+it_3.db,bba1906b9ab49fdf9e7af0dc736d4b79,SP,SP ; IN,it ; dtp
+it_3.db,c9c475ed425bc2da8e276541fb7d3429,SP,SP ; NA,it ; ne
+it_3.db,dd1efef8adedc01b92587d4d4e0a9ff1,SP,SP ; NA,it ; on
+it_3.db,f4f933425822f8857e1b41fc34aab0eb,SP,SP ; NA,it ; on
+it_3.db,7b936984e6f07fc47ca79eb1ca2875b5,SP,SP ; NA,it ; sr
+it_3.db,878a46bfc49e9e44c560557b222980c5,SP,SP ; IN,it ; dtp
+it_3.db,1c1e440321a9138788f9c25a0750c87c,SP,SP ; IN,it ; dtp
+it_3.db,08ec37b9aa5143afce05ea117baec0ad,SP,SP,it
+it_3.db,8ec38c2a4062f7649ecd176feb9f2fae,SP,SP ; NA,it ; ne
+it_3.db,0203e4c2dea2240e1f2972e2d02b9722,SP,SP,it
+it_3.db,4166ebe0c40b168a3289409ae3068f18,SP,SP,os
+it_3.db,3dfdf0b2cc1b213ad9a5ffa3e98155e0,SP,SP,it
+it_3.db,e0c1f5f6a313bdbac2e3d0f928e5923a,SP,SP,it
+it_3.db,30251036ff2c09dab990df5805ca904f,SP,SP,it
+it_3.db,dcccd4c6ba7123ac547754e7ebc6de18,SP,SP ; NA,it ; on
+it_3.db,32985fa88036770a3a738c49c63ec79e,SP,SP ; NA,it ; ne
+it_3.db,8b5bd600517fefd3994547872b1c231e,SP,SP ; OP ; ID,it ; rv ; -
+it_3.db,8b5bd600517fefd3994547872b1c231e,ID,SP ; OP ; ID,it ; rv ; -
+it_3.db,907d75d826aca58b3381e162bdd3217f,SP,SP ; IP,it ; ed
+it_3.db,c3806932ca8d980656d7f1448ed5407b,SP,SP ; NA,it ; ne
+lt.db,c6c1bfd31b9dabe12883447076e502b8,ID,IN ; ID ; IN,lt ; - ; dtp
+lt.db,54783dc954c621b831e5bfcfed4a78ff,ID,IN ; IP ; ID ; OP,fi ; ds ; - ; rv
+lt.db,8d3b47a9728fc31633fdf956b26f5ba3,ID,IN ; IP ; ID,oi ; ds ; -
+lt.db,3787fadc617f65fffaf7479ff65a61c0,ID,IP ; IN ; ID,ds ; lt ; -
+lt.db,89816f411693c86ced49e66fdd514320,ID,IP ; IN ; ID,ds ; lt ; -
+lt.db,3aa6296ad82cf7c6be381213c767c21b,ID,IN ; ID,lt ; -
+lt.db,62a60c4149de0a7a1d3b4147878d9213,ID,IN ; ID,lt ; -
+lt.db,75302346f0ec4bfc4507450f54a663c6,ID,NA ; IN ; ID,on ; lt ; -
+lt_2.db,6a766db05ed6197e81df3a5bfcefff45,ID,IN ; ID ; IN,lt ; - ; fi
+lt_2.db,b354333765e01b610b8a5abe7c0d5cae,ID,IN ; ID,lt ; -
+lt_3.db,2b2b4596ed0f5414b3811fc5c51d9341,ID,IN ; ID,lt ; -
+lt_3.db,0e26411489d14380cbbced6ce94408cb,ID,IN ; OP ; ID,dtp ; av ; -
+lt_3.db,52c22e6c0c45150718cc1c1f33a941fe,SP,NA ; IN ; SP ; OP,on ; lt ; os ; rs
+lt_3.db,1db9127c17f366641ba491d0651dd30a,ID,NA ; IN ; ID,ne ; lt ; -
+lt_3.db,0348ba35c0ea22f7868daa9cc315b27f,ID,IN ; ID,lt ; -
+LY_clean_dedup.db,4dd5e8693879d55728ed5c2067980c82,ID,OP ; ID ; LY,oo ; - ; -
+LY_clean_dedup.db,bf8419496feebcd12448224963dc7cc0,ID,OP ; ID ; IP,oo ; - ; oe
+LY_clean_dedup.db,6c253814965900d8e9d15595fb08db48,ID,OP ; ID ; LY,av ; - ; -
+LY_clean_dedup.db,fb6d89c918efd9e9a71979e8751d5ecc,ID,LY ; ID,- ; -
+LY_clean_dedup.db,f09ee9f14a7aa7dbd39bcb119e0b9dc9,ID,OP ; LY ; ID,rv ; - ; -
+LY_clean_dedup.db,ffa380d76b1a91add31670ad76ac1009,ID,LY ; ID,- ; -
+LY_clean_dedup.db,8309b62fd4a372581b592059ec46d9e2,ID,LY ; ID,- ; -
+LY_clean_dedup.db,9e450967bbb5f4837003df8a3d6cac47,ID,LY ; ID,- ; -
+MT.db,c3c446d7a5d4f49c57981955ebd0d7bd,ID,MT ; OP ; ID,- ; rv ; -
+nb_2.db,96591cbc72533ed6a5ed5b6c65d23a13,SP,SP,os
+nb_2.db,1304bf18cfb7665952b1617ddedf8615,ID,OP ; LY ; ID,ob ; - ; -
+nb_2.db,0709fa6196be7e4a358ea26f338c3fd4,ID,NA ; ID,nb ; -
+nb_2.db,25a1661c17e4a9d65d4e64e69e28bee2,ID,LY ; ID,- ; -
+nb_2.db,926baf2917b5509ab9531958f630f8ed,ID,HI ; ID,re ; -
+nb_2.db,4e9da260ce84e73d984611a7c76a173c,ID,HI ; ID,re ; -
+nb_2.db,540545bb071c03bb5b264111d753a955,ID,NA ; OP ; ID,nb ; av ; -
+nb_2.db,f1921e027a660f45575ae7e55453aad4,ID,HI ; ID,re ; -
+nb_2.db,4b06cfc453b4130efc8f3903eb8e73e4,ID,LY ; ID,- ; -
+nb_2.db,f07680d1b2d892499fe425b71ec67c61,ID,ID,-
+nb_5.db,cdc47ca23e33e2081c0970bf61ffcff3,ID,NA ; OP ; ID,nb ; av ; -
+nb_6.db,5e775a6abfc0deb867d26f05d74006ff,ID,NA ; ID,nb ; -
+nb_7.db,fe3532924cdc4b183a67e3afaf2a06f0,ID,ID,-
+nb_7.db,aa1dfdd8c7656c2acec440e590537443,ID,NA ; HI ; ID,nb ; re ; -
+nb_7.db,2a64e7ad278262099920b9c7c2521b95,ID,NA ; ID,nb ; -
+New_HI_ID_LY_OP_SP_clean_clean.db,f07138f374f0f5479a93cc57c365affe,SP,NA ; SP,on ; it
+New_HI_ID_LY_OP_SP_clean_clean.db,fd8e82effd4781197c8d40fc70ead6aa,ID,IN ; OP ; ID,oi ; oo ; -
+New_HI_ID_LY_OP_SP_clean_clean.db,f255f55fec71f653bbcc7bed2b80a842,SP,SP ; OP ; IN,os ; rs ; dtp
+New_HI_ID_LY_OP_SP_clean_clean.db,f61dc924777828068278460d0b4bcad8,ID,ID ; IN ; OP,- ; dtp ; av
+New_HI_ID_LY_OP_SP_clean_clean.db,fc7cabd0c5f2b90287836ed633fe79f4,SP,SP ; OP,it ; oo
+New_HI_ID_LY_OP_SP_clean_clean.db,f22a0e67991120bbde67a1ab4d1be523,ID,OP ; ID,ob ; -
+New_HI_ID_LY_OP_SP_clean_clean.db,ef7f90402599a4d2edb918d7432a07db,SP,SP ; IN ; NA ; OP,it ; lt ; ne ; av
+New_HI_ID_LY_OP_SP_clean_clean.db,f101163e4cfe6a8cd3cf96326fd63bab,SP,SP,it
+ob.db,914027e02846a9a9248aaa26588f1701,ID,LY ; ID ; OP,- ; - ; oo
+ob.db,76d90d42a56599eaac6e45be41c733ee,SP,SP,os
+ob_2.db,975c849cf069e5422790292905953bce,ID,OP ; ID,ob ; -
+ob_2.db,342d85c61bba8107d67711f365b964c9,ID,OP ; ID,ob ; -
+ob_2.db,2a021ef9245d2e219c87957b6bddf1b8,ID,IP ; ID,ed ; -
+ob_3.db,afb386ce39c186dffa559c13355ed9ca,ID,OP ; ID,ob ; -
+ob_3.db,5c3cf20423a9f54891d139c8127601c1,SP,SP,os
+ob_3.db,7c022224979e63070ebf43be9aad52e4,ID,OP ; ID,ob ; -
+ob_3.db,cbb196401a6ef100896432c7d46ad4d7,ID,OP ; ID,ob ; -
+ob_3.db,2a57902d8e7061048c738e148da8a0ff,ID,OP ; ID,ob ; -
+ob_3.db,59cb30baabd2bd8a1e511f49825932e0,ID,OP ; ID ; NA,rv ; - ; ne
+ob_3.db,1bf8a5cfd921a64d8176d772ba34d2e4,ID,OP ; ID,ob ; -
+ob_3.db,db411fdd9903c7af7a6be92314288971,ID,OP ; NA ; ID,ob ; nb ; -
+ob_3.db,3cc82605e3a0b546a2b05d1809eae54c,ID,OP ; NA ; ID,ob ; ne ; -
+ob_4.db,2be694100be447da64c8bb7fb0dec2a5,SP,OP ; SP,ob ; os
+ob_4.db,edaace97d27f61fcec1a9ac5aec0edd5,SP,SP,os
+ob_4.db,ecb58ebff23c4b05bf5344d788426eec,ID,OP ; ID,ob ; -
+ob_4.db,30682b1f71a916d03e03235ae2bd216c,ID,OP ; ID ; NA,ob ; - ; ne
+oi_2.db,b43062c9cc3f766a4292b410fb266d48,ID,IN ; ID,oi ; -
+oi_2.db,4e6327f41fd3f70ea795d90ec99c94fa,ID,IN ; ID,oi ; -
+oi_2.db,e4f8cc29c2d796a3745a5f99de6d625a,ID,IN ; ID,oi ; -
+oi_2.db,248fde201ad7da32e539db285062a0e6,ID,IN ; ID,oi ; -
+oi_2.db,08bf727a8e92baaabf18979303308ee2,ID,IN ; ID,oi ; -
+oi_2.db,6665b003c4d572d2ba5ff32a24439951,ID,IN ; NA ; ID,oi ; ne ; -
+oi_2.db,190a08d158979c1202ecc98ad13d2601,SP,SP ; ID ; OP,os ; - ; oo
+oi_2.db,190a08d158979c1202ecc98ad13d2601,ID,SP ; ID ; OP,os ; - ; oo
+oi_3.db,4c811248c5d03d19b64a8fa3b744fee1,ID,IP ; NA ; ID ; OP,oe ; ne ; - ; rv
+oi_3.db,0db63c36d2c22d6b82672edbf1abf51f,ID,IN ; ID,oi ; -
+oo_4.db,ee40bbca10105fe17de309237e2a4095,ID,OP ; ID ; OP,av ; - ; ob
+oo_4.db,1dec30014e32407dd6a8d5b594220890,ID,OP ; NA ; ID,oo ; on ; -
+oo_4.db,f126d60b966f41e52396d27d955576dc,ID,OP ; ID,oo ; -
+oo_4.db,58089f080659117607f9eea0de9b73ca,SP,SP,os
+oo_4.db,53ae07623ddb00df7ac05abc1c756f18,ID,OP ; ID,oo ; -
+oo_4.db,a81370747a0e663346ce71240a24df36,ID,OP ; LY ; ID,oo ; - ; -
+oo_4.db,6aa10bf11f8dc1e02ed5398e4e183b49,ID,OP ; ID,oo ; -
+oo_4.db,8ff3e9a36d08ba6cb8c836935fea3a4f,ID,OP ; OP ; NA ; ID,oo ; rv ; on ; -
+oo_4.db,41a66d042eedda08ad991baba2fd63cc,ID,OP ; ID,oo ; -
+oo_4.db,5b8cf85ee20bbb0635518f46129a0af0,ID,OP ; OP ; ID,oo ; rs ; -
+oo_4.db,0121682d0cd4f484ba66b31d722c4075,ID,OP ; HI ; ID,rv ; oh ; -
+oo_4.db,fbf15d8b2c6c853586bef63d69f60b6c,ID,OP ; OP ; ID,oo ; ob ; -
+oo_4.db,063f55f9063be12a30ccb130e3d91d50,ID,OP ; ID ; NA,oo ; - ; on
+oo_4.db,0b2d5b1d88e9e09947d8f642f7731cfc,ID,OP ; ID,oo ; -
+oo_5.db,688227166c535d6c8b303ef448016588,ID,IN ; ID ; LY ; OP,dtp ; - ; - ; oo
+oo_6.db,ec35ac79377cb9198eeef4ba922d24c2,ID,OP ; ID,oo ; -
+oo_6.db,6f906c9e0c96467114fc326c73c3d280,ID,OP ; ID,oo ; -
+os.db,d2edcb8798e3108103b663143ca78298,SP,SP,os
+os.db,255f91d51d9aba360791d3034beff085,SP,SP ; SP,os ; it
+os.db,255f91d51d9aba360791d3034beff085,SP,SP ; SP,os ; it
+os.db,84d4be1fe2d0ee03f78686e2ecb73a02,SP,SP,it
+os_2.db,4cae3e7ad9423b1bf8274ed1e0585259,SP,SP,os
+os_2.db,bafcd0799e7ab818fb4b107061562559,SP,SP,os
+os_2.db,92c20196316c59877218cb9406fc9072,SP,SP,os
+os_2.db,e0aafa9318ecae950b2fe5fff9b11ecb,SP,SP,os
+os_2.db,be33aba9b934a4cd54663ba25bac2e53,SP,SP,os
+os_2.db,91293da63b66eb273c6bf4d0c2ce8e11,SP,SP,os
+os_2.db,6cd83a697a29f669c509b9d2c2a70692,SP,SP,it
+os_2.db,7d7c4253b413411db25728512e67cdee,SP,SP,os
+os_2.db,80bc327935d59f03763b931e0314a4c9,SP,SP,os
+os_2.db,03fbd6975235b25155214f07c26c4ddf,SP,SP,it
+os_2.db,9383e8814a78d957d3832ebb449598a6,SP,SP,os
+os_2.db,db12ef7694adfac7ad362a11f4013c35,SP,SP,it
+os_2.db,992d868538f4d1a050321133e20ab5f1,SP,SP,it
+os_2.db,a76b4ff80cda6fabcda5d7f3b79aaa19,SP,SP,it
+os_2.db,99de053252cd3b75eb597a25438b58a1,SP,SP,os
+os_2.db,a757bc26aa52a3150da36852a969479c,SP,SP,os
+os_2.db,d1a99077cab65f1d63d5885f33d2a837,SP,SP,os
+os_2.db,862bfa1c3d8100f89df3eae0c3de087c,SP,SP,os
+os_2.db,5b886f0ec5e7483807056559c17b21aa,SP,SP,os
+os_2.db,4f4e1c2e5cf45178bc8e64f84200bc30,SP,SP ; IN,os ; oi
+os_2.db,3131b1c1c16c3d45720fd37663e8485d,SP,SP,it
+os_2.db,3cf40ac96db7a738d5b4b669789b5df4,SP,SP ; NA,os ; on
+os_2.db,b9b465d4685287bcc9b3522c18251c7d,SP,SP,os
+os_2.db,67e3cec610930fde1eaeab80a51283cb,SP,SP,os
+os_2.db,56e34c33439ea1f68cc30f3eb291c3f3,SP,SP,os
+os_2.db,1e262de8af5b3810d480908fe95f6dd3,SP,SP ; NA ; OP,it ; ne ; oo
+os_2.db,867888c2fc56a3ab51839bbe0ced845f,SP,SP,it
+os_2.db,777e09c9a8b3bf30a69cfb340356d015,SP,SP ; NA,os ; ne
+os_2.db,3565df706b17bd4e55407eaeb18f949f,SP,SP ; NA,os ; on
+os_2.db,be9ca7f1ee9e7e6a8e1c21ed9eae3f1e,SP,SP,os
+os_2.db,35a6d8e60547b09a85f0066fc93ed803,SP,SP,os
+os_2.db,8c7e3cf5ce48d2f32dbb971e55e0ce18,SP,SP,os
+os_2.db,9bd0ab7c887669765d8abc1924b46ee9,SP,SP,it
+os_2.db,44fbecf00bb5c3b4be66e192a3234a13,SP,SP,it
+os_2.db,13c09ad7b08ec8820346d57d3cc26623,SP,SP,os
+os_2.db,fed5e139017ab749f36d18805457270c,SP,SP,os
+os_2.db,aae9fd550f69b46ee0af925bded1fef2,SP,SP,os
+os_2.db,f5b99c42f18ec5ec40ceca5719b43ca9,SP,SP,it
+os_2.db,be9fe1c3d4b30d0f8f76e64025144098,SP,SP,os
+os_2.db,98943fb3bc1a8ebfef24c12d39aa0cdd,SP,SP,os
+os_2.db,370428f34d3bcdc05a539f06d383cd31,SP,SP,os
+os_2.db,286a67d1423d3bbe377dc234e1d5a7b5,SP,SP,it
+os_2.db,9a612a89a62652abc070216403a9770c,SP,SP ; NA,os ; ne
+os_2.db,48581e844996c9261a483ee79ba7cf01,SP,SP,os
+os_2.db,0e562be60271ee42ab26fe057738cfba,SP,SP,os
+os_2.db,5e245fbd598a0d6928278789991a0d59,SP,SP,it
+os_2.db,fe8992c4600e1b1e866be3d8e34c07c6,SP,SP,it
+os_2.db,24ec19e2a85a863497f19b0c0826839f,SP,SP,it
+os_2.db,2818b92a337aae464b118fea45fde10d,SP,SP,os
+os_2.db,2bbb94a6ec218ba4fc8f8b1a3d2e90ab,SP,SP,os
+os_2.db,8f24949eff7214b62496939aa2e7ef44,SP,SP,os
+os_2.db,2735695ca22b66670621b1eb808f5780,SP,SP ; NA,it ; ne
+os_2.db,77de1d36e97873e084fec3f285337fb9,SP,SP,os
+os_2.db,280c8c0a711c9eeb1e037ca1f33304c3,SP,SP,os
+os_2.db,7fc44d99d8211cfc55b5376f8420d37d,SP,SP ; NA,os ; ne
+os_2.db,56f4fd71282792354630c3ebca334ee7,SP,SP,os
+os_2.db,c91c4c8213a253b3d7f38d1f6cfb6688,SP,SP,os
+os_2.db,4b24474723780d9e7c74d3a2ada0eeed,SP,SP,os
+os_2.db,49f9431576015f7d5c84451e83424949,SP,SP,it
+os_2.db,fd4761c0b035ed6de42a873e609c0cc1,SP,SP,os
+os_2.db,12e0c3ab57d24e83bd36aa7114f4e2ae,SP,SP,it
+os_2.db,3689ca78dc5a60d1adcadda522437cc8,SP,SP,os
+os_2.db,9e80ab957eba040e3cebba59fb83ac66,SP,SP ; NA,os ; on
+os_2.db,389e9ead1a59d15db68643dad9095681,SP,SP ; IN,it ; oi
+os_2.db,b98e7e998f7e07f3f0a5104f63ae8a1b,SP,SP,os
+os_2.db,4c813b7352944f86b830a7f525f26edb,SP,SP ; NA,os ; ne
+os_2.db,70c83d996a11efe7cb40493eccbfff23,SP,SP,os
+os_2.db,fefac3b10308ead3740582efd4a8f4dd,SP,SP,os
+os_2.db,569b52e38ff8fe518ea24b44a2614d61,SP,SP,os
+os_2.db,35ba64d9105ba9c1d810c61b33210997,SP,SP ; OP,os ; oo
+os_2.db,5e63fb670b1bbc7db90050bf86818253,SP,SP,os
+os_2.db,a47f82edf2a8aa5d0ee3cf0223cd1661,SP,SP,os
+os_2.db,38d4298143ce192d4a24f605a686e39e,SP,SP,os
+os_2.db,43fad878c1c12b3bd2b1885de3ffbad6,SP,SP,os
+os_2.db,5c1bae74ac3165cd9d48398e7f387a08,SP,SP,os
+os_2.db,a056eaa54b9e2600bb3e0442a5061835,SP,SP ; NA,os ; ne
+os_2.db,51b340a9362d339b89149e18b2d9f9b6,SP,SP,os
+os_2.db,50efda5ba050d9336b3e01dd709753a6,SP,SP,os
+os_2.db,636ff4bfc8c5288326e04b0571729f56,SP,SP,os
+os_2.db,a60d0d47acc2030f5f2759d25b0d190b,SP,SP,it
+os_2.db,421000c38859e09272e89112593a66c9,SP,SP,it
+os_2.db,9f9e2e542c8cf378c64297b9152df3c8,SP,SP,os
+os_2.db,39b5c4c5fd771d30a4a11ca7308d40c6,SP,SP,os
+os_2.db,a9af43e305ce734532213d84a056b638,SP,SP,it
+os_2.db,054ca084f4c6894ce20a34bea39c41a7,SP,SP,it
+os_2.db,3625e84eed5ba426fc397d6c489143ae,SP,SP,os
+os_2.db,fdb9a8b4ba723d2a652683996e335085,SP,SP ; OP,os ; rs
+os_2.db,b39c8345321e79f9c2f6d6cb31adecab,SP,SP ; NA,os ; on
+os_2.db,887bf658e02381b387b54176e2cc6f7c,SP,SP,os
+os_2.db,a746e6eff31f19bc64c5989e9b33a4f4,SP,SP ; NA,os ; on
+os_2.db,c25af24b53687ff9f53c2b96d0ccec3b,SP,SP,it
+os_2.db,645bd0ce9b16c1d1b661d4e35530e4c1,SP,SP,os
+os_2.db,fa53e4f33df401eadd92c4e6dd8c22d4,SP,SP,it
+os_2.db,c6c2a0bfc2e70bc76832a096da002867,SP,SP ; SP,os ; it
+os_2.db,c6c2a0bfc2e70bc76832a096da002867,SP,SP ; SP,os ; it
+os_2.db,cd52e12a457d61cbaa73c93ba184ee07,SP,SP,it
+os_2.db,304a0bd0279531e3aa412614de1f550c,SP,SP,it
+os_2.db,1f3c7a181283e4908b2bda90eb20f90e,SP,SP,os
+os_2.db,82cb532d178dde61652c5d9e2e29991f,SP,SP ; ID,os ; -
+os_2.db,82cb532d178dde61652c5d9e2e29991f,ID,SP ; ID,os ; -
+os_2.db,8f6d3015864ac16be42806298ea0b578,SP,SP,os
+os_2.db,97df20c392c25aba81e132d8dc9e3d35,SP,SP,os
+os_2.db,8dd3d5eae33aab78de552a836385233c,SP,SP ; IN,os ; oi
+os_2.db,cc48014d60c5117f5e8f869b09dc6662,SP,SP,os
+os_2.db,2ec09820c76a4694eb99bb27dd513881,SP,SP,it
+os_2.db,09e5021e359d16a44ca1dcb50caa2020,SP,SP,os
+os_2.db,2a1e1c7f08003d88ce85cf4064291956,SP,SP,os
+os_2.db,35c43d391d2d21b321dc603155b6b469,SP,SP ; IN,os ; dtp
+Persian_data.db,d9c94c7782ccd7b7b80c38601abfc8bc,ID,ID,-
+Persian_data.db,40d969baa7594818249b3b51074f015a,ID,IP ; ID,oe ; -
+Persian_data.db,b35c7fe5a5c8861e7a8c2368a43278ff,ID,IP ; HI ; ID,ds ; oh ; -
+Persian_data.db,5b46c866f29e39987d7496a112e0c81b,ID,ID,-
+Persian_data.db,cfc3f0b764040af1a4a9df065d2b0449,ID,ID,-
+Persian_data.db,1b9d6dfaa175aa58d3cf8ab28d079ec6,ID,ID,-
+Persian_data.db,ec012ed9e07881cd9600940c892ad387,ID,ID,-
+Persian_data.db,0e7ad3f33f40f78ac135c2984d21b53d,ID,IP ; ID ; OP,oe ; - ; rv
+Persian_data.db,af8835082a6ecc5c1bd41e5c8a2e9d38,ID,ID,-
+Persian_data.db,af8ae613aae5a8c6751720c26d2ae093,ID,IP ; ID,oe ; -
+Persian_data.db,338cdcc1bd98e6f59b03840bfa916614,ID,HI ; ID,oh ; -
+Persian_data.db,407b06f34a319996f8ad6be2ac0dc65a,ID,ID,-
+Persian_data.db,073811e7e01bd9f9b70664daefecb3b3,ID,ID,-
+Persian_data.db,de688b21a1f61e59b1d21ae50c7f9395,ID,NA ; IN ; ID,ne ; dtp ; -
+Persian_data.db,bf126e4a24aa7bb18070f8c11f661ae5,ID,LY ; ID ; NA,- ; - ; nb
+Persian_data.db,281f040a789171e65e21316043d8a6ae,ID,ID,-
+Persian_data.db,243b8c975e4f4255c37eee2142e8c651,ID,ID ; LY ; OP,- ; - ; ob
+Persian_data.db,1dbea9c115252d917ef74a0fe3d8a035,ID,IP ; ID,ds ; -
+Persian_data.db,c2126e68265735bbbfa06a899d227242,ID,IP ; ID,oe ; -
+Persian_data.db,04cf3dbdce597f892255a8b9f78b0ea0,ID,NA ; ID,on ; -
+Persian_data.db,0d368a7757f4f5f0183d13e19041ee47,ID,IN ; ID ; OP ; OP,dtp ; - ; rv ; av
+Persian_data.db,79006302a834000b0512ae536ee26679,ID,ID,-
+Persian_data.db,c3f278f122d23ee13f0b4528619b572a,ID,IN ; ID,lt ; -
+Persian_data.db,875b1bcf86e2b09c6e903e6b8858c6ef,ID,NA ; ID,ne ; -
+Persian_data.db,64546ec52b1f7935b953c4d6e941429a,ID,NA ; IP ; ID,ne ; oe ; -
+Persian_data.db,b7e8d0ce42f37f9b35dd6105b581de6d,ID,LY ; ID,- ; -
+Persian_data.db,4e62b9d37c066ef8a216ab4e76cab50a,ID,OP ; ID,rs ; -
+Persian_data.db,5cae70ed1eba87a2dcd9ed37a1363ac6,ID,IN ; ID,oi ; -
+Persian_data.db,ec3b4d64570b4bd9338b8c0518ce9adf,SP,IN ; SP ; ID,dtp ; it ; -
+Persian_data.db,ec3b4d64570b4bd9338b8c0518ce9adf,ID,IN ; SP ; ID,dtp ; it ; -
+Persian_data.db,93f8544d427b0516aa5d5213d1f709b2,ID,IN ; ID,oi ; -
+Persian_data.db,3d3fa7ed8842c386b578c7df2e5c0f76,ID,NA ; ID,ne ; -
+Persian_data.db,6eea9288c888ed229f8295975a392018,SP,NA ; SP,sr ; os
+Persian_data.db,49fc443438f5f6693ed96f306a1695a1,SP,SP,it
+Persian_data.db,248fe2d300503f35d9d4d6493ffc4c01,SP,SP ; IN,it ; dtp
+Persian_data.db,8ad3f2924c8581987b601e44b70a24fd,ID,NA ; ID,ne ; -
+Persian_data.db,4037bd326c128fa5dbcbd673abd1723c,ID,NA ; ID,ne ; -
+Persian_data.db,73418f4c486a37729fc535abbefd05a9,SP,SP ; NA,it ; on
+Persian_data.db,c5830ec56ea8e2cedc91b2b1f35b30e6,SP,NA ; SP,sr ; os
+Persian_data.db,da4a5244a7eac8ee7b7877fee04ab5db,ID,IP ; ID,oe ; -
+Persian_data.db,c1116deae347da583636f38d99297ca2,ID,OP ; ID,rv ; -
+Persian_data.db,748983fca1eae67b4ea28d940e1a351b,ID,ID,-
+Persian_data.db,c92b75f4c9f629a35d8f8317c98ed89c,ID,ID ; OP,- ; av
+Persian_data.db,7ddffc9d5b466defc462af5037753e70,ID,NA ; ID,ne ; -
+Persian_data.db,d282bc36e48e4c9842e0c09590cf1e90,ID,NA ; ID,sr ; -
+Persian_data.db,b24fb77b692966e50746acc503ed0fbd,SP,NA ; SP,ne ; it
+Persian_data.db,2bfd41ac2124969a7646f8c5c20ff5ee,SP,SP ; OP,it ; rs
+Persian_data.db,8ad93e6e84a215c5b81498acfa3c703c,SP,IP ; SP,oe ; it
+Persian_data.db,fbc03dacd666e3b866a66ef00120b06f,ID,ID ; HI,- ; oh
+Persian_data.db,f6b802d6bb498e66c7f1619154f71129,SP,NA ; SP,ne ; it
+Persian_data.db,05a5b6d377c2fcbe89a2440bf3f96c0e,ID,NA ; ID,nb ; -
+Persian_data.db,ed6d4a9fe297b70985a9ee0ab0d6686f,SP,IN ; SP,dtp ; it
+Persian_data.db,b19805d04c4caedd75787f08106b9a15,SP,SP ; OP ; OP,it ; ob ; av
+Persian_data.db,7e880d9e05970b366bcb4809ff55f31f,SP,NA ; SP,ne ; it
+Persian_data.db,d003e6b368244d8defee12e745d97f65,SP,IN ; SP,dtp ; it
+Persian_data.db,5fb8efd710168c7fec0ef1d0e1970094,SP,SP,it
+Persian_data.db,74570b080a1ad00e90221b865ad056c3,ID,IP ; ID,ds ; -
+Persian_data.db,60fa0a5bf5ad1291f400581ef4e27f9f,ID,OP ; ID,av ; -
+Persian_data.db,ee95b9ff1264b3d1781c72f09e39372b,SP,SP,it
+Persian_data.db,2702ae96236685a13ed2f798cf29dcd2,ID,OP ; ID,ob ; -
+Persian_data3_clean.db,ef958af97cf0ab7d7d740067b024d52b,SP,SP ; OP ; IN,it ; oo ; oi
+Persian_data3_clean.db,f52607922370e11eb062fff373209b71,SP,SP,it
+Persian_data3_clean.db,f98cb027eb2b5970d8daa0f36a48e08f,ID,IP ; ID ; IN ; OP,ds ; - ; oi ; rv
+Persian_data3_clean.db,f2eb35861ff1fae274a3325075b59d97,ID,NA ; ID,ne ; -
+Persian_data3_clean.db,fbbd25927ae1632428699231afb9174b,ID,ID,-
+Persian_data3_clean.db,ed3f72950285ddb4bfa554684cd5f23a,SP,NA ; SP,sr ; os
+Persian_data3_clean.db,f433a7fe85779f4a5b114a5a10a5318e,ID,IN ; OP ; ID,dtp ; oo ; -
+Persian_data3_clean.db,ec61368c7807c660bd553a2b341252db,ID,OP ; ID,ob ; -
+re.db,dcb64c4be36308af8a0d4aa87407ef47,ID,HI ; ID,oh ; -
+re.db,994e8ec75325893b0d45d5860b190f2b,ID,HI ; IN ; ID,re ; dtp ; -
+re_2.db,ad37a8eb8fae1307d61d1b1a7d614a57,ID,HI ; IN ; ID,re ; dtp ; -
+re_2.db,e179562e0268e01778e496df21c43c55,ID,HI ; NA ; ID,re ; ne ; -
+re_4.db,c7738f2c31af5931adad91aa1ed2ba90,ID,HI ; ID ; OP ; IN,re ; - ; oo ; dtp
+re_4.db,263444ef62d729a231bff7f1ce919ca4,ID,HI ; ID,re ; -
+rs.db,5e815483003f0183cb357291f5fd73b0,SP,OP ; SP,rs ; os
+rs.db,3659588942b897b5300d03919dfe5848,SP,SP,os
+rs.db,d2cc861cbbc58feab87812febf52b19e,ID,OP ; ID,rs ; -
+rs.db,0f6e7be87e2e70919486aeddb0f7cd84,SP,NA ; SP,ne ; os
+rs.db,45a46c0a0d177365962a56e51cd35c44,SP,SP,os
+rs.db,61a0b4edd913c02a60593f1829c7c11a,ID,OP ; ID ; IN,av ; - ; oi
+rs.db,d670d3d9653efac5ab021376d2dd0401,SP,SP,os
+rs.db,499510ab53d05e199504f82282cf694a,SP,SP,it
+rs.db,92a28ffe9cd6b4e11e3f1d32ddb43a20,SP,SP,os
+rs.db,599a658e661d98b365b2a1b6731c1bb2,ID,IN ; ID,lt ; -
+rs.db,a209887c7f66ee92a9ecd3841666a170,SP,SP,os
+rs.db,1003b0cc5246d0e1f8208d65b9fdf741,SP,SP,os
+rs.db,6934f282f2a6e020bb55fb1e516aca67,SP,SP,os
+rs.db,2e3bf93732402f546859ccee9dfabde2,SP,SP,os
+rs.db,40fc71a21c94368b388278184e5fa6a0,SP,SP,os
+rs.db,419b26d9b7a37bb273269f3053bdbcd3,SP,SP,it
+rv.db,0214f7193017c01918a27b6f4e51a3c8,ID,OP ; ID,rv ; -
+rv.db,e62a4d22fc53d5c072827859d370c516,ID,OP ; ID,rv ; -
+rv_2.db,3bb8aa990f74a9f122ecdff7f9873d88,ID,OP ; IP ; ID,rv ; ds ; -
+rv_2.db,a3755dcfd21dc0131368e03dfd4a872f,ID,OP ; ID,rv ; -
+rv_2.db,2585057f5883bbde55136a85fbf310ae,ID,OP ; ID,rv ; -
+rv_2.db,a059dfc20d3dfc25002f568cd3bfae6b,ID,OP ; IN ; ID,rv ; dtp ; -
+rv_2.db,742e3060694faa96561f7490dab450c6,ID,IN ; ID,dtp ; -
+rv_2.db,f579039d55d377084e629e9bcc7f5f3d,ID,OP ; ID ; IN ; IP,rv ; - ; oi ; ds
+rv_2.db,76c8f821f498ff45619f76116dff4729,ID,OP ; ID ; IN,rv ; - ; dtp
+rv_2.db,520d90babf230516ed06fce14b221b2f,ID,OP ; ID ; IN,rv ; - ; dtp
+rv_3.db,ce49b2278015597c58e1662e3a61ad3f,ID,OP ; ID ; IP,rv ; - ; ds
+rv_3.db,e48b4ac68f130b3d7fbf25c385fff041,ID,OP ; IN ; ID,rv ; dtp ; -
+rv_3.db,6062a53b2512ddbeaab322a32278718d,ID,OP ; ID ; OP,rv ; - ; oo
+rv_3.db,0ee0a31c7ae573f2bf5a65e8ddd72e5d,ID,OP ; IN ; ID,rv ; oi ; -
+rv_3.db,0ffea544124266d820253b49022d6918,ID,OP ; IN ; ID,rv ; dtp ; -
+rv_3.db,9aefa529f0bd6584ae1d37dbf3795473,ID,OP ; IN ; ID ; NA,rv ; oi ; - ; ne
+rv_3.db,02ae8b384e8eda9f79f1735bdde5c480,ID,OP ; IN ; ID,rv ; dtp ; -
+rv_3.db,cf461bbbb3277c00b13dd2f9cb10501f,ID,OP ; IN ; ID,rv ; dtp ; -
+rv_3.db,ca92f5f80a7be2b39a740aae0fa74e35,ID,OP ; IN ; ID,rv ; dtp ; -
+rv_3.db,3256a038d216ce0522ea8eac4819f0b0,ID,OP ; IP ; ID,rv ; ds ; -
+rv_3.db,b878e015d20c8526ebe7ea821ec5d173,ID,OP ; ID ; HI ; IP,rv ; - ; oh ; ds
+rv_3.db,3d1440f98322d99e5f4983a15d6236e1,SP,SP ; NA,it ; on
+rv_3.db,4b9135ec1988e4d77a834ccdbe3aa388,ID,OP ; IN ; ID,rv ; oi ; -
+rv_3.db,3e0b37d93bec2400622d37bf8d31e3e5,ID,OP ; IN ; ID,rv ; dtp ; -
+rv_4.db,cbce35921e2781342aaeac7e53944fc6,ID,IP ; HI ; ID,oe ; oh ; -
+rv_4.db,387bafa2d195affc66b4a94089458256,ID,OP ; IN ; ID,rv ; dtp ; -
+rv_4.db,219f66afd36b3c7fb71536eb30c38f93,ID,OP ; ID,rv ; -
+rv_4.db,001f8ba18214e30cb9554bffac1aab8c,ID,OP ; ID,rv ; -
+rv_4.db,28c9ae52e2f05a092eb45c994b457417,ID,OP ; ID,rv ; -
+rv_4.db,533f6d6a78df54c1683af45f08af0763,ID,OP ; ID,rv ; -
+rv_4.db,75a350f25a4f9475272ab130eca3185b,ID,OP ; IN ; NA ; ID,rv ; dtp ; on ; -
+rv_4.db,037aa1b00f3318fe95d08164b2423ec5,ID,OP ; IP ; ID,rv ; ds ; -
+rv_4.db,f5806047b323cd46aa59a265161ff68b,ID,OP ; ID,rv ; -
+rv_4.db,b624261aa7f8e0d775f9dd664ad2a3c9,ID,OP ; IP ; ID,rv ; oe ; -
+rv_4.db,607d33b6553443b16f3e6c6df568f5c7,ID,IP ; ID ; OP,ds ; - ; rv
+rv_4.db,73e60a935d825f0a2bf99ce886747f7b,ID,OP ; IN ; ID,rv ; oi ; -
+rv_5.db,dd27de5bd55c5ae8492cd0891b185554,ID,OP ; ID,rv ; -
+rv_5.db,8cc05056f8db2b34d8d593967d0198af,ID,OP ; ID ; IN,rv ; - ; dtp
+rv_5.db,3f6e7a40058a3551e143786f903f0e9c,ID,OP ; NA ; ID,rv ; ne ; -
+rv_5.db,a8081be5a1e7486bdd89fd5779ff27a5,ID,OP ; IP ; ID,rv ; ds ; -
+rv_5.db,de7769005ed8bb362853fdf18e76f657,ID,OP ; ID ; IN,rv ; - ; dtp
+rv_5.db,9711ba5a1213d8dd8ddf7466c072c015,ID,OP ; IN ; ID,rv ; oi ; -
+rv_5.db,169ff08cdfa6d4b7c7e1799b21e46c4a,ID,OP ; IP ; ID,rv ; ds ; -
+rv_5.db,45dd58d213c56047879f17fecfc18686,ID,OP ; IN ; ID,rv ; dtp ; -
+rv_5.db,9a5cb10de91d42af3938db7f9b55fe63,ID,OP ; ID,rv ; -
+rv_5.db,8f449252d0e2ac779020b84703c0ebb3,ID,OP ; ID,rv ; -
+rv_5.db,17e69a7a64e448e5099a17b411812015,ID,OP ; ID,rv ; -
+SP_clean_dedup.db,c9a6f5b5c7821ecb365137c079f6f8aa,SP,SP,it
+SP_clean_dedup.db,ea16f31408554bfe10014aa1684f9c24,SP,SP,os
+SP_clean_dedup.db,321f039c75e6ed7abafb2eff03a7de50,SP,NA ; SP,sr ; it
+SP_clean_dedup.db,a31937b4129249296214cd079ff351fb,SP,SP,os
+SP_clean_dedup.db,e0445a07313003236699e1e25d24f604,SP,SP ; OP,os ; oo
+SP_clean_dedup.db,fdb9a8b4ba723d2a652683996e335085,SP,SP ; OP,os ; rs
+SP_clean_dedup.db,9f9e2e542c8cf378c64297b9152df3c8,SP,SP ; OP,os ; rs
+SP_clean_dedup.db,58009e19b5a2e34d67e1df6bde115b45,SP,NA ; SP,ne ; os
+SP_clean_dedup.db,52d91a4d242404525633faa6b004ff9d,SP,SP,it
+SP_clean_dedup.db,d9e87b82c7dd150af90ee10c8690fa70,SP,SP,os
+SP_clean_dedup.db,6b6174a96063b35156e37768744dbc57,SP,NA ; SP ; OP,ne ; os ; oo
+SP_clean_dedup.db,796c3819082244d64cfb0a4f90cf4f91,SP,SP,os
+SP_clean_dedup.db,350226f06122254e1e577e1cdc7b0eed,SP,NA ; IN ; SP,on ; dtp ; os
+SP_clean_dedup.db,bd65559fb724c2daadbf7a98329ac33e,SP,SP ; OP,os ; rs
+SP_clean_dedup.db,d5e4c6958f7ba0d11d52f28f84153550,SP,NA ; SP,ne ; os
+SP_clean_dedup.db,3011ca419b72336f91b81a6f88391cb5,SP,NA ; SP,on ; it
+SP_clean_dedup.db,ee77706e7d845ccc64a2372d07f54ac0,SP,IP ; SP,ed ; it
+SP_clean_dedup.db,5b3a389eb8296ea69f43a01a501ce0eb,SP,SP,it
+SP_clean_dedup.db,41d1b44cae7191da11096c73eec5b1f0,SP,SP,os
+SP_clean_dedup.db,f6dbd50842458268fc0e9280106dad8d,SP,NA ; SP ; IN,nb ; it ; dtp
+SP_clean_dedup.db,914e5bf3985b592cbfc4e965c19d63a1,ID,ID ; IN ; OP,- ; dtp ; av
+SP_clean_dedup.db,29404b0547824b44bc207c25f160de96,SP,SP,os
+SP_clean_dedup.db,4cc6605ee978157102ab3ed2fb73462e,SP,SP,os
+SP_clean_dedup.db,631dc5de6d39ad4297dac0ea6d81bd4a,SP,IP ; SP,ed ; os
+SP_clean_dedup.db,698487527dce86c112537f80ab96544c,SP,IP ; SP,ed ; it
+SP_clean_dedup.db,75c8132fe0dd86f85c0b3daabb97832d,SP,SP,os
+SP_clean_dedup.db,f3afcb763322f255410a1175bc34466d,SP,IP ; SP,ed ; it
+SP_clean_dedup.db,e87d50ba454164eec0dee0d5fd7496cf,SP,IP ; SP,ed ; it
+SP_clean_dedup.db,fc68661a1a93a81b89f275e6c02ab0cd,SP,NA ; SP,on ; it
+SP_clean_dedup.db,3b3d846bf36193d1ef064fa54285098b,SP,SP,os
+SP_clean_dedup.db,3c62676f30a7a29494c00c555258f4a9,SP,SP,os
+SP_clean_dedup.db,6c659a0e7b5b8c6aafff543d12bd19a5,SP,IN ; SP,dtp ; os
+SP_clean_dedup.db,65cb44381336f5acd8ff587c3d4f54e6,SP,IN ; SP,oi ; os
+SP_clean_dedup.db,a75afdaa8c78ede68916b92e4ab2c31f,SP,SP,os
+SP_clean_dedup.db,39b5c4c5fd771d30a4a11ca7308d40c6,SP,SP,os
+SP_clean_dedup.db,5ed3101cdb96b2b72d7476956f887167,SP,IN ; SP,dtp ; it
+SP_clean_dedup.db,17a02b0904a02c16922ed9e213d25612,SP,SP,os
+SP_clean_dedup.db,eee9783c2a120ce9396de38c92c3e3cc,SP,SP ; OP,os ; rs
+SP_clean_dedup.db,421000c38859e09272e89112593a66c9,SP,SP,it
+SP_clean_dedup.db,6136f34c4b50fe346a5feed01ac709c9,SP,IP ; SP,ed ; it
+SP_clean_dedup.db,f171648b89b89221a3440bd99d537637,SP,SP,os
+SP_clean_dedup.db,537b8a7dc0cedf3bb7952ec9f4a392d7,SP,SP,it
+SP_clean_dedup.db,f82e74f523d5c721f3817da7e6e66117,ID,OP ; ID,ob ; -
+SP_clean_dedup.db,1ddd8cd56935fa91715fceb56507baf6,SP,SP,os
+SP_clean_dedup.db,e64385e8a941c97c554a323a8b0b8607,SP,SP,it
+SP_clean_dedup.db,3a6c8144f3df6146ffeb03a5cdd7e778,SP,IN ; SP,oi ; os
+SP_clean_dedup.db,e15ba2cb9d0e0391e140010a03415b83,SP,SP,os
+SP_clean_dedup.db,687b47356a9a3997ab3d27ce500b48a7,SP,SP,os
+SP_clean_dedup.db,9f39c50c0df7475346bbc1440392fa98,SP,SP,it
+SP_clean_dedup.db,da939c2398aca70724c2bedf2bf19b52,SP,SP ; OP,os ; rs
+SP_clean_dedup.db,71836f354700aa695f485d4f7575efa9,SP,SP,os
+SP_clean_dedup.db,e1f1647d096c32db86a0c2cd0d53ae69,SP,IP ; SP,ed ; os
+SP_clean_dedup.db,0fadab891269825de519a8f111e00a8d,SP,SP,os
+SP_clean_dedup.db,5824c2aedfe665165fb82d68cb03a874,SP,SP,os
+SP_clean_dedup.db,c94b421e9ac028e806ce7c54f467a052,SP,SP,it
+SP_clean_dedup.db,c90edce38243b07edd7b861d5f65ed70,ID,IP ; ID,ed ; -
+SP_clean_dedup.db,74ae2cdbfd59384261de2af293588329,SP,SP ; ID,os ; -
+SP_clean_dedup.db,74ae2cdbfd59384261de2af293588329,ID,SP ; ID,os ; -
+SP_clean_dedup.db,52f779ef787eafe26f60683525c81774,SP,SP,os
+SP_clean_dedup.db,b39c8345321e79f9c2f6d6cb31adecab,SP,SP ; NA,os ; on
+SP_clean_dedup.db,b1558f88ef9489566789f1cc949d9a27,SP,SP ; IN ; NA,it ; lt ; on
+SP_clean_dedup.db,eb8bb83b73514df8d2a18e81f59d9942,SP,NA ; NA ; SP,ne ; sr ; it
+SP_clean_dedup.db,4d01d55c646206fefa25ed1d3f3f24fa,SP,SP,it
+SP_clean_dedup.db,67733a2a27771a3d7477a5f59cc64c74,SP,SP,os
+SP_clean_dedup.db,3345e074c4656cc633a3624d91c4a0af,SP,SP,os
+SP_clean_dedup.db,1a8901c5424201ef1bbb8070fc0181ed,SP,SP ; NA,os ; on
+SP_clean_dedup.db,5ad497da203189819da1b7484efa84fc,SP,NA ; SP,ne ; it
+SP_clean_dedup.db,120cb9400a9dbf52ff1f4c9daedb2a79,SP,SP,os
+SP_clean_dedup.db,3ea28501cc06a27342422ceed71e508d,SP,SP,it
+SP_clean_dedup.db,50e4c8763405e4e57f3fc122520181b3,SP,NA ; SP,ne ; it
+SP_clean_dedup.db,6cefb73a8424bc75bd608b60afba9154,SP,IN ; SP,oi ; os
+SP_clean_dedup.db,bd899da8ac8fc8463250adb51625eb54,SP,NA ; SP,ne ; os
+SP_clean_dedup.db,30ef2f813f591967790335d1166aa821,SP,SP,os
+SP_clean_dedup.db,f73b3b1dffc57b6cb79c705400473963,SP,IP ; SP ; NA,ed ; os ; ne
+SP_clean_dedup.db,a03e1ae8061b2e725d057ab9941fc2ab,SP,IN ; SP,dtp ; it
+SP_clean_dedup.db,ddadcd8d117b0373e68146730b9a99b7,SP,IP ; SP,ed ; it
+SP_clean_dedup.db,fc6946fe04324dd39e89c0b85cae9418,SP,SP,it
+SP_clean_dedup.db,de2e0067809dd581d1ad9572d9cc4b87,SP,IP ; SP,ed ; it
+SP_clean_dedup.db,f97ef7f057b418c3d5b9710fcc943689,ID,NA ; ID ; OP,ne ; - ; oo
+SP_clean_dedup.db,6f5c4bcb5c24efd5ba37230711571486,SP,SP,os
+SP_clean_dedup.db,22a13e336202df3c2253e37303eaffee,SP,OP ; SP,rs ; os
+SP_clean_dedup.db,52554666da7c2eba3cb3297c65d8f6fb,SP,SP,os
+SP_clean_dedup.db,4da709521312e5fa115b8c312a973f7c,SP,SP,os
+SP_clean_dedup.db,77779c0e574bc83800f3bbc4069cd424,SP,IP ; SP,oe ; it
+SP_clean_dedup.db,f2e0a17e17c42e2e8bd3643d39253775,SP,NA ; IN ; SP,on ; dtp ; it
+SP_clean_dedup.db,a544c8998f5df902c6a00e14b9c632de,SP,IN ; SP,fi ; it
+SP_clean_dedup.db,e37e3084899af6851fdb60871afc1f78,SP,SP,os
+SP_clean_dedup.db,7755e96fbc2e5e692db328cd2beeebdf,SP,SP,os
+SP_clean_dedup.db,686e8bf2f78ffc8765876164ac96f9be,SP,SP,os
+SP_clean_dedup.db,af13ab2f10c29c7ec45c6b03d9731d14,SP,SP,os
+SP_clean_dedup.db,19317472560a55c5e8838f678b379972,SP,SP ; LY,it ; -
+SP_clean_dedup.db,1dc18d9527525c4b153ade8d0fd79079,SP,OP ; OP ; SP,oo ; re ; os
+SP_clean_dedup.db,dbc2bfbe810be1d0ede3572e3025bc18,SP,SP,it
+SP_clean_dedup.db,3625e84eed5ba426fc397d6c489143ae,SP,SP,os
+SP_clean_dedup.db,0f252fb25f4d5a857c66d081f77be078,SP,IN ; SP,oi ; os
+SP_clean_dedup.db,3c568234478be6ca4e6710fd75c7f61a,SP,IN ; SP,dtp ; os
+SP_clean_dedup.db,0e13075b6dcc8fe27d29e5f3b0ca7080,SP,SP ; IN,it ; lt
+SP_clean_dedup.db,62e0bf5ad449976b92bfd37466da8df1,SP,SP,os
+SP_clean_dedup.db,d2edcb8798e3108103b663143ca78298,SP,SP,os
+SP_clean_dedup.db,a51f998cda239dbdf92d392dbc29a293,SP,SP,os
+SP_clean_dedup.db,5ebeef43284c3fa0d702adb4acd111fd,SP,SP,os
+SP_clean_dedup.db,144b5073688a4614cec6ba9500a6f215,SP,SP,os
+SP_clean_dedup.db,e95d85482dc03447b1c7cc997a05d396,ID,NA ; ID ; OP,ne ; - ; oo
+SP_clean_dedup.db,ea10c0e1ab2f15356d50c6870ebb37ff,SP,SP ; OP,os ; rs
+SP_clean_dedup.db,fb1ed881ed6a5c233707c8b942e712f2,SP,SP,os
+SP_clean_dedup.db,676f1bc3409ad4cbb90ac9db7f42d68e,SP,SP,os
+SP_clean_dedup.db,38f21c1a773e2e7e686a8667a597abb3,SP,SP,os
+SP_clean_dedup.db,3ef47ec3027e6d4b8c56ae3780271dc1,SP,SP,os
+SP_clean_dedup.db,f79cbdedeef95c947fc528b0e89e6be2,SP,SP ; IP,os ; ds
+SP_clean_dedup.db,7db5fc10113182be18b36730281a375b,SP,SP,os
+SP_clean_dedup.db,d0b1030a469e760946b4d260ed6996df,SP,SP,os
+SP_clean_dedup.db,151eff1d804dc59c96dbfa0651b53261,SP,SP ; LY,os ; -
+SP_clean_dedup.db,edaace97d27f61fcec1a9ac5aec0edd5,SP,SP,os
+SP_clean_dedup.db,77668bce0ec3aef82d753a75473f9b62,SP,SP,os
+SP_clean_dedup.db,2ce305a0bf54a7f3bfd24491deaf8429,SP,SP,os
+SP_clean_dedup.db,13797f9aa01005349dbd914383bd6df0,SP,SP,os
+SP_clean_dedup.db,224f68cf518b7899ddd2375e22ca8403,SP,SP ; OP,it ; rs
+sr.db,d822c2b7f542eb42cea0ac8040d7e238,SP,NA ; SP,on ; it
+sr.db,b55799839b2c0cd4a8cc6f0810e37772,SP,NA ; SP,on ; it
+sr.db,14138db0c292c7a3c79ef6cd7838403c,ID,ID,-
+sr.db,79fc87630ff40f207fc7c73a163bf701,SP,SP,it
+sr.db,6b22f71284ca3fc41b176b8062630702,ID,ID,-
+sr.db,acbc5b4e8586c73c986d566c89b50699,SP,SP,it
+sr.db,2f0e8b2456a9c89c0524af2996aeca33,SP,SP ; NA ; OP,it ; ne ; oo
+sr.db,d882c90787a3e4f16308692ed1a5d816,SP,SP,it
+sr.db,d454ee6d7d42d74938a51e04c7328def,SP,NA ; SP,on ; it
+sr.db,e48e359ac19f2643815e31ff922ffa8b,ID,NA ; NA ; ID,sr ; ne ; -
+sr_2.db,b83c75c9ba98813df7ce4025448b23e0,SP,SP,it
+sr_2.db,9a6789a10c617bcc563c910ed3cc6a26,SP,SP,it
+sr_2.db,47b36c11254f3786bd97e1e564c84673,SP,SP ; NA,it ; sr
+sr_2.db,072239e57aaecc594e7701c9e3d48a1a,SP,NA ; SP,on ; it
+sr_2.db,7b7d091bb60d86b1faf2759987ac5a22,SP,NA ; NA ; SP,sr ; ne ; it
+sr_2.db,7f085e26a33599fc0db1760b4806fdce,SP,NA ; SP,sr ; it
+sr_2.db,5bb5f62112e47bd462835af768cce174,ID,NA ; ID,sr ; -
+sr_2.db,ee857c201d687ceefbc25358cb69aa41,SP,SP ; ID,it ; -
+sr_2.db,ee857c201d687ceefbc25358cb69aa41,ID,SP ; ID,it ; -
+sr_2.db,1badebb109856411d82797a4e74d5d16,SP,NA ; SP,sr ; os
+sr_2.db,5496ceb532fc07920de62f89d569ba15,SP,NA ; SP,sr ; os
+sr_2.db,088080f132ff84e5a36deb89570e982c,SP,SP ; NA,it ; sr
+sr_2.db,dc6754fdb88e6297e633280f83004945,SP,SP,it
+sr_2.db,641fa0f7c73a80ab321521964facd8d2,SP,SP,it
+sr_2.db,55f928d2e64a0eafab80b176f66d93bf,ID,NA ; ID,sr ; -
+sr_2.db,eb38a82a6702d97b27bd3563492fd61a,ID,NA ; IN ; ID ; OP,sr ; dtp ; - ; oo
+sr_3.db,5e11041c8fefdb570c1b307db600fcb2,ID,NA ; ID,ne ; -
+sr_3.db,b5331111a5ba57dcaa855d6b92e86f65,SP,NA ; SP,sr ; it
+sr_3.db,331082036722d076ff82db317cb89025,ID,NA ; ID,sr ; -
+sr_3.db,b9a0f6ac982f809c8f7f0e8f086cfab4,SP,NA ; SP,sr ; os
+sr_3.db,ec77d02c7e15c673d5b5db803880fc37,SP,SP ; ID,it ; -
+sr_3.db,ec77d02c7e15c673d5b5db803880fc37,ID,SP ; ID,it ; -
