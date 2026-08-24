@@ -1,0 +1,72 @@
+{
+  "dataset_name": "Combined_single_no_NA",
+  "input_file": "C:\\Users\\alrazz\\Documents\\GitHub\\persian_registers\\Register\\jsonl_output\\without_NA\\Combined_single_no_NA.jsonl",
+  "seed": 44,
+  "train_size": 0.7,
+  "dev_size": 0.15,
+  "test_size": 0.15,
+  "num_examples": 4205,
+  "num_labels": 25,
+  "labels": [
+    "HI",
+    "ID",
+    "IN",
+    "IP",
+    "LY",
+    "MT",
+    "NA",
+    "OP",
+    "SP",
+    "av",
+    "ds",
+    "dtp",
+    "ed",
+    "en",
+    "fi",
+    "it",
+    "lt",
+    "nb",
+    "ne",
+    "ob",
+    "ra",
+    "re",
+    "rs",
+    "rv",
+    "sr"
+  ],
+  "label_structure": {
+    "MT": [],
+    "LY": [],
+    "SP": [
+      "it"
+    ],
+    "ID": [],
+    "NA": [
+      "ne",
+      "sr",
+      "nb"
+    ],
+    "HI": [
+      "re"
+    ],
+    "IN": [
+      "en",
+      "ra",
+      "dtp",
+      "fi",
+      "lt"
+    ],
+    "OP": [
+      "rv",
+      "ob",
+      "rs",
+      "av"
+    ],
+    "IP": [
+      "ds",
+      "ed"
+    ]
+  },
+  "split_method": "skmultilearn.iterative_train_test_split",
+  "shuffle_seed": 44
+}
