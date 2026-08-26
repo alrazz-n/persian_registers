@@ -17,6 +17,8 @@ module purge
 module use /appl/local/csc/modulefiles
 module load pytorch
 
+# Activate your Python environment
+source /projappl/project_462001491/nima/Fine_tuning-env/bin/activate
 
 echo "================================================"
 echo "Fine-tuning job"
