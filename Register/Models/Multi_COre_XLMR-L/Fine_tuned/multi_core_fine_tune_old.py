@@ -1,4 +1,7 @@
-#this script is a mess
+#---------------------------------------------
+#AVOID
+#---------------------------------------------
+#This script does not have optimization
 import os
 import json
 from pathlib import Path
@@ -6,7 +9,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import torch
-import optuna
 
 from datasets import load_from_disk
 from sklearn.metrics import (
@@ -45,40 +47,20 @@ SEED = 42
 # ------------------------------------------------------------
 # Initial baseline hyperparameters
 # ------------------------------------------------------------
+
+LEARNING_RATE = 1e-5
+WEIGHT_DECAY = 0.01
+WARMUP_RATIO = 0.05
+
 PER_DEVICE_TRAIN_BATCH_SIZE = 4
 PER_DEVICE_EVAL_BATCH_SIZE = 8
+
 GRADIENT_ACCUMULATION_STEPS = 8
-MAX_LENGTH = 512
-SEED = 42
-bf16=True
-dataloader_num_workers=0
 
+NUM_TRAIN_EPOCHS = 5
 
-# ------------------------------------------------------------
-# Optuna hyperparameter search
-# ------------------------------------------------------------
-
-N_OPTUNA_TRIALS = 20
-
-LEARNING_RATE_MIN = 5e-6
-LEARNING_RATE_MAX = 3e-5
-
-WEIGHT_DECAY_MIN = 0.0
-WEIGHT_DECAY_MAX = 0.1
-
-WARMUP_RATIO_MIN = 0.0
-WARMUP_RATIO_MAX = 0.15
-
-# Number of epochs used during hyperparameter search
-OPTUNA_NUM_TRAIN_EPOCHS = 3
-
-# Number of epochs for final training
-FINAL_NUM_TRAIN_EPOCHS = 5
-
-# Fixed threshold
-THRESHOLD = 0.5
-
-
+# Threshold used for validation/test predictions
+THRESHOLD = None #0.35
 
 # ------------------------------------------------------------
 # Hugging Face cache
@@ -235,35 +217,21 @@ print("Tokenizer loaded.")
 # Load model
 # ============================================================
 
-def model_init(trial=None):
+print("\nLoading pretrained model...")
 
-    print("\nLoading pretrained model for trial...")
-
-    model = AutoModelForSequenceClassification.from_pretrained(
-        MODEL_ID,
-        cache_dir=str(HF_CACHE),
-    )
-
-    model.config.problem_type = (
-        "multi_label_classification"
-    )
-
-    return model
-
-
-
-# ============================================================
-# Load model configuration for labels
-# ============================================================
-
-print("\nLoading model configuration...")
-
-label_model = AutoModelForSequenceClassification.from_pretrained(
+model = AutoModelForSequenceClassification.from_pretrained(
     MODEL_ID,
     cache_dir=str(HF_CACHE),
 )
 
-id2label = label_model.config.id2label
+print("Model loaded.")
+
+
+# ============================================================
+# Model labels
+# ============================================================
+
+id2label = model.config.id2label
 
 model_labels = [
     id2label[i]
@@ -272,7 +240,6 @@ model_labels = [
     )
 ]
 
-del label_model
 
 print("\nModel labels:")
 print(model_labels)
@@ -545,42 +512,6 @@ def compute_metrics(eval_prediction):
         "micro_recall": micro_recall,
     }
 
-# ============================================================
-# Optuna hyperparameter search space
-# ============================================================
-
-def hp_space(trial):
-
-    return {
-        "learning_rate": trial.suggest_float(
-            "learning_rate",
-            LEARNING_RATE_MIN,
-            LEARNING_RATE_MAX,
-            log=True,
-        ),
-
-        "weight_decay": trial.suggest_float(
-            "weight_decay",
-            WEIGHT_DECAY_MIN,
-            WEIGHT_DECAY_MAX,
-        ),
-
-        "warmup_ratio": trial.suggest_float(
-            "warmup_ratio",
-            WARMUP_RATIO_MIN,
-            WARMUP_RATIO_MAX,
-        ),
-
-        "num_train_epochs": OPTUNA_NUM_TRAIN_EPOCHS,
-    }
-
-# ============================================================
-# Optuna objective
-# ============================================================
-
-def compute_objective(metrics):
-
-    return metrics["eval_micro_f1"]
 
 # ============================================================
 # Output directories
@@ -601,191 +532,19 @@ OUTPUT_DIR.mkdir(
 # Training arguments
 # ============================================================
 
-def create_training_args():
-
-    return TrainingArguments(
-
-        output_dir=str(
-            OUTPUT_DIR / "optuna"
-        ),
-
-        overwrite_output_dir=True,
-
-        num_train_epochs=OPTUNA_NUM_TRAIN_EPOCHS,
-
-        per_device_train_batch_size=(
-            PER_DEVICE_TRAIN_BATCH_SIZE
-        ),
-
-        per_device_eval_batch_size=(
-            PER_DEVICE_EVAL_BATCH_SIZE
-        ),
-
-        gradient_accumulation_steps=(
-            GRADIENT_ACCUMULATION_STEPS
-        ),
-
-        learning_rate=1e-5,
-
-        weight_decay=0.01,
-
-        warmup_ratio=0.05,
-
-        lr_scheduler_type="linear",
-
-        eval_strategy="epoch",
-
-        logging_strategy="epoch",
-
-        # IMPORTANT:
-        # Do not save model checkpoints during Optuna.
-        save_strategy="no",
-
-        # Therefore this must also be False.
-        load_best_model_at_end=False,
-
-        bf16=True,
-
-        seed=SEED,
-
-        data_seed=SEED,
-
-        report_to="none",
-
-        dataloader_num_workers=0,
-
-        remove_unused_columns=True,
-    )
-
-
-training_args = create_training_args()
-
-trainer = Trainer(
-    model_init=model_init,
-
-    args=training_args,
-
-    train_dataset=train_dataset,
-
-    eval_dataset=validation_dataset,
-
-    processing_class=tokenizer,
-
-    data_collator=data_collator,
-
-    compute_metrics=compute_metrics,
-)
-
-
-OPTUNA_ROOT = RESULTS_ROOT / "_optuna"
-
-OPTUNA_ROOT.mkdir(
-    parents=True,
-    exist_ok=True,
-)
-
-OPTUNA_STORAGE_FILE = (
-    OPTUNA_ROOT
-    / f"{dataset_name}_optuna_journal.log"
-)
-
-OPTUNA_STUDY_NAME = (
-    f"multilabel_{dataset_name}"
-)
-
-optuna_storage = optuna.storages.JournalStorage(
-    optuna.storages.journal.JournalFileBackend(
-        str(OPTUNA_STORAGE_FILE)
-    )
-)
-
-best_run = trainer.hyperparameter_search(
-
-    hp_space=hp_space,
-
-    compute_objective=compute_objective,
-
-    n_trials=N_OPTUNA_TRIALS,
-
-    direction="maximize",
-
-    backend="optuna",
-
-    storage=optuna_storage,
-
-    study_name=OPTUNA_STUDY_NAME,
-
-    load_if_exists=True,
-
-)
-
-print("\nBest Optuna run:")
-print(best_run)
-
-print("\nBest hyperparameters:")
-print(best_run.hyperparameters)
-
-best_hyperparameters = best_run.hyperparameters
-
-BEST_LEARNING_RATE = best_hyperparameters["learning_rate"]
-BEST_WEIGHT_DECAY = best_hyperparameters["weight_decay"]
-BEST_WARMUP_RATIO = best_hyperparameters["warmup_ratio"]
-
-# ============================================================
-# FINAL MODEL TRAINING
-# ============================================================
-
-print("\n" + "=" * 100)
-print("FINAL MODEL TRAINING")
-print("=" * 100)
-
-print(
-    "Using best Optuna hyperparameters:"
-)
-
-print(
-    "Learning rate:",
-    BEST_LEARNING_RATE
-)
-
-print(
-    "Weight decay:",
-    BEST_WEIGHT_DECAY
-)
-
-print(
-    "Warmup ratio:",
-    BEST_WARMUP_RATIO
-)
-
-print(
-    "Epochs:",
-    FINAL_NUM_TRAIN_EPOCHS
-)
-
-print("=" * 100)
-
-
-# ------------------------------------------------------------
-# Create a completely new pretrained model
-# ------------------------------------------------------------
-
-final_model = model_init()
-
-
-# ------------------------------------------------------------
-# Final training arguments
-# ------------------------------------------------------------
-
-final_training_args = TrainingArguments(
+training_args = TrainingArguments(
 
     output_dir=str(
-        OUTPUT_DIR / "final_training"
+        OUTPUT_DIR
     ),
 
     overwrite_output_dir=True,
 
-    num_train_epochs=FINAL_NUM_TRAIN_EPOCHS,
+    # --------------------------------------------------------
+    # Training
+    # --------------------------------------------------------
+
+    num_train_epochs=NUM_TRAIN_EPOCHS,
 
     per_device_train_batch_size=(
         PER_DEVICE_TRAIN_BATCH_SIZE
@@ -799,17 +558,33 @@ final_training_args = TrainingArguments(
         GRADIENT_ACCUMULATION_STEPS
     ),
 
-    learning_rate=BEST_LEARNING_RATE,
+    # --------------------------------------------------------
+    # Optimization
+    # --------------------------------------------------------
 
-    weight_decay=BEST_WEIGHT_DECAY,
+    learning_rate=LEARNING_RATE,
 
-    warmup_ratio=BEST_WARMUP_RATIO,
+    weight_decay=WEIGHT_DECAY,
+
+    warmup_ratio=WARMUP_RATIO,
 
     lr_scheduler_type="linear",
 
+    # --------------------------------------------------------
+    # Evaluation
+    # --------------------------------------------------------
+
     eval_strategy="epoch",
 
+    # --------------------------------------------------------
+    # Logging
+    # --------------------------------------------------------
+
     logging_strategy="epoch",
+
+    # --------------------------------------------------------
+    # Checkpoints
+    # --------------------------------------------------------
 
     save_strategy="epoch",
 
@@ -821,29 +596,47 @@ final_training_args = TrainingArguments(
 
     greater_is_better=True,
 
+    # --------------------------------------------------------
+    # Precision
+    # --------------------------------------------------------
+
     bf16=True,
+
+    #tf32=True,
+
+    # --------------------------------------------------------
+    # Reproducibility
+    # --------------------------------------------------------
 
     seed=SEED,
 
     data_seed=SEED,
 
+    # --------------------------------------------------------
+    # Reporting
+    # --------------------------------------------------------
+
     report_to="none",
 
-    dataloader_num_workers=0,
+    # --------------------------------------------------------
+    # Performance
+    # --------------------------------------------------------
+
+    dataloader_num_workers=4,
 
     remove_unused_columns=True,
 )
 
 
-# ------------------------------------------------------------
-# Final trainer
-# ------------------------------------------------------------
+# ============================================================
+# Trainer
+# ============================================================
 
-final_trainer = Trainer(
+trainer = Trainer(
 
-    model=final_model,
+    model=model,
 
-    args=final_training_args,
+    args=training_args,
 
     train_dataset=train_dataset,
 
@@ -855,373 +648,6 @@ final_trainer = Trainer(
 
     compute_metrics=compute_metrics,
 )
-
-
-# ------------------------------------------------------------
-# Train
-# ------------------------------------------------------------
-
-print("\nStarting final training...")
-
-final_train_result = final_trainer.train()
-
-
-# ------------------------------------------------------------
-# Save best final model
-# ------------------------------------------------------------
-
-FINAL_MODEL_DIR = (
-    OUTPUT_DIR / "best_model"
-)
-
-print(
-    "\nSaving final best model to:"
-)
-
-print(FINAL_MODEL_DIR)
-
-
-final_trainer.save_model(
-    str(FINAL_MODEL_DIR)
-)
-
-tokenizer.save_pretrained(
-    str(FINAL_MODEL_DIR)
-)
-
-
-# ------------------------------------------------------------
-# Final validation
-# ------------------------------------------------------------
-
-print(
-    "\nEvaluating final best model "
-    "on validation set..."
-)
-
-final_validation_metrics = (
-    final_trainer.evaluate(
-        eval_dataset=validation_dataset
-    )
-)
-
-print("\nFinal validation metrics:")
-
-for key, value in final_validation_metrics.items():
-
-    print(
-        f"{key}: {value}"
-    )
-
-
-# ------------------------------------------------------------
-# Final test evaluation
-# ------------------------------------------------------------
-
-print("\n" + "=" * 100)
-print("FINAL TEST EVALUATION")
-print("=" * 100)
-
-
-final_test_output = final_trainer.predict(
-    test_dataset
-)
-
-
-final_test_logits = (
-    final_test_output.predictions
-)
-
-final_test_labels = (
-    final_test_output.label_ids
-)
-
-
-final_test_probabilities = (
-    1 / (
-        1 + np.exp(
-            -final_test_logits
-        )
-    )
-)
-
-
-final_test_predictions = (
-    final_test_probabilities >= THRESHOLD
-).astype(np.int32)
-
-
-# ------------------------------------------------------------
-# Final test metrics
-# ------------------------------------------------------------
-
-final_test_metrics = {
-
-    "dataset": dataset_name,
-
-    "threshold": THRESHOLD,
-
-    "num_test_examples":
-        len(test_dataset),
-
-    "micro_f1_all":
-        f1_score(
-            final_test_labels,
-            final_test_predictions,
-            average="micro",
-            zero_division=0,
-        ),
-
-    "macro_f1_all":
-        f1_score(
-            final_test_labels,
-            final_test_predictions,
-            average="macro",
-            zero_division=0,
-        ),
-
-    "weighted_f1_all":
-        f1_score(
-            final_test_labels,
-            final_test_predictions,
-            average="weighted",
-            zero_division=0,
-        ),
-
-    "micro_precision_all":
-        precision_score(
-            final_test_labels,
-            final_test_predictions,
-            average="micro",
-            zero_division=0,
-        ),
-
-    "micro_recall_all":
-        recall_score(
-            final_test_labels,
-            final_test_predictions,
-            average="micro",
-            zero_division=0,
-        ),
-}
-
-
-print("\nFinal test metrics:")
-
-for key, value in final_test_metrics.items():
-
-    print(
-        f"{key}: {value}"
-    )
-
-
-# ------------------------------------------------------------
-# Save final test metrics
-# ------------------------------------------------------------
-
-final_test_metrics_file = (
-    OUTPUT_DIR
-    / "final_test_metrics.json"
-)
-
-with open(
-    final_test_metrics_file,
-    "w",
-    encoding="utf-8",
-) as f:
-
-    json.dump(
-        final_test_metrics,
-        f,
-        indent=2,
-    )
-
-
-# ------------------------------------------------------------
-# Save Optuna results
-# ------------------------------------------------------------
-
-optuna_results = {
-
-    "dataset": dataset_name,
-
-    "n_trials":
-        N_OPTUNA_TRIALS,
-
-    "search_epochs":
-        OPTUNA_NUM_TRAIN_EPOCHS,
-
-    "best_objective":
-        best_run.objective,
-
-    "best_hyperparameters":
-        best_run.hyperparameters,
-}
-
-
-optuna_results_file = (
-    OUTPUT_DIR
-    / "optuna_results.json"
-)
-
-with open(
-    optuna_results_file,
-    "w",
-    encoding="utf-8",
-) as f:
-
-    json.dump(
-        optuna_results,
-        f,
-        indent=2,
-    )
-
-
-# ------------------------------------------------------------
-# Save final configuration
-# ------------------------------------------------------------
-
-configuration = {
-
-    "model_id": MODEL_ID,
-
-    "dataset": dataset_name,
-
-    "task_id": task_id,
-
-    "max_length": MAX_LENGTH,
-
-    "seed": SEED,
-
-    "optuna_num_trials":
-        N_OPTUNA_TRIALS,
-
-    "optuna_search_epochs":
-        OPTUNA_NUM_TRAIN_EPOCHS,
-
-    "final_num_train_epochs":
-        FINAL_NUM_TRAIN_EPOCHS,
-
-    "optuna_best_objective":
-        best_run.objective,
-
-    "optuna_best_hyperparameters":
-        best_run.hyperparameters,
-
-    "learning_rate":
-        BEST_LEARNING_RATE,
-
-    "weight_decay":
-        BEST_WEIGHT_DECAY,
-
-    "warmup_ratio":
-        BEST_WARMUP_RATIO,
-
-    "per_device_train_batch_size":
-        PER_DEVICE_TRAIN_BATCH_SIZE,
-
-    "per_device_eval_batch_size":
-        PER_DEVICE_EVAL_BATCH_SIZE,
-
-    "gradient_accumulation_steps":
-        GRADIENT_ACCUMULATION_STEPS,
-
-    "effective_batch_size":
-        (
-            PER_DEVICE_TRAIN_BATCH_SIZE
-            * GRADIENT_ACCUMULATION_STEPS
-        ),
-
-    "threshold":
-        THRESHOLD,
-
-    "problem_type":
-        "multi_label_classification",
-
-    "model_labels":
-        model_labels,
-
-    "dataset_labels":
-        dataset_labels,
-}
-
-
-configuration_file = (
-    OUTPUT_DIR
-    / "configuration.json"
-)
-
-with open(
-    configuration_file,
-    "w",
-    encoding="utf-8",
-) as f:
-
-    json.dump(
-        configuration,
-        f,
-        indent=2,
-    )
-
-
-# ============================================================
-# Finished
-# ============================================================
-
-print("\n" + "=" * 100)
-print("FINE-TUNING COMPLETE")
-print("=" * 100)
-
-print(
-    f"\nResults saved to:\n"
-    f"  {OUTPUT_DIR}"
-)
-
-print("\nBest final model:")
-print(
-    f"  {FINAL_MODEL_DIR}"
-)
-
-print("\nOptuna results:")
-print(
-    f"  {optuna_results_file}"
-)
-
-print("\nFinal test metrics:")
-print(
-    f"  {final_test_metrics_file}"
-)
-
-print("\n" + "=" * 100)
-
-
-
-
-print("\n" + "=" * 100)
-print("BEST OPTUNA HYPERPARAMETERS")
-print("=" * 100)
-
-print(
-    "Learning rate:",
-    BEST_LEARNING_RATE
-)
-
-print(
-    "Weight decay:",
-    BEST_WEIGHT_DECAY
-)
-
-print(
-    "Warmup ratio:",
-    BEST_WARMUP_RATIO
-)
-
-print(
-    "Optuna objective:",
-    best_run.objective
-)
-
-print("=" * 100)
 
 
 # ============================================================
@@ -1253,6 +679,21 @@ print(
 )
 
 print(
+    "Learning rate:",
+    LEARNING_RATE
+)
+
+print(
+    "Weight decay:",
+    WEIGHT_DECAY
+)
+
+print(
+    "Warmup ratio:",
+    WARMUP_RATIO
+)
+
+print(
     "Train batch size:",
     PER_DEVICE_TRAIN_BATCH_SIZE
 )
@@ -1268,36 +709,130 @@ print(
     * GRADIENT_ACCUMULATION_STEPS
 )
 
+print(
+    "Epochs:",
+    NUM_TRAIN_EPOCHS
+)
 
 print(
     "Threshold:",
     THRESHOLD
 )
 
-print(
-    "Learning rate:",
-    BEST_LEARNING_RATE
-)
-
-print(
-    "Weight decay:",
-    BEST_WEIGHT_DECAY
-)
-
-print(
-    "Warmup ratio:",
-    BEST_WARMUP_RATIO
-)
-
-print(
-    "Epochs:",
-    FINAL_NUM_TRAIN_EPOCHS
-)
-
 print("=" * 100)
 
 
+# ============================================================
+# Train
+# ============================================================
 
+print("\nStarting fine-tuning...")
+
+train_result = trainer.train()
+
+
+# ============================================================
+# Save final/best model
+# ============================================================
+
+print("\nSaving best model...")
+
+trainer.save_model(
+    str(OUTPUT_DIR / "best_model")
+)
+
+tokenizer.save_pretrained(
+    str(OUTPUT_DIR / "best_model")
+)
+
+
+# ============================================================
+# Save training metrics
+# ============================================================
+
+train_metrics = train_result.metrics
+
+train_metrics_file = (
+    OUTPUT_DIR
+    / "training_metrics.json"
+)
+
+with open(
+    train_metrics_file,
+    "w",
+    encoding="utf-8",
+) as f:
+
+    json.dump(
+        train_metrics,
+        f,
+        indent=2,
+    )
+
+
+# ============================================================
+# Validation evaluation
+# ============================================================
+
+print("\nEvaluating best model on validation set...")
+
+validation_metrics = trainer.evaluate(
+    eval_dataset=validation_dataset
+)
+
+print("\nValidation metrics:")
+
+for key, value in validation_metrics.items():
+
+    print(
+        f"{key}: {value}"
+    )
+
+
+validation_metrics_file = (
+    OUTPUT_DIR
+    / "validation_metrics.json"
+)
+
+with open(
+    validation_metrics_file,
+    "w",
+    encoding="utf-8",
+) as f:
+
+    json.dump(
+        validation_metrics,
+        f,
+        indent=2,
+    )
+
+
+# ============================================================
+# Test evaluation
+# ============================================================
+
+print("\n" + "=" * 100)
+print("FINAL TEST EVALUATION")
+print("=" * 100)
+
+test_output = trainer.predict(
+    test_dataset
+)
+
+
+test_logits = test_output.predictions
+
+test_labels = test_output.label_ids
+
+
+test_probabilities = 1 / (
+    1 + np.exp(-test_logits)
+)
+
+
+test_predictions = (
+    test_probabilities >= THRESHOLD
+).astype(np.int32)
 
 
 # ============================================================
@@ -1610,26 +1145,11 @@ configuration = {
 
     "seed": SEED,
 
-    "learning_rate": BEST_LEARNING_RATE,
+    "learning_rate": LEARNING_RATE,
 
-    "weight_decay": BEST_WEIGHT_DECAY,
+    "weight_decay": WEIGHT_DECAY,
 
-    "warmup_ratio": BEST_WARMUP_RATIO,
-
-    "num_train_epochs":
-        FINAL_NUM_TRAIN_EPOCHS,
-
-    "optuna_num_trials":
-        N_OPTUNA_TRIALS,
-
-    "optuna_search_epochs":
-        OPTUNA_NUM_TRAIN_EPOCHS,
-
-    "optuna_best_objective":
-        best_run.objective,
-
-    "optuna_best_hyperparameters":
-        best_run.hyperparameters,
+    "warmup_ratio": WARMUP_RATIO,
 
     "per_device_train_batch_size":
         PER_DEVICE_TRAIN_BATCH_SIZE,
@@ -1643,6 +1163,9 @@ configuration = {
     "effective_batch_size":
         PER_DEVICE_TRAIN_BATCH_SIZE
         * GRADIENT_ACCUMULATION_STEPS,
+
+    "num_train_epochs":
+        NUM_TRAIN_EPOCHS,
 
     "threshold": THRESHOLD,
 
@@ -1675,100 +1198,6 @@ with open(
         indent=2,
     )
 
-
-
-
-#Final model
-
-final_model = model_init()
-final_training_args = TrainingArguments(
-
-    output_dir=str(
-        OUTPUT_DIR / "final_training"
-    ),
-
-    overwrite_output_dir=True,
-
-    num_train_epochs=FINAL_NUM_TRAIN_EPOCHS,
-
-    per_device_train_batch_size=(
-        PER_DEVICE_TRAIN_BATCH_SIZE
-    ),
-
-    per_device_eval_batch_size=(
-        PER_DEVICE_EVAL_BATCH_SIZE
-    ),
-
-    gradient_accumulation_steps=(
-        GRADIENT_ACCUMULATION_STEPS
-    ),
-
-    learning_rate=BEST_LEARNING_RATE,
-
-    weight_decay=BEST_WEIGHT_DECAY,
-
-    warmup_ratio=BEST_WARMUP_RATIO,
-
-    lr_scheduler_type="linear",
-
-    eval_strategy="epoch",
-
-    logging_strategy="epoch",
-
-    save_strategy="no",
-
-    save_total_limit=1,
-
-    load_best_model_at_end=False,
-
-    metric_for_best_model="eval_micro_f1",
-
-    greater_is_better=True,
-
-    bf16=True,
-
-    seed=SEED,
-
-    data_seed=SEED,
-
-    report_to="none",
-
-    dataloader_num_workers=0,
-
-    remove_unused_columns=True,
-)
-
-final_trainer = Trainer(
-
-    model=final_model,
-
-    args=final_training_args,
-
-    train_dataset=train_dataset,
-
-    eval_dataset=validation_dataset,
-
-    processing_class=tokenizer,
-
-    data_collator=data_collator,
-
-    compute_metrics=compute_metrics,
-)
-
-
-train_result = final_trainer.train()
-
-validation_metrics = final_trainer.evaluate(
-    eval_dataset=validation_dataset
-)
-
-test_output = final_trainer.predict(
-    test_dataset
-)
-
-final_trainer.save_model(
-    str(OUTPUT_DIR / "best_model")
-)
 
 # ============================================================
 # Finished
