@@ -45,10 +45,10 @@ DATASET_ROOT = Path(
     r"/scratch/project_462001491/nima/Hybrid_SP_ID_effect/Dataset_Hugging_face/without_NA"
 )
 
-RESULTS_ROOT = DATASET_ROOT / "_BGE_m3_PersianOnly_finetuned_evaluation"
+RESULTS_ROOT = DATASET_ROOT / "_Sliding_MultiCore_BGE_m3_finetuned_evaluation"
 RESULTS_ROOT.mkdir(parents=True, exist_ok=True)
 
-MODEL_ID = "BAAI/bge-m3-retromae"
+MODEL_ID = "TurkuNLP/web-register-classification-multilingual-bge"
 
 MAX_LENGTH = 1024
 STRIDE = 768 #25_% overlap
@@ -291,6 +291,29 @@ def prepare_dataset(ds, split_name):
     )
 
     # --------------------------------------------------
+    # Create document IDs
+    # --------------------------------------------------
+    #
+    # Each row in the original dataset is one document.
+    # These IDs allow us to reconstruct documents after
+    # sliding-window tokenization creates multiple chunks.
+    #
+
+    ds = ds.add_column(
+        "document_id",
+        list(range(len(ds)))
+    )
+
+    print(
+        f"Created {len(ds)} document IDs."
+    )
+
+    print(
+        "First document IDs:",
+        ds["document_id"][:10]
+    )
+
+    # --------------------------------------------------
     # Align labels to model label order
     # --------------------------------------------------
 
@@ -329,8 +352,8 @@ def prepare_dataset(ds, split_name):
             return_overflowing_tokens=True,
         )
 
-        # This maps each generated chunk back to
-        # the original example in this batch.
+        # Maps every generated chunk to its
+        # original document within this batch.
         sample_mapping = tokenized.pop(
             "overflow_to_sample_mapping"
         )
@@ -349,7 +372,7 @@ def prepare_dataset(ds, split_name):
         # --------------------------------------------------
 
         tokenized["document_id"] = [
-            batch["id"][sample_idx]
+            batch["document_id"][sample_idx]
             for sample_idx in sample_mapping
         ]
 
@@ -362,7 +385,7 @@ def prepare_dataset(ds, split_name):
     )
 
     # --------------------------------------------------
-    # Print statistics
+    # Statistics
     # --------------------------------------------------
 
     print(
@@ -370,7 +393,13 @@ def prepare_dataset(ds, split_name):
         f"{len(ds)} total chunks"
     )
 
+    print(
+        f"{split_name}: "
+        f"{len(set(ds['document_id']))} unique documents"
+    )
+
     return ds
+
 
 
 train_dataset = prepare_dataset(
