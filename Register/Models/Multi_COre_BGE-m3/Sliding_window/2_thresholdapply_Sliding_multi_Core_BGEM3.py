@@ -70,7 +70,7 @@ DATASET_NAMES = [
     "Combined_hybrid_no_NA",
     "Combined_ID_hybrid_no_NA",
     "Combined_single_no_NA",
-    "Combined_SP_hybrid_no_NA",
+    "Combined_SP_hybrid_no_na",
 ]
 
 
