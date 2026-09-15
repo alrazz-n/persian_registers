@@ -27,10 +27,10 @@ EXPERIMENT_DIR = (
 
 VALIDATION_SHARD_URL = (
     "https://data.hplt-project.org/three/sorted/"
-    "pes_Arab/5_1.jsonl.zst"
+    "pes_Arab/7_1.jsonl.zst"
 )
 
-SHARD_NAME = "5_1.jsonl.zst"
+SHARD_NAME = "7_1.jsonl.zst"
 
 SHARD_DIR = (
     EXPERIMENT_DIR / "hplt3_shards"
