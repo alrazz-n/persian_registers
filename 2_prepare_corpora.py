@@ -26,8 +26,11 @@ PERREF_DIR = (
     BASE_DIR / "annotated_data" / "kept"
 )
 
+# IMPORTANT:
+# Separate directory for Qwen3.6 tokenized data.
+# This does NOT overwrite your previous Qwen2.5 data.
 OUTPUT_DIR = (
-    EXPERIMENT_DIR / "tokenized"
+    EXPERIMENT_DIR / "tokenized_Qwen3_6"
 )
 
 OUTPUT_DIR.mkdir(
@@ -39,62 +42,42 @@ OUTPUT_DIR.mkdir(
 # ------------------------------------------------------------
 # HPLT3 source shards
 # ------------------------------------------------------------
-#
-# Put the HPLT3 shard URLs here.
-# These are the same 13 Persian HPLT3 shards that you used
-# in your filtering code.
-#
-# IMPORTANT:
-# Replace these with your exact URLs from your existing
-# filtering script.
-#
 
 HPLT3_SHARDS = [
-            "https://data.hplt-project.org/three/sorted/pes_Arab/10_1.jsonl.zst",
-            "https://data.hplt-project.org/three/sorted/pes_Arab/5_1.jsonl.zst",
-            "https://data.hplt-project.org/three/sorted/pes_Arab/6_1.jsonl.zst",
-            "https://data.hplt-project.org/three/sorted/pes_Arab/6_2.jsonl.zst",
-            "https://data.hplt-project.org/three/sorted/pes_Arab/7_1.jsonl.zst",
-            "https://data.hplt-project.org/three/sorted/pes_Arab/7_2.jsonl.zst",
-            "https://data.hplt-project.org/three/sorted/pes_Arab/7_3.jsonl.zst",
-            "https://data.hplt-project.org/three/sorted/pes_Arab/8_1.jsonl.zst",
-            "https://data.hplt-project.org/three/sorted/pes_Arab/8_2.jsonl.zst",
-            "https://data.hplt-project.org/three/sorted/pes_Arab/8_3.jsonl.zst",
-            "https://data.hplt-project.org/three/sorted/pes_Arab/8_4.jsonl.zst",
-            "https://data.hplt-project.org/three/sorted/pes_Arab/9_1.jsonl.zst",
-            "https://data.hplt-project.org/three/sorted/pes_Arab/9_2.jsonl.zst"
+    "https://data.hplt-project.org/three/sorted/pes_Arab/10_1.jsonl.zst",
+    "https://data.hplt-project.org/three/sorted/pes_Arab/5_1.jsonl.zst",
+    "https://data.hplt-project.org/three/sorted/pes_Arab/6_1.jsonl.zst",
+    "https://data.hplt-project.org/three/sorted/pes_Arab/6_2.jsonl.zst",
+    "https://data.hplt-project.org/three/sorted/pes_Arab/7_1.jsonl.zst",
+    "https://data.hplt-project.org/three/sorted/pes_Arab/7_2.jsonl.zst",
+    "https://data.hplt-project.org/three/sorted/pes_Arab/7_3.jsonl.zst",
+    "https://data.hplt-project.org/three/sorted/pes_Arab/8_1.jsonl.zst",
+    "https://data.hplt-project.org/three/sorted/pes_Arab/8_2.jsonl.zst",
+    "https://data.hplt-project.org/three/sorted/pes_Arab/8_3.jsonl.zst",
+    "https://data.hplt-project.org/three/sorted/pes_Arab/8_4.jsonl.zst",
+    "https://data.hplt-project.org/three/sorted/pes_Arab/9_1.jsonl.zst",
+    "https://data.hplt-project.org/three/sorted/pes_Arab/9_2.jsonl.zst",
 ]
+
 
 # ------------------------------------------------------------
 # Tokenizer
 # ------------------------------------------------------------
-#
-# We use a pretrained tokenizer, but NOT pretrained LM weights.
-#
-# This is fine: the tokenizer defines the vocabulary while the
-# language model itself will be randomly initialized later.
-#
 
-TOKENIZER_NAME = "Qwen/Qwen2.5-0.5B"
+TOKENIZER_NAME = "Qwen/Qwen3.6-35B-A3B"
 
 
 # ------------------------------------------------------------
 # Experiment size
 # ------------------------------------------------------------
-#
-# First run:
-#     100M tokens
-#
-# After everything works, change to:
-#
-#     1_000_000_000
-#
-# ------------------------------------------------------------
 
 TARGET_TOKENS = 100_000_000
 
 
+# ------------------------------------------------------------
 # Random control
+# ------------------------------------------------------------
+
 RANDOM_REMOVAL_RATE = 0.2012
 RANDOM_SEED = 42
 
@@ -103,12 +86,14 @@ RANDOM_SEED = 42
 # LOAD TOKENIZER
 # ============================================================
 
-print("Loading tokenizer...")
+print("Loading Qwen3.6 tokenizer...")
 
 tokenizer = AutoTokenizer.from_pretrained(
     TOKENIZER_NAME,
     use_fast=True
 )
+
+tokenizer.model_max_length = 10**9
 
 if tokenizer.eos_token_id is None:
     raise ValueError(
@@ -116,8 +101,17 @@ if tokenizer.eos_token_id is None:
     )
 
 print(
+    f"Tokenizer: {TOKENIZER_NAME}"
+)
+
+print(
     f"Tokenizer vocabulary size: "
     f"{len(tokenizer):,}"
+)
+
+print(
+    f"EOS token ID: "
+    f"{tokenizer.eos_token_id}"
 )
 
 
@@ -161,7 +155,7 @@ def save_tokens(tokens, output_path):
     """
     Save token IDs as uint32 binary.
 
-    All Qwen token IDs fit comfortably inside uint32.
+    Qwen3.6 token IDs fit comfortably inside uint32.
     """
     import numpy as np
 
@@ -217,7 +211,6 @@ def stream_hplt3_documents():
     """
 
     import subprocess
-    import tempfile
 
     for shard_url in HPLT3_SHARDS:
 
@@ -230,9 +223,9 @@ def stream_hplt3_documents():
         shard_name = shard_url.split("/")[-1]
 
         local_path = (
-            EXPERIMENT_DIR /
-            "hplt3_shards" /
-            shard_name
+            EXPERIMENT_DIR
+            / "hplt3_shards"
+            / shard_name
         )
 
         local_path.parent.mkdir(
@@ -275,13 +268,9 @@ def stream_hplt3_documents():
 
 def prepare_hplt3():
 
-    print("\nPreparing HPLT3...")
+    print("\nPreparing HPLT3 for Qwen3.6...")
 
     tokens = []
-
-    rng = random.Random(
-        RANDOM_SEED
-    )
 
     documents = 0
     excluded = 0
@@ -310,9 +299,7 @@ def prepare_hplt3():
         if not doc_tokens:
             continue
 
-        tokens.extend(
-            doc_tokens
-        )
+        tokens.extend(doc_tokens)
 
         documents += 1
 
@@ -341,7 +328,7 @@ def prepare_hplt3():
 
     output = (
         OUTPUT_DIR /
-        f"hplt3_{TARGET_TOKENS}.bin"
+        f"hplt3_Qwen3_6_{TARGET_TOKENS}.bin"
     )
 
     save_tokens(
@@ -351,12 +338,15 @@ def prepare_hplt3():
 
 
 # ============================================================
-# PREPARE RANDOM 20% CONTROL
+# PREPARE RANDOM 20.12% CONTROL
 # ============================================================
 
 def prepare_random_hplt3():
 
-    print("\nPreparing random-filtered HPLT3...")
+    print(
+        "\nPreparing random-filtered HPLT3 "
+        "for Qwen3.6..."
+    )
 
     tokens = []
 
@@ -398,9 +388,7 @@ def prepare_random_hplt3():
         if not doc_tokens:
             continue
 
-        tokens.extend(
-            doc_tokens
-        )
+        tokens.extend(doc_tokens)
 
         documents += 1
 
@@ -429,7 +417,7 @@ def prepare_random_hplt3():
 
     output = (
         OUTPUT_DIR /
-        f"hplt3_random20_{TARGET_TOKENS}.bin"
+        f"hplt3_random20_Qwen3_6_{TARGET_TOKENS}.bin"
     )
 
     save_tokens(
@@ -444,7 +432,10 @@ def prepare_random_hplt3():
 
 def prepare_perref():
 
-    print("\nPreparing HPLT3-PerRef...")
+    print(
+        "\nPreparing HPLT3-PerRef "
+        "for Qwen3.6..."
+    )
 
     tokens = []
 
@@ -503,9 +494,7 @@ def prepare_perref():
 
             if len(tokens) >= TARGET_TOKENS:
 
-                tokens = tokens[
-                    :TARGET_TOKENS
-                ]
+                tokens = tokens[:TARGET_TOKENS]
 
                 print(
                     f"PerRef documents used: "
@@ -519,7 +508,7 @@ def prepare_perref():
 
                 output = (
                     OUTPUT_DIR /
-                    f"perref_{TARGET_TOKENS}.bin"
+                    f"perref_Qwen3_6_{TARGET_TOKENS}.bin"
                 )
 
                 save_tokens(
@@ -538,7 +527,7 @@ def prepare_perref():
 
     output = (
         OUTPUT_DIR /
-        f"perref_{TARGET_TOKENS}.bin"
+        f"perref_Qwen3_6_{TARGET_TOKENS}.bin"
     )
 
     save_tokens(
@@ -559,4 +548,4 @@ if __name__ == "__main__":
 
     prepare_perref()
 
-    print("\nFinished.")
+    print("\nFinished Qwen3.6 tokenization.")

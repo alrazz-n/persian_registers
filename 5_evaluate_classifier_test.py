@@ -17,7 +17,7 @@ from transformers import (
 
 parser = argparse.ArgumentParser(
     description=(
-        "Evaluate a trained LM on the held-out "
+        "Evaluate a Qwen3.6-tokenizer LM on the held-out "
         "human-annotated classifier test set."
     )
 )
@@ -30,9 +30,7 @@ parser.add_argument(
         "random20",
         "perref",
     ],
-    help=(
-        "Which trained LM to evaluate."
-    ),
+    help="Which trained LM to evaluate.",
 )
 
 args = parser.parse_args()
@@ -46,32 +44,50 @@ BASE_DIR = Path(
     "/scratch/project_462001491/nima"
 )
 
+EXPERIMENT_DIR = (
+    BASE_DIR / "corpus_experiment"
+)
+
+
 # ------------------------------------------------------------
 # Classifier dataset
+#
+# This is the held-out human-annotated dataset.
 # ------------------------------------------------------------
 
 DATASET_DIR = (
     BASE_DIR / "binary_dataset"
 )
 
+
 # ------------------------------------------------------------
-# Trained LM checkpoints
+# Qwen3.6 trained LM checkpoints
+#
+# IMPORTANT:
+# This is deliberately different from the previous:
+#
+#     corpus_experiment/lm_results
+#
+# The Qwen3.6 training script writes to:
+#
+#     corpus_experiment/lm_results_Qwen3_6
 # ------------------------------------------------------------
 
 MODEL_DIR = (
-    BASE_DIR
-    / "corpus_experiment"
-    / "lm_results"
+    EXPERIMENT_DIR
+    / "lm_results_Qwen3_6"
 )
 
+
 # ------------------------------------------------------------
-# Output results
+# Qwen3.6 evaluation results
+#
+# Separate from any previous Qwen2.5 evaluation results.
 # ------------------------------------------------------------
 
 RESULT_DIR = (
-    BASE_DIR
-    / "corpus_experiment"
-    / "lm_test_results"
+    EXPERIMENT_DIR
+    / "lm_test_results_Qwen3_6"
 )
 
 RESULT_DIR.mkdir(
@@ -79,19 +95,39 @@ RESULT_DIR.mkdir(
     exist_ok=True
 )
 
+
 # ------------------------------------------------------------
 # Tokenizer
+#
+# MUST match the tokenizer used to create:
+#
+#   hplt3_Qwen3_6_100000000.bin
+#   hplt3_random20_Qwen3_6_100000000.bin
+#   perref_Qwen3_6_100000000.bin
+#
+# and:
+#
+#   validation_Qwen3_6_5m.bin
 # ------------------------------------------------------------
 
 TOKENIZER_NAME = (
-    "Qwen/Qwen2.5-0.5B"
+    "Qwen/Qwen3.6-35B-A3B"
 )
 
+
 # ------------------------------------------------------------
-# Evaluation context
+# Context length
 # ------------------------------------------------------------
 
 CONTEXT_LENGTH = 2048
+
+
+# ------------------------------------------------------------
+# Dataset label column
+# ------------------------------------------------------------
+
+LABEL_COLUMN = "Binary"
+
 
 # ------------------------------------------------------------
 # Classifier labels
@@ -146,7 +182,8 @@ print("LOADING CLASSIFIER DATASET")
 print("=" * 70)
 
 print(
-    f"Dataset directory:\n{DATASET_DIR}"
+    f"Dataset directory:\n"
+    f"{DATASET_DIR}"
 )
 
 if not DATASET_DIR.exists():
@@ -156,13 +193,16 @@ if not DATASET_DIR.exists():
         f"{DATASET_DIR}"
     )
 
+
 dataset = load_from_disk(
     str(DATASET_DIR)
 )
 
+
 print()
 print("Dataset:")
 print(dataset)
+
 
 print()
 print(
@@ -170,13 +210,20 @@ print(
     f"{list(dataset.keys())}"
 )
 
+
+# ------------------------------------------------------------
+# Use the held-out test split
+# ------------------------------------------------------------
+
 if "test" not in dataset:
 
     raise KeyError(
         "The dataset does not contain a 'test' split."
     )
 
+
 test_dataset = dataset["test"]
+
 
 print()
 print(
@@ -200,41 +247,65 @@ if "text" not in test_dataset.column_names:
         "Test dataset does not contain a 'text' column."
     )
 
-if "labels" not in test_dataset.column_names:
+
+if LABEL_COLUMN not in test_dataset.column_names:
 
     raise KeyError(
-        "Test dataset does not contain a 'labels' column."
+        f"Test dataset does not contain the "
+        f"'{LABEL_COLUMN}' column."
     )
 
 
 # ============================================================
-# LOAD TOKENIZER
+# LOAD QWEN3.6 TOKENIZER
 # ============================================================
 
 print()
 print("=" * 70)
-print("LOADING TOKENIZER")
+print("LOADING QWEN3.6 TOKENIZER")
 print("=" * 70)
 
 print(
-    f"Tokenizer: {TOKENIZER_NAME}"
+    f"Tokenizer: "
+    f"{TOKENIZER_NAME}"
 )
+
 
 tokenizer = AutoTokenizer.from_pretrained(
     TOKENIZER_NAME,
     use_fast=True
 )
 
+
 tokenizer.model_max_length = 10**9
+
+
+vocab_size = len(
+    tokenizer
+)
+
+
+eos_token_id = (
+    tokenizer.eos_token_id
+)
+
+
+if eos_token_id is None:
+
+    raise ValueError(
+        "Qwen3.6 tokenizer does not have an EOS token."
+    )
+
 
 print(
     f"Vocabulary size: "
-    f"{len(tokenizer):,}"
+    f"{vocab_size:,}"
 )
+
 
 print(
     f"EOS token ID: "
-    f"{tokenizer.eos_token_id}"
+    f"{eos_token_id}"
 )
 
 
@@ -248,6 +319,24 @@ print("TOKENIZING TEST DOCUMENTS")
 print("=" * 70)
 
 print(
+    f"Tokenizer: "
+    f"{TOKENIZER_NAME}"
+)
+
+print(
+    f"Label column: "
+    f"{LABEL_COLUMN}"
+)
+
+print(
+    "High-quality label: 1"
+)
+
+print(
+    "Low-quality label:  0"
+)
+
+print(
     "No EOS token is added."
 )
 
@@ -255,11 +344,15 @@ print(
     "Documents remain separate during evaluation."
 )
 
+
 documents = []
 
 total_tokens = 0
+
 skipped_empty = 0
+
 skipped_short = 0
+
 unknown_labels = 0
 
 
@@ -269,14 +362,24 @@ for index, example in enumerate(
 
     text = example["text"]
 
+
+    # --------------------------------------------------------
+    # Empty text
+    # --------------------------------------------------------
+
     if not text:
 
         skipped_empty += 1
+
         continue
 
 
+    # --------------------------------------------------------
+    # Read classifier label
+    # --------------------------------------------------------
+
     label = int(
-        example["labels"]
+        example[LABEL_COLUMN]
     )
 
 
@@ -301,6 +404,13 @@ for index, example in enumerate(
 
     # --------------------------------------------------------
     # Tokenize
+    #
+    # IMPORTANT:
+    # This matches the Qwen3.6 tokenization scripts:
+    #
+    #     add_special_tokens=False
+    #
+    # No EOS is manually appended.
     # --------------------------------------------------------
 
     token_ids = tokenizer(
@@ -310,19 +420,20 @@ for index, example in enumerate(
 
 
     # --------------------------------------------------------
-    # Skip documents with fewer than 2 tokens
-    #
-    # At least two tokens are needed to create one
-    # next-token prediction.
+    # Need at least two tokens
     # --------------------------------------------------------
 
     if len(token_ids) < 2:
 
         skipped_short += 1
+
         continue
 
 
     documents.append({
+
+        "test_index":
+            index,
 
         "label":
             label,
@@ -333,8 +444,14 @@ for index, example in enumerate(
     })
 
 
-    total_tokens += len(token_ids)
+    total_tokens += len(
+        token_ids
+    )
 
+
+    # --------------------------------------------------------
+    # Progress
+    # --------------------------------------------------------
 
     if (
         (index + 1) % 100 == 0
@@ -347,40 +464,48 @@ for index, example in enumerate(
         )
 
 
+# ============================================================
+# TOKENIZATION SUMMARY
+# ============================================================
+
 print()
-print(
-    "=" * 70
-)
+print("=" * 70)
 print("TOKENIZATION COMPLETE")
 print("=" * 70)
+
 
 print(
     f"Original test documents: "
     f"{len(test_dataset):,}"
 )
 
+
 print(
     f"Usable test documents:   "
     f"{len(documents):,}"
 )
 
+
 print(
-    f"Skipped empty:            "
+    f"Skipped empty:           "
     f"{skipped_empty:,}"
 )
 
+
 print(
-    f"Skipped <2 tokens:        "
+    f"Skipped <2 tokens:       "
     f"{skipped_short:,}"
 )
 
+
 print(
-    f"Unknown labels:           "
+    f"Unknown labels:          "
     f"{unknown_labels:,}"
 )
 
+
 print(
-    f"Total document tokens:    "
+    f"Total document tokens:   "
     f"{total_tokens:,}"
 )
 
@@ -425,9 +550,11 @@ for document in documents:
         document["tokens"]
     )
 
+
     label_counts[label][
         "documents"
     ] += 1
+
 
     label_counts[label][
         "tokens"
@@ -437,7 +564,7 @@ for document in documents:
 print()
 
 print(
-    "HIGH QUALITY (label=1):"
+    "HIGH QUALITY (Binary=1):"
 )
 
 print(
@@ -454,7 +581,7 @@ print(
 print()
 
 print(
-    "LOW QUALITY (label=0):"
+    "LOW QUALITY (Binary=0):"
 )
 
 print(
@@ -477,16 +604,19 @@ def find_final_checkpoint(
 ):
     """
     Find the checkpoint with the largest training step.
+
+    Only searches inside the Qwen3.6-specific model directory.
     """
 
     corpus_dir = (
         MODEL_DIR / corpus_name
     )
 
+
     if not corpus_dir.exists():
 
         raise FileNotFoundError(
-            f"Model directory does not exist:\n"
+            f"Qwen3.6 model directory does not exist:\n"
             f"{corpus_dir}"
         )
 
@@ -499,6 +629,7 @@ def find_final_checkpoint(
     ):
 
         if not path.is_dir():
+
             continue
 
 
@@ -533,6 +664,7 @@ def find_final_checkpoint(
         key=lambda x: x[0]
     )
 
+
     final_step, final_path = (
         checkpoints[-1]
     )
@@ -541,13 +673,15 @@ def find_final_checkpoint(
     print()
     print(
         f"Found {len(checkpoints):,} "
-        f"checkpoints."
+        f"Qwen3.6 checkpoints."
     )
+
 
     print(
         f"Final checkpoint step: "
         f"{final_step:,}"
     )
+
 
     print(
         f"Final checkpoint:\n"
@@ -566,13 +700,18 @@ def evaluate_model(
     model_path
 ):
     """
-    Evaluate one trained LM on all test documents.
+    Evaluate one trained Qwen3.6-tokenizer LM on the
+    held-out human-annotated test documents.
 
-    Loss is weighted by the number of predicted tokens,
-    which gives a standard corpus-level cross-entropy.
+    Loss is weighted by the number of predicted tokens.
 
-    Each document is evaluated independently. Therefore,
-    predictions do not cross document boundaries.
+    Documents are evaluated independently.
+
+    No predictions cross document boundaries.
+
+    Long documents are evaluated in independent chunks of
+    CONTEXT_LENGTH tokens. Within each chunk, every token
+    after the first is predicted from the preceding tokens.
     """
 
     print()
@@ -580,8 +719,10 @@ def evaluate_model(
     print("LOADING MODEL")
     print("=" * 70)
 
+
     print(
-        f"Model path:\n{model_path}"
+        f"Model path:\n"
+        f"{model_path}"
     )
 
 
@@ -592,6 +733,69 @@ def evaluate_model(
     model = GPT2LMHeadModel.from_pretrained(
         model_path
     )
+
+
+    # --------------------------------------------------------
+    # Model/tokenizer vocabulary consistency check
+    # --------------------------------------------------------
+
+    model_vocab_size = (
+        model.config.vocab_size
+    )
+
+
+    print(
+        f"Model vocabulary size: "
+        f"{model_vocab_size:,}"
+    )
+
+
+    print(
+        f"Tokenizer vocabulary size: "
+        f"{vocab_size:,}"
+    )
+
+
+    if model_vocab_size != vocab_size:
+
+        raise ValueError(
+            "\nVocabulary mismatch!\n\n"
+            f"Model:     {model_vocab_size:,}\n"
+            f"Tokenizer: {vocab_size:,}\n\n"
+            "This checkpoint does not appear to "
+            "match the Qwen3.6 tokenizer."
+        )
+
+
+    # --------------------------------------------------------
+    # Context-length consistency check
+    # --------------------------------------------------------
+
+    model_max_positions = getattr(
+        model.config,
+        "n_positions",
+        None
+    )
+
+
+    if (
+        model_max_positions is not None
+        and model_max_positions
+        < CONTEXT_LENGTH
+    ):
+
+        raise ValueError(
+            "\nContext-length mismatch!\n\n"
+            f"Model n_positions: "
+            f"{model_max_positions}\n"
+            f"Required: "
+            f"{CONTEXT_LENGTH}"
+        )
+
+
+    # --------------------------------------------------------
+    # Move model to device
+    # --------------------------------------------------------
 
     model.to(DEVICE)
 
@@ -667,6 +871,10 @@ def evaluate_model(
 
             label = document["label"]
 
+            original_test_index = (
+                document["test_index"]
+            )
+
 
             # ------------------------------------------------
             # Document statistics
@@ -680,14 +888,20 @@ def evaluate_model(
             # ------------------------------------------------
             # Split document into chunks
             #
-            # Each chunk contains up to:
+            # IMPORTANT:
             #
-            #   CONTEXT_LENGTH + 1
+            # Documents remain independent.
+            #
+            # We do NOT concatenate separate documents.
+            #
+            # Each chunk contains at most:
+            #
+            #     CONTEXT_LENGTH + 1
             #
             # tokens.
             #
-            # The first token is the input context and
-            # subsequent tokens are predicted.
+            # This gives at most CONTEXT_LENGTH
+            # next-token predictions.
             # ------------------------------------------------
 
             for start in range(
@@ -708,7 +922,7 @@ def evaluate_model(
 
 
                 # ------------------------------------------------
-                # Input
+                # Input tokens
                 # ------------------------------------------------
 
                 input_ids = torch.tensor(
@@ -719,7 +933,7 @@ def evaluate_model(
 
 
                 # ------------------------------------------------
-                # Next-token labels
+                # Target tokens
                 # ------------------------------------------------
 
                 labels = torch.tensor(
@@ -741,11 +955,12 @@ def evaluate_model(
 
                 loss = outputs.loss
 
+
                 n_tokens = labels.numel()
 
 
                 # ------------------------------------------------
-                # Overall
+                # Overall statistics
                 # ------------------------------------------------
 
                 total_loss += (
@@ -753,13 +968,14 @@ def evaluate_model(
                     * n_tokens
                 )
 
+
                 total_predicted_tokens += (
                     n_tokens
                 )
 
 
                 # ------------------------------------------------
-                # Document
+                # Document statistics
                 # ------------------------------------------------
 
                 document_loss += (
@@ -767,13 +983,14 @@ def evaluate_model(
                     * n_tokens
                 )
 
+
                 document_predicted_tokens += (
                     n_tokens
                 )
 
 
                 # ------------------------------------------------
-                # Label
+                # Label statistics
                 # ------------------------------------------------
 
                 label_stats[label][
@@ -782,6 +999,7 @@ def evaluate_model(
                     loss.item()
                     * n_tokens
                 )
+
 
                 label_stats[label][
                     "tokens"
@@ -799,20 +1017,27 @@ def evaluate_model(
                     / document_predicted_tokens
                 )
 
+
                 document_results.append({
 
                     "test_index":
-                        doc_index,
+                        int(
+                            original_test_index
+                        ),
 
                     "label":
-                        label,
+                        int(label),
 
                     "loss":
-                        float(doc_loss),
+                        float(
+                            doc_loss
+                        ),
 
                     "perplexity":
                         float(
-                            math.exp(doc_loss)
+                            math.exp(
+                                doc_loss
+                            )
                         ),
 
                     "tokens":
@@ -846,7 +1071,7 @@ def evaluate_model(
 
 
     # ========================================================
-    # CALCULATE OVERALL RESULTS
+    # OVERALL RESULTS
     # ========================================================
 
     if total_predicted_tokens == 0:
@@ -861,13 +1086,14 @@ def evaluate_model(
         / total_predicted_tokens
     )
 
+
     overall_ppl = math.exp(
         overall_loss
     )
 
 
     # ========================================================
-    # CALCULATE LABEL RESULTS
+    # PER-LABEL RESULTS
     # ========================================================
 
     label_results = {}
@@ -906,6 +1132,7 @@ def evaluate_model(
             stats["loss"]
             / stats["tokens"]
         )
+
 
         ppl = math.exp(
             loss
@@ -946,6 +1173,13 @@ def evaluate_model(
         f"{args.corpus}"
     )
 
+
+    print(
+        f"Tokenizer: "
+        f"{TOKENIZER_NAME}"
+    )
+
+
     print(
         f"Checkpoint:\n"
         f"{model_path}"
@@ -958,6 +1192,7 @@ def evaluate_model(
         f"Overall loss: "
         f"{overall_loss:.6f}"
     )
+
 
     print(
         f"Overall PPL:  "
@@ -975,19 +1210,23 @@ def evaluate_model(
 
 
     print()
+
     print(
-        "HIGH QUALITY (label=1):"
+        "HIGH QUALITY (Binary=1):"
     )
+
 
     print(
         f"  documents: "
         f"{high_result['documents']:,}"
     )
 
+
     print(
         f"  tokens:    "
         f"{high_result['tokens']:,}"
     )
+
 
     if high_result["loss"] is not None:
 
@@ -995,6 +1234,7 @@ def evaluate_model(
             f"  loss:      "
             f"{high_result['loss']:.6f}"
         )
+
 
         print(
             f"  PPL:       "
@@ -1012,19 +1252,23 @@ def evaluate_model(
 
 
     print()
+
     print(
-        "LOW QUALITY (label=0):"
+        "LOW QUALITY (Binary=0):"
     )
+
 
     print(
         f"  documents: "
         f"{low_result['documents']:,}"
     )
 
+
     print(
         f"  tokens:    "
         f"{low_result['tokens']:,}"
     )
+
 
     if low_result["loss"] is not None:
 
@@ -1032,6 +1276,7 @@ def evaluate_model(
             f"  loss:      "
             f"{low_result['loss']:.6f}"
         )
+
 
         print(
             f"  PPL:       "
@@ -1048,11 +1293,35 @@ def evaluate_model(
         "corpus":
             args.corpus,
 
+        "tokenizer":
+            TOKENIZER_NAME,
+
+        "tokenizer_vocab_size":
+            int(vocab_size),
+
+        "eos_token_id":
+            int(eos_token_id),
+
+        "context_length":
+            CONTEXT_LENGTH,
+
         "checkpoint":
             str(model_path),
 
         "parameters":
             int(parameter_count),
+
+        "test_documents_original":
+            int(len(test_dataset)),
+
+        "test_documents_evaluated":
+            int(len(documents)),
+
+        "test_tokens":
+            int(total_tokens),
+
+        "predicted_tokens":
+            int(total_predicted_tokens),
 
         "overall_loss":
             float(overall_loss),
@@ -1084,23 +1353,39 @@ if __name__ == "__main__":
 
     print()
     print("=" * 70)
-    print("REVIEWER LM EVALUATION")
+    print("QWEN3.6 REVIEWER LM EVALUATION")
     print("=" * 70)
+
 
     print(
         f"Corpus: "
         f"{args.corpus}"
     )
 
+
+    print(
+        f"Tokenizer: "
+        f"{TOKENIZER_NAME}"
+    )
+
+
     print(
         f"Context length: "
         f"{CONTEXT_LENGTH}"
     )
 
+
+    print(
+        f"Dataset label column: "
+        f"{LABEL_COLUMN}"
+    )
+
+
     print(
         f"High-quality label: "
         f"{HIGH_QUALITY_LABEL}"
     )
+
 
     print(
         f"Low-quality label: "
@@ -1132,8 +1417,24 @@ if __name__ == "__main__":
 
     output_file = (
         RESULT_DIR
-        / f"{args.corpus}.json"
+        / f"{args.corpus}_Qwen3_6.json"
     )
+
+
+    # --------------------------------------------------------
+    # Safety check:
+    # Do not overwrite an existing evaluation.
+    # --------------------------------------------------------
+
+    if output_file.exists():
+
+        raise FileExistsError(
+            "\nRefusing to overwrite existing "
+            "Qwen3.6 evaluation result:\n"
+            f"{output_file}\n\n"
+            "Delete or rename the existing result "
+            "only if you intentionally want to rerun it."
+        )
 
 
     with open(
@@ -1158,6 +1459,7 @@ if __name__ == "__main__":
     print("FINAL SUMMARY")
     print("=" * 70)
 
+
     print()
 
     print(
@@ -1167,38 +1469,62 @@ if __name__ == "__main__":
         f"{'Low PPL':>15}"
     )
 
+
     print(
         "-" * 60
     )
 
 
     high_ppl = (
-        result["high_quality"]["perplexity"]
+        result[
+            "high_quality"
+        ]["perplexity"]
     )
 
+
     low_ppl = (
-        result["low_quality"]["perplexity"]
+        result[
+            "low_quality"
+        ]["perplexity"]
+    )
+
+
+    high_ppl_string = (
+        f"{high_ppl:.4f}"
+        if high_ppl is not None
+        else "N/A"
+    )
+
+
+    low_ppl_string = (
+        f"{low_ppl:.4f}"
+        if low_ppl is not None
+        else "N/A"
     )
 
 
     print(
         f"{args.corpus:<15}"
         f"{result['overall_ppl']:>15.4f}"
-        f"{high_ppl:>15.4f}"
-        f"{low_ppl:>15.4f}"
+        f"{high_ppl_string:>15}"
+        f"{low_ppl_string:>15}"
     )
 
 
     print()
+
     print(
         f"Results saved to:"
     )
+
 
     print(
         output_file
     )
 
+
     print()
+
     print("=" * 70)
     print("DONE")
     print("=" * 70)

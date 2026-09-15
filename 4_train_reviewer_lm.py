@@ -30,18 +30,44 @@ EXPERIMENT_DIR = (
     BASE_DIR / "corpus_experiment"
 )
 
+
+# ------------------------------------------------------------
+# IMPORTANT:
+# Qwen3.6 has its own tokenized-data directory.
+#
+# This is deliberately different from the old Qwen2.5
+# tokenized directory.
+# ------------------------------------------------------------
+
 TOKEN_DIR = (
-    EXPERIMENT_DIR / "tokenized"
+    EXPERIMENT_DIR / "tokenized_Qwen3_6"
 )
+
+
+# ------------------------------------------------------------
+# Qwen3.6 validation set
+#
+# This matches the validation-generation script:
+#
+# validation/validation_Qwen3_6_5m.bin
+# ------------------------------------------------------------
 
 VALIDATION_FILE = (
     EXPERIMENT_DIR
     / "validation"
-    / "validation_5m.bin"
+    / "validation_Qwen3_6_5m.bin"
 )
 
+
+# ------------------------------------------------------------
+# Qwen3.6-specific results directory
+#
+# Deliberately separate from any previous experiment.
+# ------------------------------------------------------------
+
 RESULT_DIR = (
-    EXPERIMENT_DIR / "lm_results"
+    EXPERIMENT_DIR
+    / "lm_results_Qwen3_6"
 )
 
 
@@ -50,7 +76,7 @@ RESULT_DIR = (
 # ============================================================
 
 TOKENIZER_NAME = (
-    "Qwen/Qwen2.5-0.5B"
+    "Qwen/Qwen3.6-35B-A3B"
 )
 
 
@@ -69,7 +95,12 @@ TARGET_TRAINING_TOKENS = 100_000_000
 # MODEL
 # ============================================================
 
-# Small model suitable for a reviewer sanity check.
+# Small randomly initialized GPT-2-style model.
+#
+# This is NOT the Qwen3.6 pretrained model.
+# It uses the Qwen3.6 tokenizer/vocabulary.
+#
+# Suitable as a controlled reviewer sanity-check model.
 
 N_LAYER = 6
 N_HEAD = 12
@@ -115,6 +146,14 @@ class MemmapDataset(Dataset):
             context_length
         )
 
+        # Need context_length + 1 tokens:
+        #
+        # input:
+        #   tokens[0:2048]
+        #
+        # labels:
+        #   tokens[1:2049]
+        #
         self.block_size = (
             context_length + 1
         )
@@ -197,22 +236,48 @@ def create_model(
 
 def get_corpus_path(name):
 
+    # IMPORTANT:
+    #
+    # These filenames exactly match the Qwen3.6
+    # tokenization script.
+    #
     paths = {
 
         "hplt3":
             TOKEN_DIR
-            / "hplt3_100000000.bin",
+            / "hplt3_Qwen3_6_100000000.bin",
 
         "random20":
             TOKEN_DIR
-            / "hplt3_random20_100000000.bin",
+            / "hplt3_random20_Qwen3_6_100000000.bin",
 
         "perref":
             TOKEN_DIR
-            / "perref_100000000.bin",
+            / "perref_Qwen3_6_100000000.bin",
     }
 
     return paths[name]
+
+
+# ============================================================
+# SAFETY CHECKS
+# ============================================================
+
+def check_file(path, description):
+
+    if not path.exists():
+
+        raise FileNotFoundError(
+            f"{description} does not exist:\n"
+            f"{path}"
+        )
+
+    if path.stat().st_size == 0:
+
+        raise RuntimeError(
+            f"{description} is empty:\n"
+            f"{path}"
+        )
 
 
 # ============================================================
@@ -287,7 +352,7 @@ def main():
 
     print()
     print(
-        "Loading tokenizer..."
+        "Loading Qwen3.6 tokenizer..."
     )
 
     tokenizer = AutoTokenizer.from_pretrained(
@@ -308,9 +373,14 @@ def main():
     if eos_token_id is None:
 
         raise ValueError(
-            "Tokenizer has no EOS token."
+            "Qwen3.6 tokenizer has no EOS token."
         )
 
+
+    print(
+        f"Tokenizer: "
+        f"{TOKENIZER_NAME}"
+    )
 
     print(
         f"Vocabulary size: "
@@ -331,17 +401,15 @@ def main():
         args.corpus
     )
 
-    if not train_file.exists():
+    check_file(
+        train_file,
+        "Training file"
+    )
 
-        raise FileNotFoundError(
-            train_file
-        )
-
-    if not VALIDATION_FILE.exists():
-
-        raise FileNotFoundError(
-            VALIDATION_FILE
-        )
+    check_file(
+        VALIDATION_FILE,
+        "Validation file"
+    )
 
 
     print()
@@ -350,11 +418,13 @@ def main():
     print("=" * 70)
 
     print(
-        f"Training file:\n{train_file}"
+        f"Training file:\n"
+        f"{train_file}"
     )
 
     print(
-        f"Validation file:\n{VALIDATION_FILE}"
+        f"Validation file:\n"
+        f"{VALIDATION_FILE}"
     )
 
 
@@ -373,9 +443,29 @@ def main():
     )
 
 
+    # --------------------------------------------------------
+    # Report actual usable tokens
+    # --------------------------------------------------------
+
+    actual_training_tokens = (
+        len(train_dataset)
+        * CONTEXT_LENGTH
+    )
+
+    actual_validation_tokens = (
+        len(validation_dataset)
+        * CONTEXT_LENGTH
+    )
+
+
     print(
-        f"Training tokens: "
+        f"Training tokens in file: "
         f"{len(train_dataset.tokens):,}"
+    )
+
+    print(
+        f"Usable training tokens: "
+        f"{actual_training_tokens:,}"
     )
 
     print(
@@ -384,8 +474,13 @@ def main():
     )
 
     print(
-        f"Validation tokens: "
+        f"Validation tokens in file: "
         f"{len(validation_dataset.tokens):,}"
+    )
+
+    print(
+        f"Usable validation tokens: "
+        f"{actual_validation_tokens:,}"
     )
 
     print(
@@ -441,6 +536,11 @@ def main():
     )
 
     print(
+        f"Target training tokens: "
+        f"{TARGET_TRAINING_TOKENS:,}"
+    )
+
+    print(
         f"Training steps: "
         f"{max_steps:,}"
     )
@@ -453,6 +553,30 @@ def main():
     output_dir = (
         RESULT_DIR / args.corpus
     )
+
+    # --------------------------------------------------------
+    # IMPORTANT SAFETY CHECK
+    #
+    # Do NOT silently overwrite an existing Qwen3.6 run.
+    # --------------------------------------------------------
+
+    if output_dir.exists():
+
+        existing_files = list(
+            output_dir.iterdir()
+        )
+
+        if existing_files:
+
+            raise FileExistsError(
+                "\nRefusing to overwrite existing "
+                "Qwen3.6 training results.\n\n"
+                f"Output directory:\n"
+                f"{output_dir}\n\n"
+                "Move/delete the old directory "
+                "manually if you intentionally want "
+                "to rerun this experiment."
+            )
 
     output_dir.mkdir(
         parents=True,
@@ -481,7 +605,7 @@ def main():
             output_dir
         ),
 
-        overwrite_output_dir=True,
+        overwrite_output_dir=False,
 
         max_steps=max_steps,
 
@@ -532,7 +656,6 @@ def main():
         dataloader_num_workers=2,
 
         remove_unused_columns=False,
-
     )
 
 
@@ -549,7 +672,6 @@ def main():
         train_dataset=train_dataset,
 
         eval_dataset=validation_dataset,
-
     )
 
 
@@ -560,7 +682,8 @@ def main():
     print()
     print("=" * 70)
     print(
-        f"STARTING TRAINING: {args.corpus}"
+        f"STARTING QWEN3.6 TRAINING: "
+        f"{args.corpus}"
     )
     print("=" * 70)
 
@@ -588,7 +711,8 @@ def main():
 
 
     print(
-        f"Corpus: {args.corpus}"
+        f"Corpus: "
+        f"{args.corpus}"
     )
 
     print(
@@ -608,15 +732,32 @@ def main():
 
     results = {
 
-        "corpus": args.corpus,
+        "corpus":
+            args.corpus,
 
-        "seed": SEED,
+        "tokenizer":
+            TOKENIZER_NAME,
 
-        "training_tokens":
+        "tokenizer_vocab_size":
+            int(vocab_size),
+
+        "eos_token_id":
+            int(eos_token_id),
+
+        "seed":
+            SEED,
+
+        "training_tokens_in_file":
             int(len(train_dataset.tokens)),
 
-        "validation_tokens":
+        "usable_training_tokens":
+            int(actual_training_tokens),
+
+        "validation_tokens_in_file":
             int(len(validation_dataset.tokens)),
+
+        "usable_validation_tokens":
+            int(actual_validation_tokens),
 
         "context_length":
             CONTEXT_LENGTH,
@@ -626,6 +767,24 @@ def main():
 
         "training_steps":
             int(max_steps),
+
+        "per_device_batch_size":
+            PER_DEVICE_BATCH_SIZE,
+
+        "gradient_accumulation_steps":
+            GRADIENT_ACCUMULATION,
+
+        "effective_batch_tokens":
+            int(tokens_per_optimizer_step),
+
+        "learning_rate":
+            LEARNING_RATE,
+
+        "weight_decay":
+            WEIGHT_DECAY,
+
+        "warmup_ratio":
+            WARMUP_RATIO,
 
         "eval_loss":
             float(eval_loss),
@@ -655,7 +814,7 @@ def main():
 
     print()
     print(
-        f"Results saved to:"
+        "Results saved to:"
     )
 
     print(
@@ -669,4 +828,5 @@ def main():
 
 
 if __name__ == "__main__":
+
     main()

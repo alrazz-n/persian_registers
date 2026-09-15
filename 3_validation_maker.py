@@ -20,6 +20,7 @@ EXPERIMENT_DIR = (
     BASE_DIR / "corpus_experiment"
 )
 
+
 # ------------------------------------------------------------
 # Validation shard
 # ------------------------------------------------------------
@@ -44,6 +45,7 @@ SHARD_PATH = (
     SHARD_DIR / SHARD_NAME
 )
 
+
 # ------------------------------------------------------------
 # Validation output
 # ------------------------------------------------------------
@@ -57,18 +59,24 @@ OUTPUT_DIR.mkdir(
     exist_ok=True
 )
 
+# IMPORTANT:
+# New filename for Qwen3.6.
+# Does not overwrite the previous Qwen2.5 validation set.
+
 OUTPUT_FILE = (
-    OUTPUT_DIR / "validation_5m.bin"
+    OUTPUT_DIR /
+    "validation_Qwen3_6_5m.bin"
 )
 
 TARGET_TOKENS = 5_000_000
+
 
 # ------------------------------------------------------------
 # Tokenizer
 # ------------------------------------------------------------
 
 TOKENIZER_NAME = (
-    "Qwen/Qwen2.5-0.5B"
+    "Qwen/Qwen3.6-35B-A3B"
 )
 
 
@@ -126,19 +134,22 @@ def download_shard():
 # ============================================================
 
 print()
-print("Loading tokenizer...")
+print("Loading Qwen3.6 tokenizer...")
 
 tokenizer = AutoTokenizer.from_pretrained(
     TOKENIZER_NAME,
     use_fast=True
 )
 
-# We are using the tokenizer only to convert
-# text into token IDs.
-#
-# We are NOT creating model sequences here.
-
 tokenizer.model_max_length = 10**9
+
+print(
+    f"Tokenizer: {TOKENIZER_NAME}"
+)
+
+print(
+    f"Vocabulary size: {len(tokenizer):,}"
+)
 
 
 # ============================================================
@@ -182,6 +193,19 @@ def main():
 
 
     # --------------------------------------------------------
+    # Safety check
+    # --------------------------------------------------------
+
+    if OUTPUT_FILE.exists():
+
+        raise FileExistsError(
+            f"Validation output already exists:\n"
+            f"{OUTPUT_FILE}\n\n"
+            f"Refusing to overwrite it."
+        )
+
+
+    # --------------------------------------------------------
     # Build validation set
     # --------------------------------------------------------
 
@@ -191,7 +215,7 @@ def main():
 
     print()
     print("=" * 70)
-    print("CREATING VALIDATION SET")
+    print("CREATING QWEN3.6 VALIDATION SET")
     print("=" * 70)
 
     print(
@@ -217,11 +241,10 @@ def main():
 
 
         # IMPORTANT:
-        # No EOS is added here.
+        # No EOS is added.
         #
-        # Your existing three training files were
-        # generated without EOS, so validation uses
-        # the same representation.
+        # This matches the representation used
+        # by the Qwen3.6 training files.
 
         ids = tokenizer(
             text,
@@ -287,7 +310,7 @@ def main():
 
     print()
     print("=" * 70)
-    print("VALIDATION SET COMPLETE")
+    print("QWEN3.6 VALIDATION SET COMPLETE")
     print("=" * 70)
 
     print(
