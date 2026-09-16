@@ -1,0 +1,60 @@
+================================================
+starting job
+================================================
+Job ID:    22066709
+Node:      nid005002
+Array ID:  0
+Start:     Tue Sep 15 02:10:19 PM EEST 2026
+
+Python:
+/pfs/lustrep4/projappl/project_462001491/nima/Fine_tuning-env/bin/python3
+
+Python version:
+Python 3.11.0rc1
+================================================
+Running job
+================================================
+Loading Qwen3.6 tokenizer...
+Tokenizer: Qwen/Qwen3.6-35B-A3B
+Tokenizer vocabulary size: 248,077
+EOS token ID: 248046
+Excluded classifier IDs: 6,144
+
+Preparing HPLT3 for Qwen3.6...
+
+======================================================================
+HPLT3 SHARD
+https://data.hplt-project.org/three/sorted/pes_Arab/10_1.jsonl.zst
+======================================================================
+Shard already exists; using local copy.
+HPLT3 docs: 10,000 | tokens: 51,802,570
+HPLT3 documents used: 18,630
+Excluded documents: 355
+Saved 100,000,000 tokens -> /scratch/project_462001491/nima/corpus_experiment/tokenized_Qwen3_6/hplt3_Qwen3_6_100000000.bin
+
+Preparing random-filtered HPLT3 for Qwen3.6...
+
+======================================================================
+HPLT3 SHARD
+https://data.hplt-project.org/three/sorted/pes_Arab/10_1.jsonl.zst
+======================================================================
+Shard already exists; using local copy.
+Random docs: 10,000 | tokens: 52,598,927
+Random-control docs used: 18,526
+Randomly removed: 4,781
+Saved 100,000,000 tokens -> /scratch/project_462001491/nima/corpus_experiment/tokenized_Qwen3_6/hplt3_random20_Qwen3_6_100000000.bin
+
+Preparing HPLT3-PerRef for Qwen3.6...
+PerRef files: 13
+Reading /scratch/project_462001491/nima/annotated_data/kept/10_1.jsonl.zst
+PerRef docs: 10,000 | tokens: 51,791,465
+PerRef documents used: 18,604
+Excluded documents: 351
+Saved 100,000,000 tokens -> /scratch/project_462001491/nima/corpus_experiment/tokenized_Qwen3_6/perref_Qwen3_6_100000000.bin
+
+Finished Qwen3.6 tokenization.
+
+================================================
+job completed successfully.
+Done: Tue Sep 15 02:21:15 PM EEST 2026
+================================================

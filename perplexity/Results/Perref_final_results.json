@@ -1,0 +1,11 @@
+{
+  "corpus": "perref",
+  "seed": 1234,
+  "training_tokens": 100000000,
+  "validation_tokens": 5000000,
+  "context_length": 2048,
+  "parameters": 234624768,
+  "training_steps": 1526,
+  "eval_loss": 12.74874496459961,
+  "perplexity": 344119.7425516478
+}

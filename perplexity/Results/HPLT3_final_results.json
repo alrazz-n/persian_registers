@@ -1,0 +1,11 @@
+{
+  "corpus": "hplt3",
+  "seed": 1234,
+  "training_tokens": 100000000,
+  "validation_tokens": 5000000,
+  "context_length": 2048,
+  "parameters": 234624768,
+  "training_steps": 1526,
+  "eval_loss": 12.935724258422852,
+  "perplexity": 414871.5604518219
+}

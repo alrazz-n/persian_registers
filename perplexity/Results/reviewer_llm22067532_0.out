@@ -1,0 +1,107 @@
+================================================
+Reviewer LM experiment
+================================================
+Job ID:       22067602
+Node:         nid005045
+Array ID:     0
+Start:        Tue Sep 15 02:44:00 PM EEST 2026
+
+Python:
+/pfs/lustrep4/projappl/project_462001491/nima/Fine_tuning-env/bin/python3
+
+Python version:
+Python 3.11.0rc1
+
+GPU:
+================================================
+Running HPLT3 experiment
+================================================
+Corpus: hplt3
+
+======================================================================
+SYSTEM
+======================================================================
+PyTorch: 2.7.1+rocm6.2.4
+CUDA available: True
+GPU: AMD Instinct MI250X
+
+Loading tokenizer...
+Vocabulary size: 248,077
+EOS token ID: 248046
+
+======================================================================
+DATA
+======================================================================
+Training file:
+/scratch/project_462001491/nima/corpus_experiment/tokenized/hplt3_100000000.bin
+Validation file:
+/scratch/project_462001491/nima/corpus_experiment/validation/validation_5m_Qwen3_6.bin
+Training tokens: 100,000,000
+Training sequences: 48,804
+Validation tokens: 5,000,000
+Validation sequences: 2,440
+
+Creating randomly initialized model...
+Parameters: 234,624,768
+
+Tokens per optimizer step: 65,536
+Training steps: 1,526
+[2026-09-15 14:44:44,818] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2026-09-15 14:44:49,595] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+
+======================================================================
+STARTING TRAINING: hplt3
+======================================================================
+{'loss': 7.7392, 'grad_norm': 0.8245459794998169, 'learning_rate': 0.00029989270688537934, 'epoch': 0.03}
+{'loss': 4.9987, 'grad_norm': 0.5453274846076965, 'learning_rate': 0.0002984711765568641, 'epoch': 0.07}
+{'loss': 4.8065, 'grad_norm': 0.9172610640525818, 'learning_rate': 0.00029541207597045133, 'epoch': 0.1}
+{'loss': 4.7082, 'grad_norm': 0.5576831102371216, 'learning_rate': 0.00029074914562885964, 'epoch': 0.13}
+{'loss': 4.6474, 'grad_norm': 0.4541502296924591, 'learning_rate': 0.00028453381555520264, 'epoch': 0.16}
+{'loss': 4.6109, 'grad_norm': 0.48103612661361694, 'learning_rate': 0.0002768346380429805, 'epoch': 0.2}
+{'loss': 4.5762, 'grad_norm': 0.5179128050804138, 'learning_rate': 0.0002677365315551344, 'epoch': 0.23}
+{'loss': 4.5512, 'grad_norm': 0.46828576922416687, 'learning_rate': 0.00025733984411161815, 'epoch': 0.26}
+{'loss': 4.5204, 'grad_norm': 0.43166857957839966, 'learning_rate': 0.0002457592464958995, 'epoch': 0.3}
+{'loss': 4.4986, 'grad_norm': 0.5460973381996155, 'learning_rate': 0.00023312246748782622, 'epoch': 0.33}
+{'eval_loss': 13.33997631072998, 'eval_runtime': 98.057, 'eval_samples_per_second': 24.883, 'eval_steps_per_second': 6.221, 'epoch': 0.33}
+{'loss': 4.4785, 'grad_norm': 0.4032607078552246, 'learning_rate': 0.0002195688850726689, 'epoch': 0.36}
+{'loss': 4.453, 'grad_norm': 0.44042113423347473, 'learning_rate': 0.00020524798916467037, 'epoch': 0.39}
+{'loss': 4.4504, 'grad_norm': 0.44858282804489136, 'learning_rate': 0.0001903177328005698, 'epoch': 0.43}
+{'loss': 4.4154, 'grad_norm': 0.37700432538986206, 'learning_rate': 0.0001749427899886941, 'epoch': 0.46}
+{'loss': 4.3896, 'grad_norm': 0.4155556261539459, 'learning_rate': 0.00015929273942875776, 'epoch': 0.49}
+{'loss': 4.3594, 'grad_norm': 0.40931570529937744, 'learning_rate': 0.00014354019413512415, 'epoch': 0.52}
+{'loss': 4.3475, 'grad_norm': 0.5222300887107849, 'learning_rate': 0.00012785889759294128, 'epoch': 0.56}
+{'loss': 4.3176, 'grad_norm': 0.4694397449493408, 'learning_rate': 0.00011242180744569448, 'epoch': 0.59}
+{'loss': 4.2835, 'grad_norm': 0.5938094258308411, 'learning_rate': 9.739918785023796e-05, 'epoch': 0.62}
+{'loss': 4.2432, 'grad_norm': 0.5920299887657166, 'learning_rate': 8.295673153977234e-05, 'epoch': 0.66}
+{'eval_loss': 13.11234188079834, 'eval_runtime': 97.2736, 'eval_samples_per_second': 25.084, 'eval_steps_per_second': 6.271, 'epoch': 0.66}
+{'loss': 4.1839, 'grad_norm': 0.5712030529975891, 'learning_rate': 6.92537323075677e-05, 'epoch': 0.69}
+{'loss': 4.1493, 'grad_norm': 0.6489839553833008, 'learning_rate': 5.644132806811371e-05, 'epoch': 0.72}
+{'loss': 4.1325, 'grad_norm': 0.6620986461639404, 'learning_rate': 4.4660833873942935e-05, 'epoch': 0.75}
+{'loss': 4.085, 'grad_norm': 0.6230374574661255, 'learning_rate': 3.404218327419994e-05, 'epoch': 0.79}
+{'loss': 4.0555, 'grad_norm': 0.7159155011177063, 'learning_rate': 2.4702495206071036e-05, 'epoch': 0.82}
+{'loss': 4.0494, 'grad_norm': 0.6597731113433838, 'learning_rate': 1.6744782225616526e-05, 'epoch': 0.85}
+{'loss': 4.0368, 'grad_norm': 0.6598788499832153, 'learning_rate': 1.0256814325638296e-05, 'epoch': 0.89}
+{'loss': 4.0199, 'grad_norm': 0.6165668368339539, 'learning_rate': 5.310150872160029e-06, 'epoch': 0.92}
+{'loss': 4.0123, 'grad_norm': 0.6143027544021606, 'learning_rate': 1.9593513368252933e-06, 'epoch': 0.95}
+{'loss': 4.0079, 'grad_norm': 0.5779123902320862, 'learning_rate': 2.41373530479877e-07, 'epoch': 0.98}
+{'eval_loss': 12.935332298278809, 'eval_runtime': 100.3379, 'eval_samples_per_second': 24.318, 'eval_steps_per_second': 6.079, 'epoch': 0.98}
+{'train_runtime': 4205.857, 'train_samples_per_second': 11.61, 'train_steps_per_second': 0.363, 'train_loss': 4.462673202254669, 'epoch': 1.0}
+
+======================================================================
+FINAL EVALUATION
+======================================================================
+Corpus: hplt3
+Validation loss: 12.935724
+Validation perplexity: 414871.5605
+
+Results saved to:
+/scratch/project_462001491/nima/corpus_experiment/lm_results_Qwen3_6/hplt3/final_results.json
+
+======================================================================
+DONE
+======================================================================
+
+================================================
+Job completed successfully.
+Finished: Tue Sep 15 03:56:37 PM EEST 2026
+================================================

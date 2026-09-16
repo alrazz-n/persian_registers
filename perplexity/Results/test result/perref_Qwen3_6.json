@@ -1,0 +1,4334 @@
+{
+  "corpus": "perref",
+  "tokenizer": "Qwen/Qwen3.6-35B-A3B",
+  "tokenizer_vocab_size": 248077,
+  "eos_token_id": 248046,
+  "context_length": 2048,
+  "checkpoint": "/scratch/project_462001491/nima/corpus_experiment/lm_results_Qwen3_6/perref/checkpoint-1526",
+  "parameters": 234624768,
+  "test_documents_original": 615,
+  "test_documents_evaluated": 615,
+  "test_tokens": 1400796,
+  "predicted_tokens": 1400181,
+  "overall_loss": 12.932883736726911,
+  "overall_ppl": 413694.7809084851,
+  "high_quality": {
+    "documents": 400,
+    "tokens": 949198,
+    "loss": 13.27121447062218,
+    "perplexity": 580250.0849982155
+  },
+  "low_quality": {
+    "documents": 215,
+    "tokens": 450983,
+    "loss": 12.220788478253928,
+    "perplexity": 202964.92873658036
+  },
+  "document_results": [
+    {
+      "test_index": 0,
+      "label": 1,
+      "loss": 13.757023781920712,
+      "perplexity": 943190.7130300989,
+      "tokens": 6775
+    },
+    {
+      "test_index": 1,
+      "label": 1,
+      "loss": 12.568342208862305,
+      "perplexity": 287317.22814353975,
+      "tokens": 617
+    },
+    {
+      "test_index": 2,
+      "label": 1,
+      "loss": 12.820507049560547,
+      "perplexity": 369722.1474072235,
+      "tokens": 1395
+    },
+    {
+      "test_index": 3,
+      "label": 1,
+      "loss": 13.60546875,
+      "perplexity": 810550.357801393,
+      "tokens": 722
+    },
+    {
+      "test_index": 4,
+      "label": 1,
+      "loss": 11.384665489196777,
+      "perplexity": 87962.4668312803,
+      "tokens": 192
+    },
+    {
+      "test_index": 5,
+      "label": 1,
+      "loss": 13.119471549987793,
+      "perplexity": 498556.1749443578,
+      "tokens": 433
+    },
+    {
+      "test_index": 6,
+      "label": 0,
+      "loss": 12.392032623291016,
+      "perplexity": 240874.81153329482,
+      "tokens": 1440
+    },
+    {
+      "test_index": 7,
+      "label": 1,
+      "loss": 13.717569351196289,
+      "perplexity": 906702.2101402874,
+      "tokens": 226
+    },
+    {
+      "test_index": 8,
+      "label": 1,
+      "loss": 12.529983520507812,
+      "perplexity": 276504.8168277044,
+      "tokens": 650
+    },
+    {
+      "test_index": 9,
+      "label": 0,
+      "loss": 12.223426115422777,
+      "perplexity": 203500.98322442628,
+      "tokens": 4897
+    },
+    {
+      "test_index": 10,
+      "label": 1,
+      "loss": 13.679189682006836,
+      "perplexity": 872562.603203062,
+      "tokens": 242
+    },
+    {
+      "test_index": 11,
+      "label": 1,
+      "loss": 13.632292747497559,
+      "perplexity": 832586.7898688333,
+      "tokens": 755
+    },
+    {
+      "test_index": 12,
+      "label": 1,
+      "loss": 11.892059326171875,
+      "perplexity": 146101.85963590868,
+      "tokens": 607
+    },
+    {
+      "test_index": 13,
+      "label": 1,
+      "loss": 13.114252090454102,
+      "perplexity": 495960.7603867768,
+      "tokens": 572
+    },
+    {
+      "test_index": 14,
+      "label": 1,
+      "loss": 12.637100219726562,
+      "perplexity": 307767.5963185136,
+      "tokens": 322
+    },
+    {
+      "test_index": 15,
+      "label": 1,
+      "loss": 12.970403671264648,
+      "perplexity": 429511.4466961289,
+      "tokens": 1895
+    },
+    {
+      "test_index": 16,
+      "label": 1,
+      "loss": 13.526265144348145,
+      "perplexity": 748828.410162666,
+      "tokens": 299
+    },
+    {
+      "test_index": 17,
+      "label": 0,
+      "loss": 11.441009521484375,
+      "perplexity": 93060.91162820373,
+      "tokens": 1843
+    },
+    {
+      "test_index": 18,
+      "label": 1,
+      "loss": 13.295757293701172,
+      "perplexity": 594667.2555339538,
+      "tokens": 486
+    },
+    {
+      "test_index": 19,
+      "label": 1,
+      "loss": 12.852002066534919,
+      "perplexity": 381551.86342497985,
+      "tokens": 7548
+    },
+    {
+      "test_index": 20,
+      "label": 1,
+      "loss": 13.192344665527344,
+      "perplexity": 536244.0564004116,
+      "tokens": 476
+    },
+    {
+      "test_index": 21,
+      "label": 0,
+      "loss": 11.920806835558842,
+      "perplexity": 150362.87759928175,
+      "tokens": 2442
+    },
+    {
+      "test_index": 22,
+      "label": 1,
+      "loss": 13.584820747375488,
+      "perplexity": 793985.7138026202,
+      "tokens": 1052
+    },
+    {
+      "test_index": 23,
+      "label": 1,
+      "loss": 13.28987979888916,
+      "perplexity": 591182.3531047947,
+      "tokens": 951
+    },
+    {
+      "test_index": 24,
+      "label": 1,
+      "loss": 13.497915267944336,
+      "perplexity": 727897.3161197185,
+      "tokens": 275
+    },
+    {
+      "test_index": 25,
+      "label": 1,
+      "loss": 13.677581704675045,
+      "perplexity": 871160.669757213,
+      "tokens": 5877
+    },
+    {
+      "test_index": 26,
+      "label": 1,
+      "loss": 11.9433012008667,
+      "perplexity": 153783.52349086496,
+      "tokens": 530
+    },
+    {
+      "test_index": 27,
+      "label": 1,
+      "loss": 12.707335472106934,
+      "perplexity": 330160.92698508536,
+      "tokens": 488
+    },
+    {
+      "test_index": 28,
+      "label": 1,
+      "loss": 13.550922932822733,
+      "perplexity": 767522.3916626992,
+      "tokens": 4409
+    },
+    {
+      "test_index": 29,
+      "label": 1,
+      "loss": 13.902361869812012,
+      "perplexity": 1090734.4883649263,
+      "tokens": 360
+    },
+    {
+      "test_index": 30,
+      "label": 1,
+      "loss": 13.82577896118164,
+      "perplexity": 1010321.3041841222,
+      "tokens": 380
+    },
+    {
+      "test_index": 31,
+      "label": 1,
+      "loss": 13.731572772660606,
+      "perplexity": 919488.460010964,
+      "tokens": 8977
+    },
+    {
+      "test_index": 32,
+      "label": 1,
+      "loss": 13.663899421691895,
+      "perplexity": 859322.3750803298,
+      "tokens": 367
+    },
+    {
+      "test_index": 33,
+      "label": 0,
+      "loss": 11.498497009277344,
+      "perplexity": 98567.51356544314,
+      "tokens": 559
+    },
+    {
+      "test_index": 34,
+      "label": 1,
+      "loss": 13.211013793945312,
+      "perplexity": 546349.3000968255,
+      "tokens": 384
+    },
+    {
+      "test_index": 35,
+      "label": 1,
+      "loss": 13.751275699516944,
+      "perplexity": 937784.7270003962,
+      "tokens": 2168
+    },
+    {
+      "test_index": 36,
+      "label": 1,
+      "loss": 13.488883018493652,
+      "perplexity": 721352.3682823078,
+      "tokens": 355
+    },
+    {
+      "test_index": 37,
+      "label": 1,
+      "loss": 13.590055465698242,
+      "perplexity": 798152.9028813122,
+      "tokens": 359
+    },
+    {
+      "test_index": 38,
+      "label": 0,
+      "loss": 12.008461562353835,
+      "perplexity": 164137.7941652875,
+      "tokens": 2138
+    },
+    {
+      "test_index": 39,
+      "label": 1,
+      "loss": 13.602604866027832,
+      "perplexity": 808232.3564508294,
+      "tokens": 1864
+    },
+    {
+      "test_index": 40,
+      "label": 1,
+      "loss": 12.2805814743042,
+      "perplexity": 215470.9710405657,
+      "tokens": 551
+    },
+    {
+      "test_index": 41,
+      "label": 1,
+      "loss": 13.19564151763916,
+      "perplexity": 538014.891236521,
+      "tokens": 155
+    },
+    {
+      "test_index": 42,
+      "label": 1,
+      "loss": 13.739821545833903,
+      "perplexity": 927104.4799794431,
+      "tokens": 9348
+    },
+    {
+      "test_index": 43,
+      "label": 1,
+      "loss": 13.308836936950684,
+      "perplexity": 602496.380554623,
+      "tokens": 796
+    },
+    {
+      "test_index": 44,
+      "label": 1,
+      "loss": 13.635832001794824,
+      "perplexity": 835538.7470248186,
+      "tokens": 4754
+    },
+    {
+      "test_index": 45,
+      "label": 0,
+      "loss": 11.103124618530273,
+      "perplexity": 66378.24316080273,
+      "tokens": 642
+    },
+    {
+      "test_index": 46,
+      "label": 1,
+      "loss": 12.290982246398926,
+      "perplexity": 217723.73041395197,
+      "tokens": 520
+    },
+    {
+      "test_index": 47,
+      "label": 1,
+      "loss": 13.57135347417883,
+      "perplexity": 783364.5707253199,
+      "tokens": 9250
+    },
+    {
+      "test_index": 48,
+      "label": 0,
+      "loss": 11.783843994140625,
+      "perplexity": 131116.8244068439,
+      "tokens": 1951
+    },
+    {
+      "test_index": 49,
+      "label": 0,
+      "loss": 12.083312557159909,
+      "perplexity": 176895.16662945983,
+      "tokens": 3150
+    },
+    {
+      "test_index": 50,
+      "label": 0,
+      "loss": 12.171928558861799,
+      "perplexity": 193286.4489205311,
+      "tokens": 3426
+    },
+    {
+      "test_index": 51,
+      "label": 1,
+      "loss": 13.27339325752215,
+      "perplexity": 581515.7045390842,
+      "tokens": 3524
+    },
+    {
+      "test_index": 52,
+      "label": 1,
+      "loss": 13.826144218444824,
+      "perplexity": 1010690.3987817625,
+      "tokens": 391
+    },
+    {
+      "test_index": 53,
+      "label": 1,
+      "loss": 13.176407826802377,
+      "perplexity": 527765.7594264983,
+      "tokens": 2090
+    },
+    {
+      "test_index": 54,
+      "label": 1,
+      "loss": 13.525915919971217,
+      "perplexity": 748566.9466850685,
+      "tokens": 16479
+    },
+    {
+      "test_index": 55,
+      "label": 1,
+      "loss": 11.361530572396738,
+      "perplexity": 85950.82182222354,
+      "tokens": 2430
+    },
+    {
+      "test_index": 56,
+      "label": 1,
+      "loss": 13.656682968139648,
+      "perplexity": 853143.4368994766,
+      "tokens": 1105
+    },
+    {
+      "test_index": 57,
+      "label": 1,
+      "loss": 13.499637590572364,
+      "perplexity": 729152.0703738,
+      "tokens": 2965
+    },
+    {
+      "test_index": 58,
+      "label": 1,
+      "loss": 12.984032439564766,
+      "perplexity": 435405.2299613725,
+      "tokens": 24580
+    },
+    {
+      "test_index": 59,
+      "label": 1,
+      "loss": 13.90674114227295,
+      "perplexity": 1095521.5862243408,
+      "tokens": 232
+    },
+    {
+      "test_index": 60,
+      "label": 1,
+      "loss": 12.969489097595215,
+      "perplexity": 429118.80641286116,
+      "tokens": 1451
+    },
+    {
+      "test_index": 61,
+      "label": 1,
+      "loss": 13.262372970581055,
+      "perplexity": 575142.4168449962,
+      "tokens": 264
+    },
+    {
+      "test_index": 62,
+      "label": 1,
+      "loss": 11.62090015411377,
+      "perplexity": 111401.95482407442,
+      "tokens": 252
+    },
+    {
+      "test_index": 63,
+      "label": 1,
+      "loss": 13.9131441116333,
+      "perplexity": 1102558.682488188,
+      "tokens": 591
+    },
+    {
+      "test_index": 64,
+      "label": 1,
+      "loss": 12.987750053405762,
+      "perplexity": 437026.9109949231,
+      "tokens": 412
+    },
+    {
+      "test_index": 65,
+      "label": 0,
+      "loss": 12.449798583984375,
+      "perplexity": 255198.91630356607,
+      "tokens": 469
+    },
+    {
+      "test_index": 66,
+      "label": 1,
+      "loss": 12.904986681066063,
+      "perplexity": 402313.4061178339,
+      "tokens": 4139
+    },
+    {
+      "test_index": 67,
+      "label": 1,
+      "loss": 13.687081336975098,
+      "perplexity": 879475.8086433058,
+      "tokens": 1447
+    },
+    {
+      "test_index": 68,
+      "label": 1,
+      "loss": 12.876538276672363,
+      "perplexity": 391029.49725518905,
+      "tokens": 881
+    },
+    {
+      "test_index": 69,
+      "label": 1,
+      "loss": 12.103928408208173,
+      "perplexity": 180579.86209954022,
+      "tokens": 2841
+    },
+    {
+      "test_index": 70,
+      "label": 0,
+      "loss": 12.292776389226544,
+      "perplexity": 218114.708513675,
+      "tokens": 4744
+    },
+    {
+      "test_index": 71,
+      "label": 1,
+      "loss": 13.586027145385742,
+      "perplexity": 794944.154602216,
+      "tokens": 1154
+    },
+    {
+      "test_index": 72,
+      "label": 1,
+      "loss": 13.717006528387381,
+      "perplexity": 906192.0410364048,
+      "tokens": 7262
+    },
+    {
+      "test_index": 73,
+      "label": 1,
+      "loss": 12.605184555053711,
+      "perplexity": 298100.0820930394,
+      "tokens": 809
+    },
+    {
+      "test_index": 74,
+      "label": 1,
+      "loss": 13.569021288690015,
+      "perplexity": 781539.7479806996,
+      "tokens": 4670
+    },
+    {
+      "test_index": 75,
+      "label": 1,
+      "loss": 13.63770248538158,
+      "perplexity": 837103.0711023891,
+      "tokens": 2135
+    },
+    {
+      "test_index": 76,
+      "label": 1,
+      "loss": 12.11825942993164,
+      "perplexity": 183186.3885092575,
+      "tokens": 1816
+    },
+    {
+      "test_index": 77,
+      "label": 1,
+      "loss": 11.287614822387695,
+      "perplexity": 79826.8204142932,
+      "tokens": 1048
+    },
+    {
+      "test_index": 78,
+      "label": 1,
+      "loss": 13.498858095135375,
+      "perplexity": 728583.9211257137,
+      "tokens": 5831
+    },
+    {
+      "test_index": 79,
+      "label": 1,
+      "loss": 13.793278480910926,
+      "perplexity": 978013.2342818466,
+      "tokens": 5805
+    },
+    {
+      "test_index": 80,
+      "label": 0,
+      "loss": 11.023163795471191,
+      "perplexity": 61277.24191402544,
+      "tokens": 856
+    },
+    {
+      "test_index": 81,
+      "label": 1,
+      "loss": 12.807754472969405,
+      "perplexity": 365037.1736406006,
+      "tokens": 5355
+    },
+    {
+      "test_index": 82,
+      "label": 0,
+      "loss": 13.536520004272461,
+      "perplexity": 756547.049757883,
+      "tokens": 529
+    },
+    {
+      "test_index": 83,
+      "label": 1,
+      "loss": 13.060762405395508,
+      "perplexity": 470129.0006034737,
+      "tokens": 200
+    },
+    {
+      "test_index": 84,
+      "label": 0,
+      "loss": 11.620484352111816,
+      "perplexity": 111355.64329711713,
+      "tokens": 622
+    },
+    {
+      "test_index": 85,
+      "label": 0,
+      "loss": 11.626565933227539,
+      "perplexity": 112034.92513468229,
+      "tokens": 582
+    },
+    {
+      "test_index": 86,
+      "label": 1,
+      "loss": 12.779325784955706,
+      "perplexity": 354805.76751181047,
+      "tokens": 2905
+    },
+    {
+      "test_index": 87,
+      "label": 1,
+      "loss": 12.659393310546875,
+      "perplexity": 314705.7362447589,
+      "tokens": 421
+    },
+    {
+      "test_index": 88,
+      "label": 1,
+      "loss": 13.056790513162948,
+      "perplexity": 468265.40233342105,
+      "tokens": 5209
+    },
+    {
+      "test_index": 89,
+      "label": 1,
+      "loss": 13.451300621032715,
+      "perplexity": 694745.326729796,
+      "tokens": 807
+    },
+    {
+      "test_index": 90,
+      "label": 0,
+      "loss": 11.854251861572266,
+      "perplexity": 140681.23447021414,
+      "tokens": 2002
+    },
+    {
+      "test_index": 91,
+      "label": 1,
+      "loss": 13.261620050775546,
+      "perplexity": 574709.5437081937,
+      "tokens": 7309
+    },
+    {
+      "test_index": 92,
+      "label": 0,
+      "loss": 12.487368511963739,
+      "perplexity": 264969.1046549012,
+      "tokens": 10798
+    },
+    {
+      "test_index": 93,
+      "label": 0,
+      "loss": 12.261168479919434,
+      "perplexity": 211328.3744903882,
+      "tokens": 1453
+    },
+    {
+      "test_index": 94,
+      "label": 1,
+      "loss": 13.294137954711914,
+      "perplexity": 593705.0669264552,
+      "tokens": 604
+    },
+    {
+      "test_index": 95,
+      "label": 1,
+      "loss": 12.207179069519043,
+      "perplexity": 200221.40726033918,
+      "tokens": 362
+    },
+    {
+      "test_index": 96,
+      "label": 1,
+      "loss": 13.677591323852539,
+      "perplexity": 871169.0496466246,
+      "tokens": 1926
+    },
+    {
+      "test_index": 97,
+      "label": 0,
+      "loss": 12.312060356140137,
+      "perplexity": 222361.64259555945,
+      "tokens": 4096
+    },
+    {
+      "test_index": 98,
+      "label": 0,
+      "loss": 12.428628921508789,
+      "perplexity": 249853.22426920317,
+      "tokens": 1399
+    },
+    {
+      "test_index": 99,
+      "label": 1,
+      "loss": 13.761299425405221,
+      "perplexity": 947232.0938519582,
+      "tokens": 2145
+    },
+    {
+      "test_index": 100,
+      "label": 1,
+      "loss": 13.299509048461914,
+      "perplexity": 596902.491647958,
+      "tokens": 1178
+    },
+    {
+      "test_index": 101,
+      "label": 1,
+      "loss": 12.72443962097168,
+      "perplexity": 335856.6197616578,
+      "tokens": 765
+    },
+    {
+      "test_index": 102,
+      "label": 1,
+      "loss": 13.291728973388672,
+      "perplexity": 592276.5638181921,
+      "tokens": 765
+    },
+    {
+      "test_index": 103,
+      "label": 1,
+      "loss": 11.692112922668457,
+      "perplexity": 119624.4968479249,
+      "tokens": 801
+    },
+    {
+      "test_index": 104,
+      "label": 0,
+      "loss": 12.997099876403809,
+      "perplexity": 441132.1972011115,
+      "tokens": 1498
+    },
+    {
+      "test_index": 105,
+      "label": 1,
+      "loss": 12.378883600385217,
+      "perplexity": 237728.27539228243,
+      "tokens": 3174
+    },
+    {
+      "test_index": 106,
+      "label": 0,
+      "loss": 11.407914161682129,
+      "perplexity": 90031.43460163182,
+      "tokens": 1856
+    },
+    {
+      "test_index": 107,
+      "label": 0,
+      "loss": 11.974681854248047,
+      "perplexity": 158685.86803456495,
+      "tokens": 584
+    },
+    {
+      "test_index": 108,
+      "label": 1,
+      "loss": 13.158748265411145,
+      "perplexity": 518527.45984387543,
+      "tokens": 2761
+    },
+    {
+      "test_index": 109,
+      "label": 0,
+      "loss": 12.008366758032533,
+      "perplexity": 164122.23393071207,
+      "tokens": 2466
+    },
+    {
+      "test_index": 110,
+      "label": 1,
+      "loss": 13.057502746582031,
+      "perplexity": 468599.0354001696,
+      "tokens": 326
+    },
+    {
+      "test_index": 111,
+      "label": 1,
+      "loss": 12.970751762390137,
+      "perplexity": 429660.98184343847,
+      "tokens": 1277
+    },
+    {
+      "test_index": 112,
+      "label": 0,
+      "loss": 13.151876449584961,
+      "perplexity": 514976.4495571159,
+      "tokens": 1371
+    },
+    {
+      "test_index": 113,
+      "label": 0,
+      "loss": 11.833382294804728,
+      "perplexity": 137775.70211053136,
+      "tokens": 2876
+    },
+    {
+      "test_index": 114,
+      "label": 0,
+      "loss": 12.57123851776123,
+      "perplexity": 288150.5938479148,
+      "tokens": 1476
+    },
+    {
+      "test_index": 115,
+      "label": 1,
+      "loss": 13.287446975708008,
+      "perplexity": 589745.8590483994,
+      "tokens": 347
+    },
+    {
+      "test_index": 116,
+      "label": 1,
+      "loss": 13.215665817260742,
+      "perplexity": 548896.8508175578,
+      "tokens": 374
+    },
+    {
+      "test_index": 117,
+      "label": 1,
+      "loss": 13.343428116249505,
+      "perplexity": 623702.0917282088,
+      "tokens": 2733
+    },
+    {
+      "test_index": 118,
+      "label": 1,
+      "loss": 12.666197776794434,
+      "perplexity": 316854.44291540113,
+      "tokens": 946
+    },
+    {
+      "test_index": 119,
+      "label": 0,
+      "loss": 10.996028900146484,
+      "perplexity": 59636.84699216067,
+      "tokens": 384
+    },
+    {
+      "test_index": 120,
+      "label": 0,
+      "loss": 12.780926704406738,
+      "perplexity": 355374.2378825825,
+      "tokens": 907
+    },
+    {
+      "test_index": 121,
+      "label": 0,
+      "loss": 12.49432373046875,
+      "perplexity": 266818.44650802936,
+      "tokens": 1347
+    },
+    {
+      "test_index": 122,
+      "label": 1,
+      "loss": 13.570244615189152,
+      "perplexity": 782496.411301022,
+      "tokens": 7720
+    },
+    {
+      "test_index": 123,
+      "label": 0,
+      "loss": 11.177720069885254,
+      "perplexity": 71519.11745135294,
+      "tokens": 666
+    },
+    {
+      "test_index": 124,
+      "label": 0,
+      "loss": 11.528841972351074,
+      "perplexity": 101604.38497023794,
+      "tokens": 235
+    },
+    {
+      "test_index": 125,
+      "label": 0,
+      "loss": 11.341699600219727,
+      "perplexity": 84263.12312838147,
+      "tokens": 673
+    },
+    {
+      "test_index": 126,
+      "label": 1,
+      "loss": 13.489324569702148,
+      "perplexity": 721670.9526227484,
+      "tokens": 569
+    },
+    {
+      "test_index": 127,
+      "label": 0,
+      "loss": 11.678476333618164,
+      "perplexity": 118004.29883840597,
+      "tokens": 2017
+    },
+    {
+      "test_index": 128,
+      "label": 1,
+      "loss": 13.692721813655957,
+      "perplexity": 884450.4880257621,
+      "tokens": 3537
+    },
+    {
+      "test_index": 129,
+      "label": 0,
+      "loss": 13.1509428024292,
+      "perplexity": 514495.86764158204,
+      "tokens": 193
+    },
+    {
+      "test_index": 130,
+      "label": 1,
+      "loss": 13.240436881079878,
+      "perplexity": 562663.4119926108,
+      "tokens": 3615
+    },
+    {
+      "test_index": 131,
+      "label": 0,
+      "loss": 11.650237083435059,
+      "perplexity": 114718.55770352343,
+      "tokens": 1145
+    },
+    {
+      "test_index": 132,
+      "label": 1,
+      "loss": 13.08560887991919,
+      "perplexity": 481956.37465363316,
+      "tokens": 4505
+    },
+    {
+      "test_index": 133,
+      "label": 0,
+      "loss": 11.43220043182373,
+      "perplexity": 92244.7299007503,
+      "tokens": 713
+    },
+    {
+      "test_index": 134,
+      "label": 0,
+      "loss": 10.962434768676758,
+      "perplexity": 57666.67726954651,
+      "tokens": 672
+    },
+    {
+      "test_index": 135,
+      "label": 0,
+      "loss": 11.798354148864746,
+      "perplexity": 133033.21978890372,
+      "tokens": 1979
+    },
+    {
+      "test_index": 136,
+      "label": 1,
+      "loss": 13.50540274754402,
+      "perplexity": 733367.88726201,
+      "tokens": 7915
+    },
+    {
+      "test_index": 137,
+      "label": 1,
+      "loss": 13.492749214172363,
+      "perplexity": 724146.6558420066,
+      "tokens": 1422
+    },
+    {
+      "test_index": 138,
+      "label": 1,
+      "loss": 13.53464126586914,
+      "perplexity": 755127.0301019966,
+      "tokens": 1119
+    },
+    {
+      "test_index": 139,
+      "label": 0,
+      "loss": 10.778286933898926,
+      "perplexity": 47967.88166292695,
+      "tokens": 823
+    },
+    {
+      "test_index": 140,
+      "label": 1,
+      "loss": 13.659680366516113,
+      "perplexity": 855704.4839738471,
+      "tokens": 220
+    },
+    {
+      "test_index": 141,
+      "label": 0,
+      "loss": 11.690937042236328,
+      "perplexity": 119483.91541255607,
+      "tokens": 1621
+    },
+    {
+      "test_index": 142,
+      "label": 0,
+      "loss": 12.934289932250977,
+      "perplexity": 414276.92586661805,
+      "tokens": 1381
+    },
+    {
+      "test_index": 143,
+      "label": 1,
+      "loss": 13.311877250671387,
+      "perplexity": 604330.9459811647,
+      "tokens": 345
+    },
+    {
+      "test_index": 144,
+      "label": 1,
+      "loss": 13.413871765136719,
+      "perplexity": 669222.4299803392,
+      "tokens": 962
+    },
+    {
+      "test_index": 145,
+      "label": 1,
+      "loss": 13.727278709411621,
+      "perplexity": 915548.5835003703,
+      "tokens": 1514
+    },
+    {
+      "test_index": 146,
+      "label": 0,
+      "loss": 11.822489102073655,
+      "perplexity": 136283.0295787881,
+      "tokens": 2092
+    },
+    {
+      "test_index": 147,
+      "label": 1,
+      "loss": 13.574576902231936,
+      "perplexity": 785893.7642050498,
+      "tokens": 5749
+    },
+    {
+      "test_index": 148,
+      "label": 1,
+      "loss": 13.451436996459961,
+      "perplexity": 694840.0793813758,
+      "tokens": 632
+    },
+    {
+      "test_index": 149,
+      "label": 1,
+      "loss": 13.196381568908691,
+      "perplexity": 538413.1972050476,
+      "tokens": 690
+    },
+    {
+      "test_index": 150,
+      "label": 0,
+      "loss": 12.001852035522461,
+      "perplexity": 163056.49837392278,
+      "tokens": 603
+    },
+    {
+      "test_index": 151,
+      "label": 1,
+      "loss": 13.45887274320232,
+      "perplexity": 700025.9909062526,
+      "tokens": 6431
+    },
+    {
+      "test_index": 152,
+      "label": 1,
+      "loss": 13.39814567565918,
+      "perplexity": 658780.4987371356,
+      "tokens": 1179
+    },
+    {
+      "test_index": 153,
+      "label": 0,
+      "loss": 11.494915008544922,
+      "perplexity": 98215.07625185199,
+      "tokens": 594
+    },
+    {
+      "test_index": 154,
+      "label": 1,
+      "loss": 11.969883898063243,
+      "perplexity": 157926.32377969788,
+      "tokens": 3133
+    },
+    {
+      "test_index": 155,
+      "label": 0,
+      "loss": 11.646122878383377,
+      "perplexity": 114247.55160611134,
+      "tokens": 2082
+    },
+    {
+      "test_index": 156,
+      "label": 1,
+      "loss": 12.237305641174316,
+      "perplexity": 206345.17270324213,
+      "tokens": 235
+    },
+    {
+      "test_index": 157,
+      "label": 1,
+      "loss": 11.822518640927838,
+      "perplexity": 136287.05528278337,
+      "tokens": 2924
+    },
+    {
+      "test_index": 158,
+      "label": 1,
+      "loss": 13.195112228393555,
+      "perplexity": 537730.2010889768,
+      "tokens": 1842
+    },
+    {
+      "test_index": 159,
+      "label": 1,
+      "loss": 13.51779556274414,
+      "perplexity": 742512.9293282925,
+      "tokens": 661
+    },
+    {
+      "test_index": 160,
+      "label": 1,
+      "loss": 13.54362265576103,
+      "perplexity": 761939.6680608323,
+      "tokens": 3726
+    },
+    {
+      "test_index": 161,
+      "label": 1,
+      "loss": 13.73182864103948,
+      "perplexity": 919723.7581340111,
+      "tokens": 11809
+    },
+    {
+      "test_index": 162,
+      "label": 1,
+      "loss": 13.548622821146985,
+      "perplexity": 765759.0331863706,
+      "tokens": 9628
+    },
+    {
+      "test_index": 163,
+      "label": 1,
+      "loss": 12.897339820861816,
+      "perplexity": 399248.7043498369,
+      "tokens": 196
+    },
+    {
+      "test_index": 164,
+      "label": 0,
+      "loss": 12.104916726975214,
+      "perplexity": 180758.42078812,
+      "tokens": 3360
+    },
+    {
+      "test_index": 165,
+      "label": 1,
+      "loss": 13.430174827575684,
+      "perplexity": 680222.2265922474,
+      "tokens": 473
+    },
+    {
+      "test_index": 166,
+      "label": 1,
+      "loss": 13.725209734598796,
+      "perplexity": 913656.2947650757,
+      "tokens": 3000
+    },
+    {
+      "test_index": 167,
+      "label": 1,
+      "loss": 13.678993360501021,
+      "perplexity": 872391.3172129954,
+      "tokens": 4564
+    },
+    {
+      "test_index": 168,
+      "label": 1,
+      "loss": 13.597161260853332,
+      "perplexity": 803844.6120222972,
+      "tokens": 8536
+    },
+    {
+      "test_index": 169,
+      "label": 0,
+      "loss": 13.141855239868164,
+      "perplexity": 509841.53455952264,
+      "tokens": 1478
+    },
+    {
+      "test_index": 170,
+      "label": 0,
+      "loss": 12.035949894938206,
+      "perplexity": 168712.25251930227,
+      "tokens": 2563
+    },
+    {
+      "test_index": 171,
+      "label": 1,
+      "loss": 13.442383101865005,
+      "perplexity": 688577.4638531406,
+      "tokens": 3566
+    },
+    {
+      "test_index": 172,
+      "label": 1,
+      "loss": 12.313295364379883,
+      "perplexity": 222636.43070423102,
+      "tokens": 1095
+    },
+    {
+      "test_index": 173,
+      "label": 1,
+      "loss": 12.709994316101074,
+      "perplexity": 331039.94144621416,
+      "tokens": 267
+    },
+    {
+      "test_index": 174,
+      "label": 1,
+      "loss": 12.979828585749088,
+      "perplexity": 433578.69196333917,
+      "tokens": 2576
+    },
+    {
+      "test_index": 175,
+      "label": 1,
+      "loss": 13.733502575043708,
+      "perplexity": 921264.6042848377,
+      "tokens": 3875
+    },
+    {
+      "test_index": 176,
+      "label": 0,
+      "loss": 12.167076110839844,
+      "perplexity": 192350.80838323478,
+      "tokens": 331
+    },
+    {
+      "test_index": 177,
+      "label": 0,
+      "loss": 11.951252406630696,
+      "perplexity": 155011.16206493272,
+      "tokens": 2444
+    },
+    {
+      "test_index": 178,
+      "label": 0,
+      "loss": 11.049622535705566,
+      "perplexity": 62920.19999363637,
+      "tokens": 827
+    },
+    {
+      "test_index": 179,
+      "label": 0,
+      "loss": 12.28699016571045,
+      "perplexity": 216856.29230780803,
+      "tokens": 1553
+    },
+    {
+      "test_index": 180,
+      "label": 0,
+      "loss": 11.783928196232122,
+      "perplexity": 131127.865182511,
+      "tokens": 4995
+    },
+    {
+      "test_index": 181,
+      "label": 1,
+      "loss": 13.455965565461513,
+      "perplexity": 697993.8462615951,
+      "tokens": 4388
+    },
+    {
+      "test_index": 182,
+      "label": 0,
+      "loss": 11.944153032568494,
+      "perplexity": 153914.57698122243,
+      "tokens": 2549
+    },
+    {
+      "test_index": 183,
+      "label": 1,
+      "loss": 13.532449722290039,
+      "perplexity": 753473.9483697256,
+      "tokens": 270
+    },
+    {
+      "test_index": 184,
+      "label": 1,
+      "loss": 13.779236695972042,
+      "perplexity": 964376.1513414597,
+      "tokens": 9718
+    },
+    {
+      "test_index": 185,
+      "label": 1,
+      "loss": 13.456734657287598,
+      "perplexity": 698530.874108805,
+      "tokens": 680
+    },
+    {
+      "test_index": 186,
+      "label": 1,
+      "loss": 12.679532244143214,
+      "perplexity": 321107.8233967715,
+      "tokens": 5093
+    },
+    {
+      "test_index": 187,
+      "label": 0,
+      "loss": 11.950457758871117,
+      "perplexity": 154888.03172139337,
+      "tokens": 2503
+    },
+    {
+      "test_index": 188,
+      "label": 0,
+      "loss": 13.190306663513184,
+      "perplexity": 535152.3028092738,
+      "tokens": 1323
+    },
+    {
+      "test_index": 189,
+      "label": 1,
+      "loss": 12.176468849182129,
+      "perplexity": 194166.0207583921,
+      "tokens": 203
+    },
+    {
+      "test_index": 190,
+      "label": 1,
+      "loss": 13.323143005371094,
+      "perplexity": 611177.6846009844,
+      "tokens": 759
+    },
+    {
+      "test_index": 191,
+      "label": 0,
+      "loss": 11.964764653201279,
+      "perplexity": 157119.9260928097,
+      "tokens": 2492
+    },
+    {
+      "test_index": 192,
+      "label": 1,
+      "loss": 13.509122848510742,
+      "perplexity": 736101.1707414408,
+      "tokens": 1356
+    },
+    {
+      "test_index": 193,
+      "label": 0,
+      "loss": 13.030403601212935,
+      "perplexity": 456070.91931296844,
+      "tokens": 2750
+    },
+    {
+      "test_index": 194,
+      "label": 1,
+      "loss": 12.357683181762695,
+      "perplexity": 232741.38529602275,
+      "tokens": 647
+    },
+    {
+      "test_index": 195,
+      "label": 1,
+      "loss": 13.422519753456363,
+      "perplexity": 675034.954836181,
+      "tokens": 3863
+    },
+    {
+      "test_index": 196,
+      "label": 1,
+      "loss": 13.240321159362793,
+      "perplexity": 562598.3033837467,
+      "tokens": 1183
+    },
+    {
+      "test_index": 197,
+      "label": 1,
+      "loss": 13.432999610900879,
+      "perplexity": 682146.4234354362,
+      "tokens": 905
+    },
+    {
+      "test_index": 198,
+      "label": 1,
+      "loss": 13.543966879132483,
+      "perplexity": 762201.9906484085,
+      "tokens": 6595
+    },
+    {
+      "test_index": 199,
+      "label": 1,
+      "loss": 13.68951416015625,
+      "perplexity": 881618.0225350627,
+      "tokens": 331
+    },
+    {
+      "test_index": 200,
+      "label": 1,
+      "loss": 11.081887245178223,
+      "perplexity": 64983.407377698204,
+      "tokens": 1632
+    },
+    {
+      "test_index": 201,
+      "label": 1,
+      "loss": 12.968195915222168,
+      "perplexity": 428564.2361939659,
+      "tokens": 1724
+    },
+    {
+      "test_index": 202,
+      "label": 1,
+      "loss": 13.145088195800781,
+      "perplexity": 511492.4970799203,
+      "tokens": 485
+    },
+    {
+      "test_index": 203,
+      "label": 1,
+      "loss": 11.799185752868652,
+      "perplexity": 133143.8967604607,
+      "tokens": 240
+    },
+    {
+      "test_index": 204,
+      "label": 0,
+      "loss": 11.60918140411377,
+      "perplexity": 110104.08273816646,
+      "tokens": 1654
+    },
+    {
+      "test_index": 205,
+      "label": 0,
+      "loss": 13.028897285461426,
+      "perplexity": 455384.4496532319,
+      "tokens": 923
+    },
+    {
+      "test_index": 206,
+      "label": 1,
+      "loss": 13.48157787322998,
+      "perplexity": 716101.985200199,
+      "tokens": 475
+    },
+    {
+      "test_index": 207,
+      "label": 1,
+      "loss": 13.055390357971191,
+      "perplexity": 467610.2168869135,
+      "tokens": 1335
+    },
+    {
+      "test_index": 208,
+      "label": 1,
+      "loss": 13.295945085082135,
+      "perplexity": 594778.93940539,
+      "tokens": 3007
+    },
+    {
+      "test_index": 209,
+      "label": 1,
+      "loss": 13.114456176757812,
+      "perplexity": 496061.9895145377,
+      "tokens": 603
+    },
+    {
+      "test_index": 210,
+      "label": 1,
+      "loss": 13.368745803833008,
+      "perplexity": 639694.3760348619,
+      "tokens": 647
+    },
+    {
+      "test_index": 211,
+      "label": 1,
+      "loss": 13.614348411560059,
+      "perplexity": 817779.8207455932,
+      "tokens": 204
+    },
+    {
+      "test_index": 212,
+      "label": 1,
+      "loss": 13.125410079956055,
+      "perplexity": 501525.67423349386,
+      "tokens": 226
+    },
+    {
+      "test_index": 213,
+      "label": 1,
+      "loss": 13.500443458557129,
+      "perplexity": 729739.9075110907,
+      "tokens": 1736
+    },
+    {
+      "test_index": 214,
+      "label": 0,
+      "loss": 11.982956995063995,
+      "perplexity": 160004.4641979622,
+      "tokens": 2490
+    },
+    {
+      "test_index": 215,
+      "label": 0,
+      "loss": 13.382810592651367,
+      "perplexity": 648755.111644087,
+      "tokens": 1318
+    },
+    {
+      "test_index": 216,
+      "label": 0,
+      "loss": 11.414655685424805,
+      "perplexity": 90640.43414152488,
+      "tokens": 628
+    },
+    {
+      "test_index": 217,
+      "label": 1,
+      "loss": 13.046283588367688,
+      "perplexity": 463371.12986861484,
+      "tokens": 3656
+    },
+    {
+      "test_index": 218,
+      "label": 0,
+      "loss": 11.953911781311035,
+      "perplexity": 155423.94345140687,
+      "tokens": 529
+    },
+    {
+      "test_index": 219,
+      "label": 1,
+      "loss": 13.279369024195066,
+      "perplexity": 585001.1103199812,
+      "tokens": 3947
+    },
+    {
+      "test_index": 220,
+      "label": 0,
+      "loss": 11.95340026431014,
+      "perplexity": 155344.46179182845,
+      "tokens": 2121
+    },
+    {
+      "test_index": 221,
+      "label": 0,
+      "loss": 12.958038330078125,
+      "perplexity": 424233.0926938718,
+      "tokens": 365
+    },
+    {
+      "test_index": 222,
+      "label": 1,
+      "loss": 13.457773208618164,
+      "perplexity": 699256.7111218101,
+      "tokens": 368
+    },
+    {
+      "test_index": 223,
+      "label": 1,
+      "loss": 10.512117385864258,
+      "perplexity": 36758.22855603058,
+      "tokens": 976
+    },
+    {
+      "test_index": 224,
+      "label": 0,
+      "loss": 12.549741744995117,
+      "perplexity": 282022.39029994037,
+      "tokens": 1499
+    },
+    {
+      "test_index": 225,
+      "label": 1,
+      "loss": 11.528915405273438,
+      "perplexity": 101611.84635110338,
+      "tokens": 384
+    },
+    {
+      "test_index": 226,
+      "label": 0,
+      "loss": 12.995874404907227,
+      "perplexity": 440591.9333737906,
+      "tokens": 1454
+    },
+    {
+      "test_index": 227,
+      "label": 0,
+      "loss": 13.355517387390137,
+      "perplexity": 631287.9568265032,
+      "tokens": 354
+    },
+    {
+      "test_index": 228,
+      "label": 0,
+      "loss": 11.365528279582945,
+      "perplexity": 86295.11577495474,
+      "tokens": 4319
+    },
+    {
+      "test_index": 229,
+      "label": 1,
+      "loss": 13.578383445739746,
+      "perplexity": 788891.0039536569,
+      "tokens": 693
+    },
+    {
+      "test_index": 230,
+      "label": 0,
+      "loss": 12.728873252868652,
+      "perplexity": 337348.99024990405,
+      "tokens": 1526
+    },
+    {
+      "test_index": 231,
+      "label": 0,
+      "loss": 12.370672225952148,
+      "perplexity": 235784.1922306688,
+      "tokens": 1425
+    },
+    {
+      "test_index": 232,
+      "label": 1,
+      "loss": 13.197977066040039,
+      "perplexity": 539272.9195765802,
+      "tokens": 201
+    },
+    {
+      "test_index": 233,
+      "label": 1,
+      "loss": 13.712769425886204,
+      "perplexity": 902360.5354460047,
+      "tokens": 2382
+    },
+    {
+      "test_index": 234,
+      "label": 1,
+      "loss": 13.205525398254395,
+      "perplexity": 543358.9326188666,
+      "tokens": 314
+    },
+    {
+      "test_index": 235,
+      "label": 1,
+      "loss": 13.317903518676758,
+      "perplexity": 607983.8017146804,
+      "tokens": 464
+    },
+    {
+      "test_index": 236,
+      "label": 1,
+      "loss": 14.003715515136719,
+      "perplexity": 1207080.8898842493,
+      "tokens": 300
+    },
+    {
+      "test_index": 237,
+      "label": 1,
+      "loss": 13.266516250853451,
+      "perplexity": 577530.3365687986,
+      "tokens": 3107
+    },
+    {
+      "test_index": 238,
+      "label": 1,
+      "loss": 13.664021519244749,
+      "perplexity": 859427.3026450089,
+      "tokens": 3641
+    },
+    {
+      "test_index": 239,
+      "label": 1,
+      "loss": 13.581165146875097,
+      "perplexity": 791088.5179516099,
+      "tokens": 10060
+    },
+    {
+      "test_index": 240,
+      "label": 0,
+      "loss": 11.45621395111084,
+      "perplexity": 94486.66109743874,
+      "tokens": 558
+    },
+    {
+      "test_index": 241,
+      "label": 1,
+      "loss": 12.279420646734998,
+      "perplexity": 215220.99151665185,
+      "tokens": 9040
+    },
+    {
+      "test_index": 242,
+      "label": 0,
+      "loss": 12.354182898014686,
+      "perplexity": 231928.14851763498,
+      "tokens": 9696
+    },
+    {
+      "test_index": 243,
+      "label": 1,
+      "loss": 11.364543914794922,
+      "perplexity": 86210.21169675582,
+      "tokens": 1758
+    },
+    {
+      "test_index": 244,
+      "label": 1,
+      "loss": 13.602054980108568,
+      "perplexity": 807788.0430305656,
+      "tokens": 3118
+    },
+    {
+      "test_index": 245,
+      "label": 1,
+      "loss": 13.424737512326963,
+      "perplexity": 676533.6808874469,
+      "tokens": 2341
+    },
+    {
+      "test_index": 246,
+      "label": 1,
+      "loss": 13.529561996459961,
+      "perplexity": 751301.2607596231,
+      "tokens": 944
+    },
+    {
+      "test_index": 247,
+      "label": 0,
+      "loss": 10.990020751953125,
+      "perplexity": 59279.61420601689,
+      "tokens": 646
+    },
+    {
+      "test_index": 248,
+      "label": 1,
+      "loss": 13.44305037292431,
+      "perplexity": 689037.0849957487,
+      "tokens": 2467
+    },
+    {
+      "test_index": 249,
+      "label": 1,
+      "loss": 13.127772331237793,
+      "perplexity": 502711.80431735876,
+      "tokens": 231
+    },
+    {
+      "test_index": 250,
+      "label": 1,
+      "loss": 13.29738998413086,
+      "perplexity": 595638.956098165,
+      "tokens": 1394
+    },
+    {
+      "test_index": 251,
+      "label": 0,
+      "loss": 13.251471137093667,
+      "perplexity": 568906.3639529131,
+      "tokens": 2524
+    },
+    {
+      "test_index": 252,
+      "label": 1,
+      "loss": 13.044652938842773,
+      "perplexity": 462616.14967717294,
+      "tokens": 330
+    },
+    {
+      "test_index": 253,
+      "label": 1,
+      "loss": 11.91130256652832,
+      "perplexity": 148940.55811849877,
+      "tokens": 824
+    },
+    {
+      "test_index": 254,
+      "label": 0,
+      "loss": 12.129602382057591,
+      "perplexity": 185276.0922434458,
+      "tokens": 2622
+    },
+    {
+      "test_index": 255,
+      "label": 1,
+      "loss": 13.566949632921384,
+      "perplexity": 779922.3425854486,
+      "tokens": 5638
+    },
+    {
+      "test_index": 256,
+      "label": 1,
+      "loss": 13.132665634155273,
+      "perplexity": 505177.753854635,
+      "tokens": 578
+    },
+    {
+      "test_index": 257,
+      "label": 0,
+      "loss": 12.179032180438735,
+      "perplexity": 194664.3710339175,
+      "tokens": 2284
+    },
+    {
+      "test_index": 258,
+      "label": 1,
+      "loss": 13.380223274230957,
+      "perplexity": 647078.74517548,
+      "tokens": 1210
+    },
+    {
+      "test_index": 259,
+      "label": 0,
+      "loss": 12.17096699403566,
+      "perplexity": 193100.68079823966,
+      "tokens": 3461
+    },
+    {
+      "test_index": 260,
+      "label": 1,
+      "loss": 12.536385536193848,
+      "perplexity": 278280.6835000062,
+      "tokens": 569
+    },
+    {
+      "test_index": 261,
+      "label": 1,
+      "loss": 11.694351934311364,
+      "perplexity": 119892.63756221521,
+      "tokens": 3215
+    },
+    {
+      "test_index": 262,
+      "label": 1,
+      "loss": 12.702653884887695,
+      "perplexity": 328618.86228071066,
+      "tokens": 230
+    },
+    {
+      "test_index": 263,
+      "label": 1,
+      "loss": 13.733295440673828,
+      "perplexity": 921073.7984834382,
+      "tokens": 739
+    },
+    {
+      "test_index": 264,
+      "label": 0,
+      "loss": 11.617938041687012,
+      "perplexity": 111072.45795363229,
+      "tokens": 1311
+    },
+    {
+      "test_index": 265,
+      "label": 0,
+      "loss": 12.730728149414062,
+      "perplexity": 337975.3184339277,
+      "tokens": 1378
+    },
+    {
+      "test_index": 266,
+      "label": 0,
+      "loss": 12.493258476257324,
+      "perplexity": 266534.36836878123,
+      "tokens": 1362
+    },
+    {
+      "test_index": 267,
+      "label": 1,
+      "loss": 12.479104042053223,
+      "perplexity": 262788.2994743299,
+      "tokens": 357
+    },
+    {
+      "test_index": 268,
+      "label": 1,
+      "loss": 13.547137200514175,
+      "perplexity": 764622.2503899769,
+      "tokens": 30159
+    },
+    {
+      "test_index": 269,
+      "label": 1,
+      "loss": 12.950541496276855,
+      "perplexity": 421064.5794533822,
+      "tokens": 279
+    },
+    {
+      "test_index": 270,
+      "label": 0,
+      "loss": 12.012070238072758,
+      "perplexity": 164731.18426992674,
+      "tokens": 2534
+    },
+    {
+      "test_index": 271,
+      "label": 1,
+      "loss": 13.065014982969629,
+      "perplexity": 472132.51768492017,
+      "tokens": 2812
+    },
+    {
+      "test_index": 272,
+      "label": 1,
+      "loss": 13.804861068725586,
+      "perplexity": 989407.0158106467,
+      "tokens": 192
+    },
+    {
+      "test_index": 273,
+      "label": 1,
+      "loss": 13.85599552821415,
+      "perplexity": 1041315.6588707503,
+      "tokens": 15439
+    },
+    {
+      "test_index": 274,
+      "label": 1,
+      "loss": 13.307990410165417,
+      "perplexity": 601986.5670462968,
+      "tokens": 2597
+    },
+    {
+      "test_index": 275,
+      "label": 1,
+      "loss": 12.112970352172852,
+      "perplexity": 182220.0592041991,
+      "tokens": 1651
+    },
+    {
+      "test_index": 276,
+      "label": 0,
+      "loss": 12.257407188415527,
+      "perplexity": 210534.99986284928,
+      "tokens": 1566
+    },
+    {
+      "test_index": 277,
+      "label": 1,
+      "loss": 13.014717102050781,
+      "perplexity": 448972.5827986688,
+      "tokens": 185
+    },
+    {
+      "test_index": 278,
+      "label": 1,
+      "loss": 13.445287704467773,
+      "perplexity": 690580.4152275497,
+      "tokens": 1910
+    },
+    {
+      "test_index": 279,
+      "label": 1,
+      "loss": 13.187558040526755,
+      "perplexity": 533683.3905563174,
+      "tokens": 3312
+    },
+    {
+      "test_index": 280,
+      "label": 1,
+      "loss": 13.373502731323242,
+      "perplexity": 642744.6049045473,
+      "tokens": 527
+    },
+    {
+      "test_index": 281,
+      "label": 0,
+      "loss": 11.949990272521973,
+      "perplexity": 154815.64060316593,
+      "tokens": 760
+    },
+    {
+      "test_index": 282,
+      "label": 0,
+      "loss": 13.32264232635498,
+      "perplexity": 610871.757351256,
+      "tokens": 1524
+    },
+    {
+      "test_index": 283,
+      "label": 0,
+      "loss": 11.825671195983887,
+      "perplexity": 136717.38569173554,
+      "tokens": 2002
+    },
+    {
+      "test_index": 284,
+      "label": 0,
+      "loss": 11.903177261352539,
+      "perplexity": 147735.2739128553,
+      "tokens": 2021
+    },
+    {
+      "test_index": 285,
+      "label": 0,
+      "loss": 13.344945907592773,
+      "perplexity": 624649.4601357257,
+      "tokens": 204
+    },
+    {
+      "test_index": 286,
+      "label": 0,
+      "loss": 12.824411392211914,
+      "perplexity": 371168.49102972256,
+      "tokens": 1781
+    },
+    {
+      "test_index": 287,
+      "label": 0,
+      "loss": 11.210420608520508,
+      "perplexity": 73896.48995043502,
+      "tokens": 674
+    },
+    {
+      "test_index": 288,
+      "label": 1,
+      "loss": 13.267140659732712,
+      "perplexity": 577891.0642480577,
+      "tokens": 4525
+    },
+    {
+      "test_index": 289,
+      "label": 0,
+      "loss": 11.957392855089195,
+      "perplexity": 155965.92846305104,
+      "tokens": 2488
+    },
+    {
+      "test_index": 290,
+      "label": 0,
+      "loss": 10.714738845825195,
+      "perplexity": 45014.45078805745,
+      "tokens": 1559
+    },
+    {
+      "test_index": 291,
+      "label": 1,
+      "loss": 13.602380507857529,
+      "perplexity": 808051.0432584647,
+      "tokens": 6181
+    },
+    {
+      "test_index": 292,
+      "label": 0,
+      "loss": 12.35960578918457,
+      "perplexity": 233189.28604145,
+      "tokens": 1280
+    },
+    {
+      "test_index": 293,
+      "label": 1,
+      "loss": 11.444344520568848,
+      "perplexity": 93371.78778099045,
+      "tokens": 960
+    },
+    {
+      "test_index": 294,
+      "label": 1,
+      "loss": 13.073814392089844,
+      "perplexity": 476305.33711471676,
+      "tokens": 193
+    },
+    {
+      "test_index": 295,
+      "label": 1,
+      "loss": 12.039661407470703,
+      "perplexity": 169339.5936309604,
+      "tokens": 395
+    },
+    {
+      "test_index": 296,
+      "label": 0,
+      "loss": 12.797961235046387,
+      "perplexity": 361479.7256478073,
+      "tokens": 1436
+    },
+    {
+      "test_index": 297,
+      "label": 1,
+      "loss": 13.131555557250977,
+      "perplexity": 504617.2788402556,
+      "tokens": 361
+    },
+    {
+      "test_index": 298,
+      "label": 1,
+      "loss": 13.471002578735352,
+      "perplexity": 708568.8983308306,
+      "tokens": 679
+    },
+    {
+      "test_index": 299,
+      "label": 0,
+      "loss": 11.75083495405726,
+      "perplexity": 126859.43659941948,
+      "tokens": 2933
+    },
+    {
+      "test_index": 300,
+      "label": 0,
+      "loss": 11.228870391845703,
+      "perplexity": 75272.5188636602,
+      "tokens": 1566
+    },
+    {
+      "test_index": 301,
+      "label": 0,
+      "loss": 10.60740852355957,
+      "perplexity": 40433.28146934954,
+      "tokens": 802
+    },
+    {
+      "test_index": 302,
+      "label": 1,
+      "loss": 12.155372619628906,
+      "perplexity": 190112.75445591932,
+      "tokens": 266
+    },
+    {
+      "test_index": 303,
+      "label": 1,
+      "loss": 13.201159477233887,
+      "perplexity": 540991.841459768,
+      "tokens": 1377
+    },
+    {
+      "test_index": 304,
+      "label": 1,
+      "loss": 13.546086166757945,
+      "perplexity": 763819.0287745096,
+      "tokens": 13733
+    },
+    {
+      "test_index": 305,
+      "label": 1,
+      "loss": 11.872701644897461,
+      "perplexity": 143300.86425654183,
+      "tokens": 1728
+    },
+    {
+      "test_index": 306,
+      "label": 0,
+      "loss": 11.648039516528966,
+      "perplexity": 114466.73279998142,
+      "tokens": 2909
+    },
+    {
+      "test_index": 307,
+      "label": 0,
+      "loss": 12.131242641741741,
+      "perplexity": 185580.2425225181,
+      "tokens": 3492
+    },
+    {
+      "test_index": 308,
+      "label": 0,
+      "loss": 10.853827476501465,
+      "perplexity": 51731.775068011186,
+      "tokens": 1622
+    },
+    {
+      "test_index": 309,
+      "label": 0,
+      "loss": 13.381259959893374,
+      "perplexity": 647749.9102665621,
+      "tokens": 12264
+    },
+    {
+      "test_index": 310,
+      "label": 0,
+      "loss": 11.969322894392658,
+      "perplexity": 157837.75137941932,
+      "tokens": 2501
+    },
+    {
+      "test_index": 311,
+      "label": 0,
+      "loss": 12.396143075102625,
+      "perplexity": 241866.95351772138,
+      "tokens": 3897
+    },
+    {
+      "test_index": 312,
+      "label": 0,
+      "loss": 13.274575233459473,
+      "perplexity": 582203.4484773491,
+      "tokens": 753
+    },
+    {
+      "test_index": 313,
+      "label": 0,
+      "loss": 12.965171813964844,
+      "perplexity": 427270.17222489027,
+      "tokens": 1478
+    },
+    {
+      "test_index": 314,
+      "label": 1,
+      "loss": 13.485909224715016,
+      "perplexity": 719210.4015594933,
+      "tokens": 2058
+    },
+    {
+      "test_index": 315,
+      "label": 0,
+      "loss": 11.229543635668847,
+      "perplexity": 75323.21268477383,
+      "tokens": 5922
+    },
+    {
+      "test_index": 316,
+      "label": 0,
+      "loss": 13.486114595791856,
+      "perplexity": 719358.1217423432,
+      "tokens": 4055
+    },
+    {
+      "test_index": 317,
+      "label": 1,
+      "loss": 13.584895101181074,
+      "perplexity": 794044.7518568467,
+      "tokens": 2792
+    },
+    {
+      "test_index": 318,
+      "label": 1,
+      "loss": 12.424443244934082,
+      "perplexity": 248809.6051310281,
+      "tokens": 1083
+    },
+    {
+      "test_index": 319,
+      "label": 1,
+      "loss": 13.21281623840332,
+      "perplexity": 547334.9523898285,
+      "tokens": 643
+    },
+    {
+      "test_index": 320,
+      "label": 1,
+      "loss": 13.382096630920188,
+      "perplexity": 648292.0906307767,
+      "tokens": 3839
+    },
+    {
+      "test_index": 321,
+      "label": 1,
+      "loss": 13.222888267072793,
+      "perplexity": 552875.5815707156,
+      "tokens": 2198
+    },
+    {
+      "test_index": 322,
+      "label": 1,
+      "loss": 13.149768829345703,
+      "perplexity": 513892.21774509584,
+      "tokens": 826
+    },
+    {
+      "test_index": 323,
+      "label": 1,
+      "loss": 11.550427436828613,
+      "perplexity": 103821.40442908752,
+      "tokens": 1146
+    },
+    {
+      "test_index": 324,
+      "label": 1,
+      "loss": 13.685677528381348,
+      "perplexity": 878242.0591218378,
+      "tokens": 878
+    },
+    {
+      "test_index": 325,
+      "label": 1,
+      "loss": 13.443762633952689,
+      "perplexity": 689528.0340796935,
+      "tokens": 9400
+    },
+    {
+      "test_index": 326,
+      "label": 1,
+      "loss": 13.32864471435547,
+      "perplexity": 614549.473154096,
+      "tokens": 8075
+    },
+    {
+      "test_index": 327,
+      "label": 0,
+      "loss": 11.960666119398406,
+      "perplexity": 156477.28261222003,
+      "tokens": 2461
+    },
+    {
+      "test_index": 328,
+      "label": 1,
+      "loss": 11.836514472961426,
+      "perplexity": 138207.91668838065,
+      "tokens": 1697
+    },
+    {
+      "test_index": 329,
+      "label": 0,
+      "loss": 12.000774383544922,
+      "perplexity": 162880.87486350763,
+      "tokens": 2005
+    },
+    {
+      "test_index": 330,
+      "label": 1,
+      "loss": 13.643533706665039,
+      "perplexity": 841998.6641180242,
+      "tokens": 275
+    },
+    {
+      "test_index": 331,
+      "label": 0,
+      "loss": 12.374071199771716,
+      "perplexity": 236586.98008168754,
+      "tokens": 19934
+    },
+    {
+      "test_index": 332,
+      "label": 0,
+      "loss": 11.893532342697531,
+      "perplexity": 146317.22867171402,
+      "tokens": 2594
+    },
+    {
+      "test_index": 333,
+      "label": 0,
+      "loss": 11.883191897856507,
+      "perplexity": 144812.03901646333,
+      "tokens": 2081
+    },
+    {
+      "test_index": 334,
+      "label": 1,
+      "loss": 13.510977830381453,
+      "perplexity": 737467.8922981276,
+      "tokens": 11624
+    },
+    {
+      "test_index": 335,
+      "label": 0,
+      "loss": 11.99965878779894,
+      "perplexity": 162699.26697173878,
+      "tokens": 2478
+    },
+    {
+      "test_index": 336,
+      "label": 0,
+      "loss": 11.962568653573236,
+      "perplexity": 156775.26936508116,
+      "tokens": 2502
+    },
+    {
+      "test_index": 337,
+      "label": 1,
+      "loss": 13.237190246582031,
+      "perplexity": 560839.6117569413,
+      "tokens": 820
+    },
+    {
+      "test_index": 338,
+      "label": 1,
+      "loss": 12.46217155456543,
+      "perplexity": 258376.10005492574,
+      "tokens": 823
+    },
+    {
+      "test_index": 339,
+      "label": 0,
+      "loss": 11.818273544311523,
+      "perplexity": 135709.729833701,
+      "tokens": 1290
+    },
+    {
+      "test_index": 340,
+      "label": 0,
+      "loss": 11.967457431836074,
+      "perplexity": 157543.5854272971,
+      "tokens": 4450
+    },
+    {
+      "test_index": 341,
+      "label": 0,
+      "loss": 11.982931137084961,
+      "perplexity": 160000.32685937337,
+      "tokens": 340
+    },
+    {
+      "test_index": 342,
+      "label": 0,
+      "loss": 12.10850918850052,
+      "perplexity": 181408.95627238665,
+      "tokens": 2247
+    },
+    {
+      "test_index": 343,
+      "label": 1,
+      "loss": 13.504963130905622,
+      "perplexity": 733045.5573926814,
+      "tokens": 2105
+    },
+    {
+      "test_index": 344,
+      "label": 0,
+      "loss": 11.990106763005539,
+      "perplexity": 161152.55839934724,
+      "tokens": 3384
+    },
+    {
+      "test_index": 345,
+      "label": 1,
+      "loss": 13.59168815612793,
+      "perplexity": 799457.1038757999,
+      "tokens": 1425
+    },
+    {
+      "test_index": 346,
+      "label": 1,
+      "loss": 12.87621021270752,
+      "perplexity": 390901.23560811125,
+      "tokens": 767
+    },
+    {
+      "test_index": 347,
+      "label": 1,
+      "loss": 12.511268615722656,
+      "perplexity": 271378.1774242039,
+      "tokens": 248
+    },
+    {
+      "test_index": 348,
+      "label": 1,
+      "loss": 13.375516891479492,
+      "perplexity": 644040.5001105326,
+      "tokens": 475
+    },
+    {
+      "test_index": 349,
+      "label": 1,
+      "loss": 10.63047981262207,
+      "perplexity": 41376.97363220017,
+      "tokens": 1245
+    },
+    {
+      "test_index": 350,
+      "label": 1,
+      "loss": 13.912632942199707,
+      "perplexity": 1101995.2322125046,
+      "tokens": 378
+    },
+    {
+      "test_index": 351,
+      "label": 0,
+      "loss": 10.275197982788086,
+      "perplexity": 29004.25965357291,
+      "tokens": 742
+    },
+    {
+      "test_index": 352,
+      "label": 0,
+      "loss": 10.947396278381348,
+      "perplexity": 56805.94577575322,
+      "tokens": 599
+    },
+    {
+      "test_index": 353,
+      "label": 1,
+      "loss": 12.79332160949707,
+      "perplexity": 359806.47969600675,
+      "tokens": 581
+    },
+    {
+      "test_index": 354,
+      "label": 0,
+      "loss": 12.008218111047423,
+      "perplexity": 164097.83946857526,
+      "tokens": 2484
+    },
+    {
+      "test_index": 355,
+      "label": 1,
+      "loss": 12.917220115661621,
+      "perplexity": 407265.30848832754,
+      "tokens": 408
+    },
+    {
+      "test_index": 356,
+      "label": 1,
+      "loss": 13.14097785949707,
+      "perplexity": 509394.4057844203,
+      "tokens": 290
+    },
+    {
+      "test_index": 357,
+      "label": 1,
+      "loss": 12.699923976600592,
+      "perplexity": 327722.9863112576,
+      "tokens": 5640
+    },
+    {
+      "test_index": 358,
+      "label": 1,
+      "loss": 12.12359619140625,
+      "perplexity": 184166.62388481293,
+      "tokens": 933
+    },
+    {
+      "test_index": 359,
+      "label": 1,
+      "loss": 13.607512128401776,
+      "perplexity": 812208.3122333304,
+      "tokens": 4900
+    },
+    {
+      "test_index": 360,
+      "label": 0,
+      "loss": 11.693377014686321,
+      "perplexity": 119775.80883552045,
+      "tokens": 3480
+    },
+    {
+      "test_index": 361,
+      "label": 0,
+      "loss": 11.978469460310336,
+      "perplexity": 159288.04727930817,
+      "tokens": 2672
+    },
+    {
+      "test_index": 362,
+      "label": 0,
+      "loss": 12.887474060058594,
+      "perplexity": 395329.17847571947,
+      "tokens": 1511
+    },
+    {
+      "test_index": 363,
+      "label": 0,
+      "loss": 10.838875770568848,
+      "perplexity": 50964.05047821455,
+      "tokens": 626
+    },
+    {
+      "test_index": 364,
+      "label": 0,
+      "loss": 12.634467124938965,
+      "perplexity": 306958.2810343785,
+      "tokens": 1402
+    },
+    {
+      "test_index": 365,
+      "label": 0,
+      "loss": 13.065825462341309,
+      "perplexity": 472515.3264595557,
+      "tokens": 189
+    },
+    {
+      "test_index": 366,
+      "label": 0,
+      "loss": 12.745536804199219,
+      "perplexity": 343017.52021898713,
+      "tokens": 1460
+    },
+    {
+      "test_index": 367,
+      "label": 1,
+      "loss": 13.54645824432373,
+      "perplexity": 764103.2815782028,
+      "tokens": 694
+    },
+    {
+      "test_index": 368,
+      "label": 1,
+      "loss": 12.476374626159668,
+      "perplexity": 262072.01887160874,
+      "tokens": 380
+    },
+    {
+      "test_index": 369,
+      "label": 0,
+      "loss": 11.990041937776338,
+      "perplexity": 161142.11198641194,
+      "tokens": 2489
+    },
+    {
+      "test_index": 370,
+      "label": 1,
+      "loss": 12.394380569458008,
+      "perplexity": 241441.0370972042,
+      "tokens": 1387
+    },
+    {
+      "test_index": 371,
+      "label": 1,
+      "loss": 11.748549461364746,
+      "perplexity": 126569.83135549171,
+      "tokens": 848
+    },
+    {
+      "test_index": 372,
+      "label": 0,
+      "loss": 11.9877784580087,
+      "perplexity": 160777.78255790993,
+      "tokens": 2203
+    },
+    {
+      "test_index": 373,
+      "label": 0,
+      "loss": 11.910557746887207,
+      "perplexity": 148829.6655680551,
+      "tokens": 2024
+    },
+    {
+      "test_index": 374,
+      "label": 1,
+      "loss": 12.646916389465332,
+      "perplexity": 310803.5717309227,
+      "tokens": 810
+    },
+    {
+      "test_index": 375,
+      "label": 1,
+      "loss": 13.315398932053917,
+      "perplexity": 606462.9589542331,
+      "tokens": 2165
+    },
+    {
+      "test_index": 376,
+      "label": 1,
+      "loss": 13.71663761138916,
+      "perplexity": 905857.7930474869,
+      "tokens": 1013
+    },
+    {
+      "test_index": 377,
+      "label": 1,
+      "loss": 12.876083374023438,
+      "perplexity": 390851.6573540674,
+      "tokens": 823
+    },
+    {
+      "test_index": 378,
+      "label": 1,
+      "loss": 13.094706535339355,
+      "perplexity": 486361.0534223697,
+      "tokens": 236
+    },
+    {
+      "test_index": 379,
+      "label": 1,
+      "loss": 13.6163052879817,
+      "perplexity": 819381.6816056019,
+      "tokens": 13444
+    },
+    {
+      "test_index": 380,
+      "label": 0,
+      "loss": 13.276761054992676,
+      "perplexity": 583477.4331560693,
+      "tokens": 203
+    },
+    {
+      "test_index": 381,
+      "label": 0,
+      "loss": 12.106306140342456,
+      "perplexity": 181009.7435093479,
+      "tokens": 2759
+    },
+    {
+      "test_index": 382,
+      "label": 0,
+      "loss": 11.355061531066895,
+      "perplexity": 85396.59698798919,
+      "tokens": 583
+    },
+    {
+      "test_index": 383,
+      "label": 0,
+      "loss": 10.938051223754883,
+      "perplexity": 56277.56383372277,
+      "tokens": 577
+    },
+    {
+      "test_index": 384,
+      "label": 1,
+      "loss": 13.615785598754883,
+      "perplexity": 818955.9684018847,
+      "tokens": 1039
+    },
+    {
+      "test_index": 385,
+      "label": 0,
+      "loss": 11.908323686823314,
+      "perplexity": 148497.5422857039,
+      "tokens": 2073
+    },
+    {
+      "test_index": 386,
+      "label": 0,
+      "loss": 12.059271812438965,
+      "perplexity": 172693.18682653096,
+      "tokens": 695
+    },
+    {
+      "test_index": 387,
+      "label": 0,
+      "loss": 11.982691581726074,
+      "perplexity": 159962.00251423504,
+      "tokens": 2500
+    },
+    {
+      "test_index": 388,
+      "label": 1,
+      "loss": 12.05443286895752,
+      "perplexity": 171859.55283638166,
+      "tokens": 305
+    },
+    {
+      "test_index": 389,
+      "label": 1,
+      "loss": 13.620499610900879,
+      "perplexity": 822825.6504821562,
+      "tokens": 624
+    },
+    {
+      "test_index": 390,
+      "label": 1,
+      "loss": 13.180989265441895,
+      "perplexity": 530189.233128406,
+      "tokens": 349
+    },
+    {
+      "test_index": 391,
+      "label": 1,
+      "loss": 13.024313926696777,
+      "perplexity": 453302.0352163292,
+      "tokens": 770
+    },
+    {
+      "test_index": 392,
+      "label": 1,
+      "loss": 13.767841512479032,
+      "perplexity": 953449.283212062,
+      "tokens": 12553
+    },
+    {
+      "test_index": 393,
+      "label": 1,
+      "loss": 12.416653369533039,
+      "perplexity": 246878.9388962527,
+      "tokens": 3799
+    },
+    {
+      "test_index": 394,
+      "label": 1,
+      "loss": 12.568885803222656,
+      "perplexity": 287473.4546264609,
+      "tokens": 543
+    },
+    {
+      "test_index": 395,
+      "label": 1,
+      "loss": 13.77269546262311,
+      "perplexity": 958088.5287221828,
+      "tokens": 2337
+    },
+    {
+      "test_index": 396,
+      "label": 1,
+      "loss": 13.860647201538086,
+      "perplexity": 1046170.8026596834,
+      "tokens": 387
+    },
+    {
+      "test_index": 397,
+      "label": 0,
+      "loss": 12.613646507263184,
+      "perplexity": 300633.29358284315,
+      "tokens": 1461
+    },
+    {
+      "test_index": 398,
+      "label": 1,
+      "loss": 13.4097900390625,
+      "perplexity": 666496.4145473002,
+      "tokens": 306
+    },
+    {
+      "test_index": 399,
+      "label": 1,
+      "loss": 13.731172214684351,
+      "perplexity": 919120.2253288256,
+      "tokens": 4068
+    },
+    {
+      "test_index": 400,
+      "label": 1,
+      "loss": 13.165528297424316,
+      "perplexity": 522055.0376533545,
+      "tokens": 1620
+    },
+    {
+      "test_index": 401,
+      "label": 0,
+      "loss": 13.273160556877006,
+      "perplexity": 581380.4012026739,
+      "tokens": 15069
+    },
+    {
+      "test_index": 402,
+      "label": 1,
+      "loss": 13.362515247444238,
+      "perplexity": 635721.1148208545,
+      "tokens": 2152
+    },
+    {
+      "test_index": 403,
+      "label": 1,
+      "loss": 13.804699897766113,
+      "perplexity": 989247.5649823662,
+      "tokens": 178
+    },
+    {
+      "test_index": 404,
+      "label": 1,
+      "loss": 13.761515617370605,
+      "perplexity": 947436.8999579225,
+      "tokens": 973
+    },
+    {
+      "test_index": 405,
+      "label": 1,
+      "loss": 13.708521207173666,
+      "perplexity": 898535.2416292903,
+      "tokens": 2097
+    },
+    {
+      "test_index": 406,
+      "label": 1,
+      "loss": 11.809186935424805,
+      "perplexity": 134482.174201769,
+      "tokens": 1689
+    },
+    {
+      "test_index": 407,
+      "label": 1,
+      "loss": 13.324455261230469,
+      "perplexity": 611980.232557684,
+      "tokens": 367
+    },
+    {
+      "test_index": 408,
+      "label": 1,
+      "loss": 13.196702003479004,
+      "perplexity": 538585.7510511768,
+      "tokens": 599
+    },
+    {
+      "test_index": 409,
+      "label": 1,
+      "loss": 12.015814781188965,
+      "perplexity": 165349.18363252725,
+      "tokens": 343
+    },
+    {
+      "test_index": 410,
+      "label": 1,
+      "loss": 13.64961051940918,
+      "perplexity": 847130.9103869781,
+      "tokens": 463
+    },
+    {
+      "test_index": 411,
+      "label": 1,
+      "loss": 13.564175605773926,
+      "perplexity": 777761.8149009114,
+      "tokens": 384
+    },
+    {
+      "test_index": 412,
+      "label": 1,
+      "loss": 13.469548225402832,
+      "perplexity": 707539.1377915671,
+      "tokens": 1734
+    },
+    {
+      "test_index": 413,
+      "label": 0,
+      "loss": 12.03153580061468,
+      "perplexity": 167969.1819215142,
+      "tokens": 2510
+    },
+    {
+      "test_index": 414,
+      "label": 0,
+      "loss": 13.121916268388853,
+      "perplexity": 499776.49546143255,
+      "tokens": 5082
+    },
+    {
+      "test_index": 415,
+      "label": 0,
+      "loss": 12.166772267148659,
+      "perplexity": 192292.37268172237,
+      "tokens": 3435
+    },
+    {
+      "test_index": 416,
+      "label": 1,
+      "loss": 13.82950496673584,
+      "perplexity": 1014092.7888982048,
+      "tokens": 197
+    },
+    {
+      "test_index": 417,
+      "label": 0,
+      "loss": 11.119746208190918,
+      "perplexity": 67490.77549515979,
+      "tokens": 572
+    },
+    {
+      "test_index": 418,
+      "label": 1,
+      "loss": 12.823762893676758,
+      "perplexity": 370927.8668376446,
+      "tokens": 733
+    },
+    {
+      "test_index": 419,
+      "label": 1,
+      "loss": 12.678340840185662,
+      "perplexity": 320725.4820718854,
+      "tokens": 3406
+    },
+    {
+      "test_index": 420,
+      "label": 0,
+      "loss": 12.081492681472277,
+      "perplexity": 176573.53217258517,
+      "tokens": 2767
+    },
+    {
+      "test_index": 421,
+      "label": 1,
+      "loss": 13.57845687866211,
+      "perplexity": 788948.936652561,
+      "tokens": 353
+    },
+    {
+      "test_index": 422,
+      "label": 0,
+      "loss": 10.485363960266113,
+      "perplexity": 35787.85826543631,
+      "tokens": 780
+    },
+    {
+      "test_index": 423,
+      "label": 1,
+      "loss": 12.821316719055176,
+      "perplexity": 370021.6213725746,
+      "tokens": 1390
+    },
+    {
+      "test_index": 424,
+      "label": 1,
+      "loss": 13.545888900756836,
+      "perplexity": 763668.3681097341,
+      "tokens": 1185
+    },
+    {
+      "test_index": 425,
+      "label": 0,
+      "loss": 12.667146682739258,
+      "perplexity": 317155.25067649275,
+      "tokens": 1502
+    },
+    {
+      "test_index": 426,
+      "label": 1,
+      "loss": 13.235952542994752,
+      "perplexity": 560145.887958359,
+      "tokens": 2291
+    },
+    {
+      "test_index": 427,
+      "label": 0,
+      "loss": 11.713212013244629,
+      "perplexity": 122175.2799162296,
+      "tokens": 606
+    },
+    {
+      "test_index": 428,
+      "label": 0,
+      "loss": 13.323734283447266,
+      "perplexity": 611539.1674244372,
+      "tokens": 1425
+    },
+    {
+      "test_index": 429,
+      "label": 0,
+      "loss": 13.438592910766602,
+      "perplexity": 685972.5633328668,
+      "tokens": 816
+    },
+    {
+      "test_index": 430,
+      "label": 1,
+      "loss": 13.696993827819824,
+      "perplexity": 888236.9551999298,
+      "tokens": 1092
+    },
+    {
+      "test_index": 431,
+      "label": 1,
+      "loss": 11.974767684936523,
+      "perplexity": 158699.48873639858,
+      "tokens": 999
+    },
+    {
+      "test_index": 432,
+      "label": 1,
+      "loss": 13.097962433720978,
+      "perplexity": 487947.17631538154,
+      "tokens": 5325
+    },
+    {
+      "test_index": 433,
+      "label": 0,
+      "loss": 11.907458305358887,
+      "perplexity": 148369.09085285765,
+      "tokens": 1352
+    },
+    {
+      "test_index": 434,
+      "label": 1,
+      "loss": 13.142288051166885,
+      "perplexity": 510062.2474963181,
+      "tokens": 4682
+    },
+    {
+      "test_index": 435,
+      "label": 0,
+      "loss": 12.157698410806136,
+      "perplexity": 190555.43161067416,
+      "tokens": 3469
+    },
+    {
+      "test_index": 436,
+      "label": 1,
+      "loss": 12.40391598936665,
+      "perplexity": 243754.2901612276,
+      "tokens": 3321
+    },
+    {
+      "test_index": 437,
+      "label": 1,
+      "loss": 13.741496489374212,
+      "perplexity": 928658.6288318275,
+      "tokens": 6059
+    },
+    {
+      "test_index": 438,
+      "label": 1,
+      "loss": 12.378011143495407,
+      "perplexity": 237520.95817133304,
+      "tokens": 2609
+    },
+    {
+      "test_index": 439,
+      "label": 1,
+      "loss": 13.458864212036133,
+      "perplexity": 700020.0188936626,
+      "tokens": 1840
+    },
+    {
+      "test_index": 440,
+      "label": 1,
+      "loss": 13.300861358642578,
+      "perplexity": 597710.235000961,
+      "tokens": 383
+    },
+    {
+      "test_index": 441,
+      "label": 1,
+      "loss": 13.39511489868164,
+      "perplexity": 656786.9045640038,
+      "tokens": 293
+    },
+    {
+      "test_index": 442,
+      "label": 0,
+      "loss": 13.085028648376465,
+      "perplexity": 481676.8094769517,
+      "tokens": 1254
+    },
+    {
+      "test_index": 443,
+      "label": 1,
+      "loss": 13.022657606430165,
+      "perplexity": 452551.84331903176,
+      "tokens": 3405
+    },
+    {
+      "test_index": 444,
+      "label": 0,
+      "loss": 11.437542915344238,
+      "perplexity": 92738.86462811343,
+      "tokens": 812
+    },
+    {
+      "test_index": 445,
+      "label": 1,
+      "loss": 13.239315032958984,
+      "perplexity": 562032.5430369121,
+      "tokens": 370
+    },
+    {
+      "test_index": 446,
+      "label": 1,
+      "loss": 12.86613655090332,
+      "perplexity": 386983.19639579055,
+      "tokens": 905
+    },
+    {
+      "test_index": 447,
+      "label": 1,
+      "loss": 12.283557891845703,
+      "perplexity": 216113.25800137257,
+      "tokens": 1654
+    },
+    {
+      "test_index": 448,
+      "label": 0,
+      "loss": 11.839534759521484,
+      "perplexity": 138625.9752121199,
+      "tokens": 600
+    },
+    {
+      "test_index": 449,
+      "label": 1,
+      "loss": 13.507576721917571,
+      "perplexity": 734963.9445204902,
+      "tokens": 6556
+    },
+    {
+      "test_index": 450,
+      "label": 0,
+      "loss": 12.182582807375562,
+      "perplexity": 195356.78010907723,
+      "tokens": 4903
+    },
+    {
+      "test_index": 451,
+      "label": 0,
+      "loss": 13.150911331176758,
+      "perplexity": 514479.67606703733,
+      "tokens": 1459
+    },
+    {
+      "test_index": 452,
+      "label": 0,
+      "loss": 11.783752478033204,
+      "perplexity": 131104.82565450468,
+      "tokens": 2083
+    },
+    {
+      "test_index": 453,
+      "label": 0,
+      "loss": 11.415240348835455,
+      "perplexity": 90693.44378178143,
+      "tokens": 2343
+    },
+    {
+      "test_index": 454,
+      "label": 1,
+      "loss": 13.489564895629883,
+      "perplexity": 721844.4097062389,
+      "tokens": 1121
+    },
+    {
+      "test_index": 455,
+      "label": 1,
+      "loss": 13.366545677185059,
+      "perplexity": 638288.5144954185,
+      "tokens": 791
+    },
+    {
+      "test_index": 456,
+      "label": 1,
+      "loss": 13.322584552133584,
+      "perplexity": 610836.4657305848,
+      "tokens": 3837
+    },
+    {
+      "test_index": 457,
+      "label": 1,
+      "loss": 13.848380289269013,
+      "perplexity": 1033415.9087303329,
+      "tokens": 12117
+    },
+    {
+      "test_index": 458,
+      "label": 0,
+      "loss": 13.889067649841309,
+      "perplexity": 1076329.9846169162,
+      "tokens": 459
+    },
+    {
+      "test_index": 459,
+      "label": 1,
+      "loss": 12.671835899353027,
+      "perplexity": 318645.95272796665,
+      "tokens": 520
+    },
+    {
+      "test_index": 460,
+      "label": 0,
+      "loss": 11.121420860290527,
+      "perplexity": 67603.89375447597,
+      "tokens": 620
+    },
+    {
+      "test_index": 461,
+      "label": 0,
+      "loss": 11.758440971374512,
+      "perplexity": 127828.0104965189,
+      "tokens": 752
+    },
+    {
+      "test_index": 462,
+      "label": 1,
+      "loss": 12.566850662231445,
+      "perplexity": 286889.00054002425,
+      "tokens": 875
+    },
+    {
+      "test_index": 463,
+      "label": 0,
+      "loss": 11.180549621582031,
+      "perplexity": 71721.77106571877,
+      "tokens": 895
+    },
+    {
+      "test_index": 464,
+      "label": 1,
+      "loss": 12.94353183263094,
+      "perplexity": 418123.3788348063,
+      "tokens": 3126
+    },
+    {
+      "test_index": 465,
+      "label": 1,
+      "loss": 13.593672752380371,
+      "perplexity": 801045.2788699418,
+      "tokens": 1551
+    },
+    {
+      "test_index": 466,
+      "label": 1,
+      "loss": 13.230930960364127,
+      "perplexity": 557340.1196912888,
+      "tokens": 4364
+    },
+    {
+      "test_index": 467,
+      "label": 1,
+      "loss": 13.371051440669541,
+      "perplexity": 641170.9805551277,
+      "tokens": 2990
+    },
+    {
+      "test_index": 468,
+      "label": 0,
+      "loss": 12.705358505249023,
+      "perplexity": 329508.85454983555,
+      "tokens": 1696
+    },
+    {
+      "test_index": 469,
+      "label": 1,
+      "loss": 13.075544357299805,
+      "perplexity": 477130.0419268808,
+      "tokens": 1725
+    },
+    {
+      "test_index": 470,
+      "label": 1,
+      "loss": 12.518566131591797,
+      "perplexity": 273365.80754093494,
+      "tokens": 256
+    },
+    {
+      "test_index": 471,
+      "label": 0,
+      "loss": 12.800411224365234,
+      "perplexity": 362366.4328827172,
+      "tokens": 1953
+    },
+    {
+      "test_index": 472,
+      "label": 1,
+      "loss": 12.159891128540039,
+      "perplexity": 190973.72431617885,
+      "tokens": 480
+    },
+    {
+      "test_index": 473,
+      "label": 0,
+      "loss": 11.8539555906945,
+      "perplexity": 140639.56089103132,
+      "tokens": 2741
+    },
+    {
+      "test_index": 474,
+      "label": 0,
+      "loss": 12.087388367893054,
+      "perplexity": 177617.62915837174,
+      "tokens": 2601
+    },
+    {
+      "test_index": 475,
+      "label": 0,
+      "loss": 11.881717907694114,
+      "perplexity": 144598.74473101387,
+      "tokens": 2061
+    },
+    {
+      "test_index": 476,
+      "label": 1,
+      "loss": 13.688669204711914,
+      "perplexity": 880873.4092139383,
+      "tokens": 446
+    },
+    {
+      "test_index": 477,
+      "label": 1,
+      "loss": 13.172391891479492,
+      "perplexity": 525650.5364132283,
+      "tokens": 522
+    },
+    {
+      "test_index": 478,
+      "label": 1,
+      "loss": 13.507974624633789,
+      "perplexity": 735256.4468602156,
+      "tokens": 420
+    },
+    {
+      "test_index": 479,
+      "label": 1,
+      "loss": 13.529605865478516,
+      "perplexity": 751334.2203315182,
+      "tokens": 1474
+    },
+    {
+      "test_index": 480,
+      "label": 0,
+      "loss": 13.248108787536621,
+      "perplexity": 566996.7141462781,
+      "tokens": 3200
+    },
+    {
+      "test_index": 481,
+      "label": 1,
+      "loss": 11.295370101928711,
+      "perplexity": 80448.30650575772,
+      "tokens": 918
+    },
+    {
+      "test_index": 482,
+      "label": 1,
+      "loss": 13.660536337471772,
+      "perplexity": 856437.2557296846,
+      "tokens": 7490
+    },
+    {
+      "test_index": 483,
+      "label": 1,
+      "loss": 13.684539794921875,
+      "perplexity": 877243.4219448466,
+      "tokens": 517
+    },
+    {
+      "test_index": 484,
+      "label": 1,
+      "loss": 12.181043378251186,
+      "perplexity": 195056.27355574918,
+      "tokens": 7494
+    },
+    {
+      "test_index": 485,
+      "label": 1,
+      "loss": 12.402206786475356,
+      "perplexity": 243338.0204697386,
+      "tokens": 9013
+    },
+    {
+      "test_index": 486,
+      "label": 0,
+      "loss": 12.259031295776367,
+      "perplexity": 210877.2091229089,
+      "tokens": 1514
+    },
+    {
+      "test_index": 487,
+      "label": 1,
+      "loss": 13.775928497314453,
+      "perplexity": 961191.0747900038,
+      "tokens": 167
+    },
+    {
+      "test_index": 488,
+      "label": 1,
+      "loss": 13.446196556091309,
+      "perplexity": 691208.3356591403,
+      "tokens": 536
+    },
+    {
+      "test_index": 489,
+      "label": 0,
+      "loss": 10.089813232421875,
+      "perplexity": 24096.29160727354,
+      "tokens": 785
+    },
+    {
+      "test_index": 490,
+      "label": 0,
+      "loss": 12.785210609436035,
+      "perplexity": 356899.892914949,
+      "tokens": 1623
+    },
+    {
+      "test_index": 491,
+      "label": 0,
+      "loss": 10.932397842407227,
+      "perplexity": 55960.30294743222,
+      "tokens": 719
+    },
+    {
+      "test_index": 492,
+      "label": 1,
+      "loss": 13.451523780822754,
+      "perplexity": 694900.3832515866,
+      "tokens": 600
+    },
+    {
+      "test_index": 493,
+      "label": 1,
+      "loss": 13.156303977723951,
+      "perplexity": 517261.57727914606,
+      "tokens": 3148
+    },
+    {
+      "test_index": 494,
+      "label": 0,
+      "loss": 12.9544677734375,
+      "perplexity": 422721.045439172,
+      "tokens": 873
+    },
+    {
+      "test_index": 495,
+      "label": 0,
+      "loss": 12.80259895324707,
+      "perplexity": 363160.06019790657,
+      "tokens": 1404
+    },
+    {
+      "test_index": 496,
+      "label": 0,
+      "loss": 12.338307707494693,
+      "perplexity": 228275.31639168665,
+      "tokens": 2101
+    },
+    {
+      "test_index": 497,
+      "label": 1,
+      "loss": 13.48625373840332,
+      "perplexity": 719458.2220739301,
+      "tokens": 778
+    },
+    {
+      "test_index": 498,
+      "label": 0,
+      "loss": 12.605463027954102,
+      "perplexity": 298183.1064469863,
+      "tokens": 1294
+    },
+    {
+      "test_index": 499,
+      "label": 0,
+      "loss": 12.832904815673828,
+      "perplexity": 374334.4079041372,
+      "tokens": 1398
+    },
+    {
+      "test_index": 500,
+      "label": 1,
+      "loss": 13.050580978393555,
+      "perplexity": 465366.70114332257,
+      "tokens": 853
+    },
+    {
+      "test_index": 501,
+      "label": 1,
+      "loss": 13.011070250161417,
+      "perplexity": 447338.22822269844,
+      "tokens": 2195
+    },
+    {
+      "test_index": 502,
+      "label": 1,
+      "loss": 13.552447319030762,
+      "perplexity": 768693.2844305576,
+      "tokens": 1045
+    },
+    {
+      "test_index": 503,
+      "label": 1,
+      "loss": 12.159994125366211,
+      "perplexity": 190993.39501665812,
+      "tokens": 902
+    },
+    {
+      "test_index": 504,
+      "label": 1,
+      "loss": 13.30250072479248,
+      "perplexity": 598690.9045462693,
+      "tokens": 232
+    },
+    {
+      "test_index": 505,
+      "label": 1,
+      "loss": 13.71155581992581,
+      "perplexity": 901266.0895691109,
+      "tokens": 4223
+    },
+    {
+      "test_index": 506,
+      "label": 1,
+      "loss": 13.536744117736816,
+      "perplexity": 756716.6211390572,
+      "tokens": 453
+    },
+    {
+      "test_index": 507,
+      "label": 1,
+      "loss": 13.157840728759766,
+      "perplexity": 518057.0906402505,
+      "tokens": 810
+    },
+    {
+      "test_index": 508,
+      "label": 1,
+      "loss": 12.820323944091797,
+      "perplexity": 369654.4554576875,
+      "tokens": 913
+    },
+    {
+      "test_index": 509,
+      "label": 1,
+      "loss": 13.643196105957031,
+      "perplexity": 841714.4527505551,
+      "tokens": 328
+    },
+    {
+      "test_index": 510,
+      "label": 1,
+      "loss": 12.844606464284642,
+      "perplexity": 378740.4664063811,
+      "tokens": 5759
+    },
+    {
+      "test_index": 511,
+      "label": 1,
+      "loss": 12.801705681852292,
+      "perplexity": 362835.80455011444,
+      "tokens": 5913
+    },
+    {
+      "test_index": 512,
+      "label": 0,
+      "loss": 11.664976924491329,
+      "perplexity": 116422.0145101786,
+      "tokens": 2506
+    },
+    {
+      "test_index": 513,
+      "label": 1,
+      "loss": 13.957175254821777,
+      "perplexity": 1152190.2507485987,
+      "tokens": 247
+    },
+    {
+      "test_index": 514,
+      "label": 1,
+      "loss": 13.685653686523438,
+      "perplexity": 878221.1204490629,
+      "tokens": 1478
+    },
+    {
+      "test_index": 515,
+      "label": 1,
+      "loss": 13.090517044067383,
+      "perplexity": 484327.71034464246,
+      "tokens": 762
+    },
+    {
+      "test_index": 516,
+      "label": 1,
+      "loss": 12.593637466430664,
+      "perplexity": 294677.6913780451,
+      "tokens": 757
+    },
+    {
+      "test_index": 517,
+      "label": 1,
+      "loss": 13.55775939486751,
+      "perplexity": 772787.5062333974,
+      "tokens": 3289
+    },
+    {
+      "test_index": 518,
+      "label": 1,
+      "loss": 13.057517051696777,
+      "perplexity": 468605.7388110873,
+      "tokens": 306
+    },
+    {
+      "test_index": 519,
+      "label": 1,
+      "loss": 12.619475364685059,
+      "perplexity": 302390.7592198106,
+      "tokens": 736
+    },
+    {
+      "test_index": 520,
+      "label": 1,
+      "loss": 13.24122428894043,
+      "perplexity": 563106.6320606412,
+      "tokens": 1609
+    },
+    {
+      "test_index": 521,
+      "label": 0,
+      "loss": 12.745123863220215,
+      "perplexity": 342875.9034700643,
+      "tokens": 1027
+    },
+    {
+      "test_index": 522,
+      "label": 0,
+      "loss": 12.901418685913086,
+      "perplexity": 400880.5116352443,
+      "tokens": 1450
+    },
+    {
+      "test_index": 523,
+      "label": 0,
+      "loss": 11.301739528986413,
+      "perplexity": 80962.35147404467,
+      "tokens": 3175
+    },
+    {
+      "test_index": 524,
+      "label": 1,
+      "loss": 12.635910739314992,
+      "perplexity": 307401.73042966827,
+      "tokens": 5065
+    },
+    {
+      "test_index": 525,
+      "label": 1,
+      "loss": 13.173321723937988,
+      "perplexity": 526139.5306499363,
+      "tokens": 1240
+    },
+    {
+      "test_index": 526,
+      "label": 0,
+      "loss": 12.286486625671387,
+      "perplexity": 216747.12396952973,
+      "tokens": 321
+    },
+    {
+      "test_index": 527,
+      "label": 0,
+      "loss": 12.44411563873291,
+      "perplexity": 253752.74797380384,
+      "tokens": 1522
+    },
+    {
+      "test_index": 528,
+      "label": 0,
+      "loss": 12.720958696313081,
+      "perplexity": 334689.5605731515,
+      "tokens": 17076
+    },
+    {
+      "test_index": 529,
+      "label": 0,
+      "loss": 10.024118423461914,
+      "perplexity": 22564.167619599186,
+      "tokens": 861
+    },
+    {
+      "test_index": 530,
+      "label": 1,
+      "loss": 13.59619257312097,
+      "perplexity": 803066.3146323328,
+      "tokens": 4008
+    },
+    {
+      "test_index": 531,
+      "label": 0,
+      "loss": 12.633296012878418,
+      "perplexity": 306599.0089043986,
+      "tokens": 254
+    },
+    {
+      "test_index": 532,
+      "label": 1,
+      "loss": 13.479751586914062,
+      "perplexity": 714795.371432413,
+      "tokens": 1205
+    },
+    {
+      "test_index": 533,
+      "label": 1,
+      "loss": 13.439449310302734,
+      "perplexity": 686560.2815427856,
+      "tokens": 562
+    },
+    {
+      "test_index": 534,
+      "label": 1,
+      "loss": 12.659910202026367,
+      "perplexity": 314868.4470066516,
+      "tokens": 160
+    },
+    {
+      "test_index": 535,
+      "label": 1,
+      "loss": 12.020136793567913,
+      "perplexity": 166065.37142242992,
+      "tokens": 3153
+    },
+    {
+      "test_index": 536,
+      "label": 1,
+      "loss": 12.920495986938477,
+      "perplexity": 408601.6448523641,
+      "tokens": 352
+    },
+    {
+      "test_index": 537,
+      "label": 1,
+      "loss": 13.780773825483951,
+      "perplexity": 965859.6622663811,
+      "tokens": 19635
+    },
+    {
+      "test_index": 538,
+      "label": 1,
+      "loss": 13.259446144104004,
+      "perplexity": 573461.5358147639,
+      "tokens": 1791
+    },
+    {
+      "test_index": 539,
+      "label": 1,
+      "loss": 13.810664389845364,
+      "perplexity": 995165.5556077791,
+      "tokens": 2495
+    },
+    {
+      "test_index": 540,
+      "label": 1,
+      "loss": 10.413665771484375,
+      "perplexity": 33311.76015678459,
+      "tokens": 1661
+    },
+    {
+      "test_index": 541,
+      "label": 0,
+      "loss": 11.498164889935365,
+      "perplexity": 98534.78282325449,
+      "tokens": 4850
+    },
+    {
+      "test_index": 542,
+      "label": 1,
+      "loss": 13.465154647827148,
+      "perplexity": 704437.3287109102,
+      "tokens": 1673
+    },
+    {
+      "test_index": 543,
+      "label": 1,
+      "loss": 12.509346008300781,
+      "perplexity": 270856.92496863706,
+      "tokens": 279
+    },
+    {
+      "test_index": 544,
+      "label": 1,
+      "loss": 12.704473495483398,
+      "perplexity": 329217.36500027357,
+      "tokens": 348
+    },
+    {
+      "test_index": 545,
+      "label": 1,
+      "loss": 13.129701614379883,
+      "perplexity": 503682.6139089239,
+      "tokens": 237
+    },
+    {
+      "test_index": 546,
+      "label": 1,
+      "loss": 13.62258243560791,
+      "perplexity": 824541.2380904808,
+      "tokens": 3584
+    },
+    {
+      "test_index": 547,
+      "label": 0,
+      "loss": 13.164811134338379,
+      "perplexity": 521680.7732718623,
+      "tokens": 778
+    },
+    {
+      "test_index": 548,
+      "label": 0,
+      "loss": 11.990229395981167,
+      "perplexity": 161172.32222893773,
+      "tokens": 2069
+    },
+    {
+      "test_index": 549,
+      "label": 1,
+      "loss": 12.848555564880371,
+      "perplexity": 380239.10780305136,
+      "tokens": 875
+    },
+    {
+      "test_index": 550,
+      "label": 0,
+      "loss": 12.392937660217285,
+      "perplexity": 241092.91081140388,
+      "tokens": 1339
+    },
+    {
+      "test_index": 551,
+      "label": 0,
+      "loss": 10.687607765197754,
+      "perplexity": 43809.5787421429,
+      "tokens": 666
+    },
+    {
+      "test_index": 552,
+      "label": 1,
+      "loss": 12.302517890930176,
+      "perplexity": 220249.85620581484,
+      "tokens": 654
+    },
+    {
+      "test_index": 553,
+      "label": 0,
+      "loss": 11.086681365966797,
+      "perplexity": 65295.69365286037,
+      "tokens": 896
+    },
+    {
+      "test_index": 554,
+      "label": 1,
+      "loss": 13.642203330993652,
+      "perplexity": 840879.2343760951,
+      "tokens": 829
+    },
+    {
+      "test_index": 555,
+      "label": 1,
+      "loss": 12.18875503540039,
+      "perplexity": 196566.29556485693,
+      "tokens": 221
+    },
+    {
+      "test_index": 556,
+      "label": 0,
+      "loss": 12.163937563457958,
+      "perplexity": 191748.05264069486,
+      "tokens": 3297
+    },
+    {
+      "test_index": 557,
+      "label": 1,
+      "loss": 13.597102199723953,
+      "perplexity": 803797.1374536305,
+      "tokens": 7629
+    },
+    {
+      "test_index": 558,
+      "label": 0,
+      "loss": 11.81196117401123,
+      "perplexity": 134855.77783181236,
+      "tokens": 789
+    },
+    {
+      "test_index": 559,
+      "label": 0,
+      "loss": 11.278053283691406,
+      "perplexity": 79067.19058420359,
+      "tokens": 787
+    },
+    {
+      "test_index": 560,
+      "label": 1,
+      "loss": 13.18167495727539,
+      "perplexity": 530552.9042246711,
+      "tokens": 1043
+    },
+    {
+      "test_index": 561,
+      "label": 0,
+      "loss": 11.871666127985174,
+      "perplexity": 143152.55059196582,
+      "tokens": 2112
+    },
+    {
+      "test_index": 562,
+      "label": 0,
+      "loss": 11.724164362486244,
+      "perplexity": 123520.74077977947,
+      "tokens": 2364
+    },
+    {
+      "test_index": 563,
+      "label": 1,
+      "loss": 13.198184967041016,
+      "perplexity": 539385.0466116172,
+      "tokens": 1083
+    },
+    {
+      "test_index": 564,
+      "label": 1,
+      "loss": 13.61917992241033,
+      "perplexity": 821740.4931338087,
+      "tokens": 3417
+    },
+    {
+      "test_index": 565,
+      "label": 1,
+      "loss": 13.592598915100098,
+      "perplexity": 800185.5482743015,
+      "tokens": 565
+    },
+    {
+      "test_index": 566,
+      "label": 1,
+      "loss": 13.59028148651123,
+      "perplexity": 798333.3224378298,
+      "tokens": 800
+    },
+    {
+      "test_index": 567,
+      "label": 1,
+      "loss": 13.38684143675356,
+      "perplexity": 651375.4198387094,
+      "tokens": 7511
+    },
+    {
+      "test_index": 568,
+      "label": 1,
+      "loss": 13.653924475049735,
+      "perplexity": 850793.2895469449,
+      "tokens": 7005
+    },
+    {
+      "test_index": 569,
+      "label": 1,
+      "loss": 12.78054428100586,
+      "perplexity": 355238.36044095934,
+      "tokens": 1926
+    },
+    {
+      "test_index": 570,
+      "label": 1,
+      "loss": 13.764292974910276,
+      "perplexity": 950071.9284897416,
+      "tokens": 2285
+    },
+    {
+      "test_index": 571,
+      "label": 0,
+      "loss": 12.718624114990234,
+      "perplexity": 333909.1119409569,
+      "tokens": 1480
+    },
+    {
+      "test_index": 572,
+      "label": 1,
+      "loss": 13.694746017456055,
+      "perplexity": 886242.6092620102,
+      "tokens": 625
+    },
+    {
+      "test_index": 573,
+      "label": 1,
+      "loss": 12.913042068481445,
+      "perplexity": 405567.2844968584,
+      "tokens": 252
+    },
+    {
+      "test_index": 574,
+      "label": 1,
+      "loss": 13.277514457702637,
+      "perplexity": 583917.1922724639,
+      "tokens": 614
+    },
+    {
+      "test_index": 575,
+      "label": 1,
+      "loss": 14.019879341125488,
+      "perplexity": 1226750.474964985,
+      "tokens": 173
+    },
+    {
+      "test_index": 576,
+      "label": 1,
+      "loss": 13.785573842536298,
+      "perplexity": 970506.9497220989,
+      "tokens": 4629
+    },
+    {
+      "test_index": 577,
+      "label": 1,
+      "loss": 13.721204741052706,
+      "perplexity": 910004.4249400605,
+      "tokens": 2866
+    },
+    {
+      "test_index": 578,
+      "label": 1,
+      "loss": 12.792207717895508,
+      "perplexity": 359405.91741298366,
+      "tokens": 536
+    },
+    {
+      "test_index": 579,
+      "label": 1,
+      "loss": 13.46421797240309,
+      "perplexity": 703777.8085037214,
+      "tokens": 4060
+    },
+    {
+      "test_index": 580,
+      "label": 0,
+      "loss": 11.784670333661179,
+      "perplexity": 131225.21619870362,
+      "tokens": 2276
+    },
+    {
+      "test_index": 581,
+      "label": 1,
+      "loss": 13.278967186091299,
+      "perplexity": 584766.0818079766,
+      "tokens": 5339
+    },
+    {
+      "test_index": 582,
+      "label": 0,
+      "loss": 11.95801609493402,
+      "perplexity": 156063.1629411576,
+      "tokens": 2579
+    },
+    {
+      "test_index": 583,
+      "label": 1,
+      "loss": 13.77490234375,
+      "perplexity": 960205.2510322743,
+      "tokens": 263
+    },
+    {
+      "test_index": 584,
+      "label": 0,
+      "loss": 11.628595352172852,
+      "perplexity": 112262.52180066635,
+      "tokens": 569
+    },
+    {
+      "test_index": 585,
+      "label": 1,
+      "loss": 12.162739753723145,
+      "perplexity": 191518.512456788,
+      "tokens": 299
+    },
+    {
+      "test_index": 586,
+      "label": 1,
+      "loss": 13.506360054016113,
+      "perplexity": 734070.2812364188,
+      "tokens": 746
+    },
+    {
+      "test_index": 587,
+      "label": 1,
+      "loss": 12.404744525682373,
+      "perplexity": 243956.33313115028,
+      "tokens": 3209
+    },
+    {
+      "test_index": 588,
+      "label": 1,
+      "loss": 12.800539016723633,
+      "perplexity": 362412.74350278836,
+      "tokens": 467
+    },
+    {
+      "test_index": 589,
+      "label": 1,
+      "loss": 13.867603302001953,
+      "perplexity": 1053473.4413633414,
+      "tokens": 177
+    },
+    {
+      "test_index": 590,
+      "label": 0,
+      "loss": 11.048503875732422,
+      "perplexity": 62849.8530388985,
+      "tokens": 649
+    },
+    {
+      "test_index": 591,
+      "label": 1,
+      "loss": 12.004977226257324,
+      "perplexity": 163566.8781335495,
+      "tokens": 568
+    },
+    {
+      "test_index": 592,
+      "label": 1,
+      "loss": 13.145014762878418,
+      "perplexity": 511454.93807014363,
+      "tokens": 499
+    },
+    {
+      "test_index": 593,
+      "label": 0,
+      "loss": 12.13721705055564,
+      "perplexity": 186692.2933745835,
+      "tokens": 3498
+    },
+    {
+      "test_index": 594,
+      "label": 0,
+      "loss": 13.319502830505371,
+      "perplexity": 608956.9353650236,
+      "tokens": 209
+    },
+    {
+      "test_index": 595,
+      "label": 1,
+      "loss": 13.678525805575303,
+      "perplexity": 871983.5216963087,
+      "tokens": 2338
+    },
+    {
+      "test_index": 596,
+      "label": 0,
+      "loss": 12.703983306884766,
+      "perplexity": 329056.0259479911,
+      "tokens": 1453
+    },
+    {
+      "test_index": 597,
+      "label": 1,
+      "loss": 13.529338836669922,
+      "perplexity": 751133.6192341354,
+      "tokens": 605
+    },
+    {
+      "test_index": 598,
+      "label": 1,
+      "loss": 13.48134994506836,
+      "perplexity": 715938.7839909614,
+      "tokens": 1097
+    },
+    {
+      "test_index": 599,
+      "label": 0,
+      "loss": 12.824719429016113,
+      "perplexity": 371282.84219679865,
+      "tokens": 707
+    },
+    {
+      "test_index": 600,
+      "label": 0,
+      "loss": 12.189961748068104,
+      "perplexity": 196803.6377768868,
+      "tokens": 3637
+    },
+    {
+      "test_index": 601,
+      "label": 1,
+      "loss": 13.72580623626709,
+      "perplexity": 914201.4548474354,
+      "tokens": 1071
+    },
+    {
+      "test_index": 602,
+      "label": 1,
+      "loss": 13.674036560117816,
+      "perplexity": 868077.7471823042,
+      "tokens": 5153
+    },
+    {
+      "test_index": 603,
+      "label": 1,
+      "loss": 13.161693572998047,
+      "perplexity": 520056.9339856061,
+      "tokens": 885
+    },
+    {
+      "test_index": 604,
+      "label": 1,
+      "loss": 12.035740852355957,
+      "perplexity": 168676.98816038336,
+      "tokens": 1030
+    },
+    {
+      "test_index": 605,
+      "label": 1,
+      "loss": 11.88878548450959,
+      "perplexity": 145624.3273898938,
+      "tokens": 6552
+    },
+    {
+      "test_index": 606,
+      "label": 1,
+      "loss": 12.940542221069336,
+      "perplexity": 416875.21903339896,
+      "tokens": 595
+    },
+    {
+      "test_index": 607,
+      "label": 1,
+      "loss": 13.544862747192383,
+      "perplexity": 762885.1290222576,
+      "tokens": 500
+    },
+    {
+      "test_index": 608,
+      "label": 0,
+      "loss": 11.78667442249289,
+      "perplexity": 131488.4668897018,
+      "tokens": 2105
+    },
+    {
+      "test_index": 609,
+      "label": 1,
+      "loss": 12.635709762573242,
+      "perplexity": 307339.95603929396,
+      "tokens": 395
+    },
+    {
+      "test_index": 610,
+      "label": 1,
+      "loss": 13.729888890124014,
+      "perplexity": 917941.4523057237,
+      "tokens": 7072
+    },
+    {
+      "test_index": 611,
+      "label": 1,
+      "loss": 11.685573993806635,
+      "perplexity": 118844.83263536105,
+      "tokens": 3421
+    },
+    {
+      "test_index": 612,
+      "label": 1,
+      "loss": 13.23629379272461,
+      "perplexity": 560337.0702098957,
+      "tokens": 538
+    },
+    {
+      "test_index": 613,
+      "label": 0,
+      "loss": 13.162405014038086,
+      "perplexity": 520427.05547579797,
+      "tokens": 1520
+    },
+    {
+      "test_index": 614,
+      "label": 0,
+      "loss": 13.271966934204102,
+      "perplexity": 580686.8663660111,
+      "tokens": 206
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "corpus": "random20",
+  "seed": 1234,
+  "training_tokens": 100000000,
+  "validation_tokens": 5000000,
+  "context_length": 2048,
+  "parameters": 234624768,
+  "training_steps": 1526,
+  "eval_loss": 13.029562950134277,
+  "perplexity": 455687.68390890065
+}

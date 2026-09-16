@@ -1,0 +1,195 @@
+================================================
+Reviewer LM evaluation
+================================================
+Job ID: 22071550
+Node: nid007853
+Array ID: 1
+Start: Tue Sep 15 04:52:05 PM EEST 2026
+
+Python:
+/pfs/lustrep4/projappl/project_462001491/nima/Fine_tuning-env/bin/python3
+
+Python version:
+Python 3.11.0rc1
+
+GPU:
+================================================
+
+Corpus: random20
+================================================
+
+======================================================================
+SYSTEM
+======================================================================
+Device: cuda
+GPU: AMD Instinct MI250X
+CUDA: None
+
+======================================================================
+LOADING CLASSIFIER DATASET
+======================================================================
+Dataset directory:
+/scratch/project_462001491/nima/binary_dataset
+
+Dataset:
+DatasetDict({
+    train: Dataset({
+        features: ['u', 'id', 'ts', 'text', 'Turku_NLP', 'Turku_NLP_sub', 'Tags', 'web-register', 'Binary', 'source'],
+        num_rows: 4915
+    })
+    validation: Dataset({
+        features: ['u', 'id', 'ts', 'text', 'Turku_NLP', 'Turku_NLP_sub', 'Tags', 'web-register', 'Binary', 'source'],
+        num_rows: 614
+    })
+    test: Dataset({
+        features: ['u', 'id', 'ts', 'text', 'Turku_NLP', 'Turku_NLP_sub', 'Tags', 'web-register', 'Binary', 'source'],
+        num_rows: 615
+    })
+})
+
+Available splits: ['train', 'validation', 'test']
+
+Test documents: 615
+Test columns: ['u', 'id', 'ts', 'text', 'Turku_NLP', 'Turku_NLP_sub', 'Tags', 'web-register', 'Binary', 'source']
+
+======================================================================
+LOADING QWEN3.6 TOKENIZER
+======================================================================
+Tokenizer: Qwen/Qwen3.6-35B-A3B
+Vocabulary size: 248,077
+EOS token ID: 248046
+
+======================================================================
+TOKENIZING TEST DOCUMENTS
+======================================================================
+Tokenizer: Qwen/Qwen3.6-35B-A3B
+Label column: Binary
+High-quality label: 1
+Low-quality label:  0
+No EOS token is added.
+Documents remain separate during evaluation.
+Processed 100 / 615 documents
+Processed 200 / 615 documents
+Processed 300 / 615 documents
+Processed 400 / 615 documents
+Processed 500 / 615 documents
+Processed 600 / 615 documents
+
+======================================================================
+TOKENIZATION COMPLETE
+======================================================================
+Original test documents: 615
+Usable test documents:   615
+Skipped empty:           0
+Skipped <2 tokens:       0
+Unknown labels:          0
+Total document tokens:   1,400,796
+
+======================================================================
+TEST SET LABEL STATISTICS
+======================================================================
+
+HIGH QUALITY (Binary=1):
+  documents: 400
+  tokens:    949,598
+
+LOW QUALITY (Binary=0):
+  documents: 215
+  tokens:    451,198
+
+======================================================================
+QWEN3.6 REVIEWER LM EVALUATION
+======================================================================
+Corpus: random20
+Tokenizer: Qwen/Qwen3.6-35B-A3B
+Context length: 2048
+Dataset label column: Binary
+High-quality label: 1
+Low-quality label: 0
+
+Found 2 Qwen3.6 checkpoints.
+Final checkpoint step: 1,526
+Final checkpoint:
+/scratch/project_462001491/nima/corpus_experiment/lm_results_Qwen3_6/random20/checkpoint-1526
+
+======================================================================
+LOADING MODEL
+======================================================================
+Model path:
+/scratch/project_462001491/nima/corpus_experiment/lm_results_Qwen3_6/random20/checkpoint-1526
+Model vocabulary size: 248,077
+Tokenizer vocabulary size: 248,077
+Parameters: 234,624,768
+
+======================================================================
+STARTING EVALUATION
+======================================================================
+Evaluated 25 / 615 documents
+Evaluated 50 / 615 documents
+Evaluated 75 / 615 documents
+Evaluated 100 / 615 documents
+Evaluated 125 / 615 documents
+Evaluated 150 / 615 documents
+Evaluated 175 / 615 documents
+Evaluated 200 / 615 documents
+Evaluated 225 / 615 documents
+Evaluated 250 / 615 documents
+Evaluated 275 / 615 documents
+Evaluated 300 / 615 documents
+Evaluated 325 / 615 documents
+Evaluated 350 / 615 documents
+Evaluated 375 / 615 documents
+Evaluated 400 / 615 documents
+Evaluated 425 / 615 documents
+Evaluated 450 / 615 documents
+Evaluated 475 / 615 documents
+Evaluated 500 / 615 documents
+Evaluated 525 / 615 documents
+Evaluated 550 / 615 documents
+Evaluated 575 / 615 documents
+Evaluated 600 / 615 documents
+Evaluated 615 / 615 documents
+
+======================================================================
+RESULTS
+======================================================================
+
+Corpus: random20
+Tokenizer: Qwen/Qwen3.6-35B-A3B
+Checkpoint:
+/scratch/project_462001491/nima/corpus_experiment/lm_results_Qwen3_6/random20/checkpoint-1526
+
+Overall loss: 13.223068
+Overall PPL:  552975.1708
+
+HIGH QUALITY (Binary=1):
+  documents: 400
+  tokens:    949,198
+  loss:      13.585558
+  PPL:       794571.2586
+
+LOW QUALITY (Binary=0):
+  documents: 215
+  tokens:    450,983
+  loss:      12.460125
+  PPL:       257847.9283
+
+======================================================================
+FINAL SUMMARY
+======================================================================
+
+Corpus             Overall PPL       High PPL        Low PPL
+------------------------------------------------------------
+random20           552975.1708    794571.2586    257847.9283
+
+Results saved to:
+/scratch/project_462001491/nima/corpus_experiment/lm_test_results_Qwen3_6/random20_Qwen3_6.json
+
+======================================================================
+DONE
+======================================================================
+
+================================================
+Evaluation completed successfully.
+Finished: Tue Sep 15 04:53:50 PM EEST 2026
+================================================
