@@ -16,3 +16,12 @@ The HPLT3-PerRef dataset is available on [Hugging Face](https://huggingface.co/d
 # Usage
 
 If you use this dataset in your research or projects, please cite the following paper:
+
+# Classifiers performance
+
+| Metric        | BGE-M3  | XLM-R   |
+|---------------|---------|---------|
+| Accuracy      | 96.91%  | 97.56%  |
+| Macro F1      | 96.58%  | 97.31%  |
+| Weighted F1   | 96.90%  | 97.56%  |
+| Total errors  | 19/615  | 15/615  |
