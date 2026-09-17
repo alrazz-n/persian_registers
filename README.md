@@ -2,9 +2,9 @@
 
 This repository contains HPLT3-PerRef source code.
 
-The classifier used can be found on [Hugging Face](https://huggingface.co/alrazz-n/quality_classifier).
+The classifier used can be found on [Hugging Face](https://huggingface.co/TurkuNLP/quality_classifier_HPLT3_Persian).
 
-The HPLT3-PerRef dataset is available on [Hugging Face](https://huggingface.co/datasets/alrazz-n/HPLT3-PerRef).
+The HPLT3-PerRef dataset is available on [Hugging Face](https://huggingface.co/datasets/TurkuNLP/HPLT3-PerRef).
 
 `Ham_Spam` folder contains code for fine-tuning XLM-R and BGE-M3, finding the threshold, and creating plots.
 
