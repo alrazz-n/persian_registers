@@ -1,0 +1,151 @@
+ This is what we are using in this forlder
+ 
+ Text
+                           │
+                         XLM-R
+                           │
+                           ▼
+                    shared representation
+                           │
+              ┌────────────┴────────────┐
+              │                         │
+              ▼                         ▼
+       Parent classifier          Child classifiers
+       9 independent              16 independent
+       sigmoid outputs             sigmoid outputs
+              │                         │
+              └────────────┬────────────┘
+                           ▼
+                    hierarchical loss
+
+
+
+IN and OP can both be 1.
+en and rv can both be 1.
+IP can also be 1 simultaneously.
+No argmax, no softmax.
+
+The model used is TurkuNLP. There is a missmatch name that it is XLMR but seems BGE-M3
+
+Possible Approaches:
+Model 1 — Flat baseline (What we used so far):
+XLM-R → sigmoid → all labels
+
+Model 2 — Hierarchical
+
+XLM-R
+  ↓
+parent classifier
+  ↓
+child classifiers
+
+
+Model 3 — Hierarchical + shared experts
+
+             XLM-R
+               │
+               ▼
+        shared representation
+               │
+        ┌──────┴──────┐
+        ▼             ▼
+    Narrative     Informative
+      expert         expert
+        │
+    ┌───┴────┐
+    ▼        ▼
+   News     Blog
+
+
+Model 4 — Hierarchical MoE
+-------------------------
+What can be done here (method 2)
+
+Rather than predicting the child independently, you can make the child probability depend on its parent.
+
+For example:
+
+P(en∣x)=P(IN∣x)×P(en∣IN,x)
+
+Then
+
+                     XLM-R
+                       │
+                       ▼
+                shared representation
+                       │
+              ┌────────┴────────┐
+              ▼                 ▼
+        P(IN | x)          P(OP | x)
+              │                 │
+              ▼                 ▼
+       IN expert/head      OP expert/head
+              │                 │
+       ┌──────┼──────┐    ┌─────┼─────┐
+       ▼      ▼      ▼    ▼     ▼     ▼
+      en     ra     dtp  rv    ob    rs
+
+
+And because:
+
+P(en∣x)=P(IN∣x)P(en∣IN,x)
+
+you automatically get:
+
+P(en∣x)≤P(IN∣x)
+
+
+don't need nine separate XLM-Rs
+
+Instead:
+
+
+                         XLM-R
+                           │
+                           ▼
+                    shared representation
+                           │
+          ┌────────────────┼────────────────┐
+          │                │                │
+       IN head          OP head           IP head
+          │                │                │
+      en ra dtp...      rv ob rs...      ds ed
+
+loss 
+
+L=Lparent+λLchild
+
+loss = (
+                self.parent_weight
+                * parent_loss
+                +
+                self.child_weight
+                * child_loss
+            )
+
+
+parent_weight=1.0,
+    child_weight=1.0,
+
+but can be checked with variuos amount
+
+Here I used:
+
+parent_weight = (
+        trial.suggest_float(
+            "parent_weight",
+            0.25,
+            2.0,
+        )
+    )
+
+kept child_weight = 1 
+
+------------
+
+Three settings that can be used:
+
+Model	Architecture	Purpose
+A	XLM-R → flat multilabel classifier	Baseline
+B	XLM-R → parent + child classifiers	Hierarchical baseline
+C	XLM-R → parent classifiers → parent-specific child experts	Hierarchical expert model
