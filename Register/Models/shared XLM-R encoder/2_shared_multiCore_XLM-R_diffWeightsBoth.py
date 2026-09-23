@@ -183,7 +183,7 @@ DATASET_ROOT = Path(
 
 RESULTS_ROOT = (
     DATASET_ROOT
-    / "_MultiCore_Hierarchical_sharedRep_finetuned_evaluation"
+    / "_MultiCore_Hierarchical_sharedRep_finetuned_evaluation_deffWeightsBoth"
 )
 
 RESULTS_ROOT.mkdir(
@@ -1097,17 +1097,20 @@ def objective(trial):
     )
 
 
-    parent_weight = (
-        trial.suggest_float(
-            "parent_weight",
-            0.25,
-            2.0,
-        )
+    parent_weight = trial.suggest_float(
+        "parent_weight",
+        0.25,
+        2.0,
+        log=True,
     )
 
+    child_weight = trial.suggest_float(
+        "child_weight",
+        0.25,
+        2.0,
+        log=True,
+    )
 
-    # Keep child loss weight fixed.
-    child_weight = 1.0
 
 
     grad_accum = (
@@ -1416,7 +1419,7 @@ set_seed(SEED)
 
 final_model = create_model(
     parent_weight=best_params["parent_weight"],
-    child_weight=1.0,
+    child_weight=best_params["child_weight"],
     seed=SEED,
 )
 
@@ -1428,7 +1431,7 @@ final_trainer = Trainer(
 
     model=create_model(
         parent_weight=best_params["parent_weight"],
-        child_weight=1.0,
+        child_weight=best_params["child_weight"],
     ),
 
     args=final_args,

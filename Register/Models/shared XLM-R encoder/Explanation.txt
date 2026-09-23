@@ -1,22 +1,22 @@
  This is what we are using in this forlder
  
- Text
-                           │
-                         XLM-R
-                           │
-                           ▼
-                    shared representation
-                           │
-              ┌────────────┴────────────┐
-              │                         │
-              ▼                         ▼
-       Parent classifier          Child classifiers
-       9 independent              16 independent
-       sigmoid outputs             sigmoid outputs
-              │                         │
-              └────────────┬────────────┘
-                           ▼
-                    hierarchical loss
+       Text
+                            │
+                            XLM-R
+                            │
+                            ▼
+                     shared representation
+                            │
+                     ┌────────────┴────────────┐
+                     │                         │
+                     ▼                         ▼
+              Parent classifier          Child classifiers
+              9 independent              16 independent
+              sigmoid outputs             sigmoid outputs
+                     │                         │
+                     └────────────┬────────────┘
+                            ▼
+                     hierarchical loss
 
 
 
