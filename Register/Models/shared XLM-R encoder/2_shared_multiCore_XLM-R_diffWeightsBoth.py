@@ -183,7 +183,7 @@ DATASET_ROOT = Path(
 
 RESULTS_ROOT = (
     DATASET_ROOT
-    / "_MultiCore_Hierarchical_sharedRep_finetuned_evaluation_deffWeightsBoth"
+    / "_MultiCore_Hierarchical_sharedRep_2SepHeads_DiffWeightboth"
 )
 
 RESULTS_ROOT.mkdir(

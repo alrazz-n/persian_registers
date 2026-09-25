@@ -365,7 +365,7 @@ DATASET_ROOT = Path(
 
 RESULTS_ROOT = (
     DATASET_ROOT
-    / "_MultiCore_ParentConditioned_Hierarchical_XLM-R_DiffWeightsBoth"
+    / "_MultiCore_ParentConditionedtoChild_XLM-R_DiffWeightsBoth"
 )
 
 
