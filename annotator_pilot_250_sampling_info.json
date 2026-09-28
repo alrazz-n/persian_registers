@@ -1,0 +1,33 @@
+{
+  "sample_size": 250,
+  "minimum_coverage_per_label": 15,
+  "random_seed": 42,
+  "n_target_labels": 25,
+  "target_labels": [
+    "MT",
+    "LY",
+    "ID",
+    "it",
+    "os",
+    "ne",
+    "sr",
+    "nb",
+    "on",
+    "re",
+    "oh",
+    "en",
+    "ra",
+    "dtp",
+    "fi",
+    "lt",
+    "oi",
+    "rv",
+    "ob",
+    "rs",
+    "av",
+    "oo",
+    "ds",
+    "ed",
+    "oe"
+  ]
+}
