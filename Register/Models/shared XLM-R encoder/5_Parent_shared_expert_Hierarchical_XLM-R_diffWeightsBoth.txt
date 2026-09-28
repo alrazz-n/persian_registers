@@ -1,0 +1,391 @@
+
+Title: Hierarchical XLM-R with parent-specific child experts
+
+
+ParentExpert
+
+expert is class ParentExpert(nn.Module):
+Each expert does:
+
+1024
+ ↓
+Linear
+ ↓
+GELU
+ ↓
+Dropout
+ ↓
+Linear
+ ↓
+GELU
+ ↓
+256
+
+example:
+
+XLM-R h
+  ↓
+NA expert
+  ↓
+256-dimensional NA representation
+  ↓
+NA child classifier
+  ↓
+3 logits (ne, sr, nb)
+
+or 
+
+XLM-R h
+  ↓
+IN expert
+  ↓
+256
+  ↓
+classifier
+  ↓
+5 logits
+
+Experts are seprate and no parameter sharing between them.
+
+Parent-only labels don't get experts. Skipping MT, LY, ID because they do not have child.
+
+Parent classifier become like this:
+
+XLM-R
+  ↓
+1024
+  ↓
+256
+  ↓
+9 parent logits (9 main registers)
+
+Child experts:
+
+expert_hidden = self.experts[parent](h)
+ecery expert got "h" (XLM_R representation)
+
+                  h
+                  |
+       +----------+----------+
+       |          |          |
+       v          v          v
+      NA         HI         IN
+    expert     expert     expert
+       |          |          |
+       v          v          v
+      256        256        256
+       |          |          |
+       v          v          v
+     ne/sr/nb     re      en/ra/...
+
+
+They do not recieve "parent_hidden", "parent probability", "parent prediction".
+
+For example "NA child expert" do not know what the NA parent classifier predicted.
+
+The model is 
+
+    shared encoder + parallel parent classifier + parent-specific child experts
+
+there is no hard routing
+(hard routing example:
+if HI:
+    activate HI expert
+else:
+    don't activate HI expert
+)
+model can predict both independently (For example HI and re)
+
+Child classifiers
+For NA it is nn.Linear(256, 3) and so on for others. (3: ne, nb, sr)
+
+Final output dimension is parent_logits + child_logits =  9 + 16 = 25
+
+loss
+
+parent_loss = BCEWithLogitsLoss(parent_logits, parent_labels)
+child_loss = BCEWithLogitsLoss(child_logits, child_labels)
+
+loss = (
+    parent_weight * parent_loss
+    +
+    child_weight * child_loss
+)
+
+
+Each loss is separately averaged. (due to using BCEWithLogitsLoss())
+
+Extracting h
+
+h = outputs.last_hidden_state[:, 0]
+
+all token representations
+        ↓
+take token 0
+        ↓
+h
+
+For XLM-R, token 0 is the beginning/special token representation.
+This is a standard CLS-style representation.
+We are not doing mean pooling. We are first-token pooling. ( not incorrect but different approach)
+
+I can compare:
+
+h = outputs.last_hidden_state[:, 0]
+VS
+mask = attention_mask.unsqueeze(-1)
+h = (
+    outputs.last_hidden_state * mask
+).sum(dim=1) / mask.sum(dim=1).clamp(min=1)
+ which is masked mnean pooling
+
+shared encoder learns from both parent loss and child loss because they are independent.
+
+Parent-specific expert gradients. 
+For example: The NA expert doesn't receive gradients from IN child predictions.
+
+parent predictions do not supervise experts directly **conceptual limitation**
+the model itself can still output
+NA probability = 0.2
+ne probability = 0.9
+there is no architectural constraint forcing:
+ne ≤ NA 
+
+model does NOT enforce hierarchy at inference
+if:
+NA = 0.10
+ne = 0.95
+
+The final prediction would be:
+
+ne = 1
+NA = 0
+
+Option A:
+soft-hierarchy (what currently did)
+The hierarchy is represented through:
+
+    hierarchical labels
+
+    parent loss
+
+    child experts
+
+but predictions are independent.
+
+Option B:
+hard hierarchy
+Enforce child = 1 → parent = 1 during inference or or some probability transformation.
+
+Option C:
+architectural hierarchy
+Feed parent information into the child experts. such as:
+
+h
+ |
+ +------> parent representation
+ |              |
+ |              v
+ |        parent probability
+ |              |
+ +--------------+
+                |
+                v
+           child expert
+
+In my current setting:
+The child classifier is not conditioned on the predicted parent. It is only parent-specific, because each parent has its own expert.
+
+model is fine-tuning the entire XLM-R
+
+We do not freeze self.encoder
+THerefore:
+XLM-R parameters
++
+parent classifier
++
+parent projection
++
+all experts
++
+all child classifiers
+
+are trainable : fully fine-tuned XLM-R + trainable hierarchical heads
+
+Number of expert parameters
+
+six experts:
+SP
+NA
+HI
+IN
+OP
+IP
+
+Each has approximately:
+1024 × 256
++
+256
++
+256 × 256
++
+256
+parameters
+roughly:
+262k
++
+65k
+≈ 327k
+per expert.
+Six experts: ~1.96 million plus child classifiers.
+the expert architecture adds only a few million parameters compared with XLM-R-large.
+
+
+Suppous:
+
+parent logits:
+
+NA = -5
+IN = +5
+
+
+
+NA expert still runs: self.experts["NA"](h) and produce:
+ne
+sr
+nb
+and doesn't care that NA = -5
+Therefore :
+
+It is:
+
+                  h
+        +---------+---------+
+        |         |         |
+        v         v         v
+       NA        IN        OP
+     expert    expert    expert
+        |         |         |
+        v         v         v
+      children  children  children
+
+not:
+
+                  h
+                  |
+             parent model
+                  |
+          +-------+-------+
+          |               |
+       NA prob         IN prob
+          |               |
+          v               v
+      NA expert       IN expert
+
+parent task help the child task because both losses update
+so we get
+parent_loss
+     ↓
+shared encoder
+
+child_loss
+     ↓
+shared encoder
+the parent task acts as an auxiliary task.
+but the parent loss is NOT directly changing the child expert
+
+maybe add hierarchy violation rate where:
+number of child-positive predictions whose parent is negative
+/
+number of child-positive predictions
+
+model architecture in mathematical notation
+
+The actual model is approximately:
+Shared encoder
+
+h=XLM-R(x)CLS
+
+with:
+
+h∈R1024
+Parent representation
+
+p=GELU(Wph+bp)
+
+where:
+
+p∈R256
+Parent logits
+
+zP=WPp+bP
+
+where:
+
+zP∈R9
+Expert for parent j
+
+ej=Expertj(h)
+
+where:
+
+ej∈R256
+Child logits
+
+zC,j=WC,jej+bC,j
+Final output
+
+z=[zP,zC,SP,zC,NA,zC,HI,zC,IN,zC,OP,zC,IP]
+
+giving:
+
+9+16=25
+
+logits.
+
+That's exactly what your code implements.
+
+The whole architecture looks like this:
+
+                         INPUT TEXT
+                             |
+                             v
+                       XLM-R-large
+                             |
+                             v
+                    shared representation h
+                       [batch, 1024]
+                             |
+             +---------------+---------------+
+             |                               |
+             v                               v
+      parent projection               parent-specific
+        1024 → 256                       experts
+             |                               |
+             v                  +------------+-------------+
+       parent classifier        |      |      |      |     |
+             |                  v      v      v      v     v
+             v                 SP     NA     HI     IN    OP/IP
+        9 parent logits         |      |      |      |     |
+                               1      3      1      5     4/2
+                               |      |      |      |     |
+                               +------+------|------+-----+
+                                             |
+                                             v
+                                      16 child logits
+
+                       TOTAL = 25 LOGITS
+
+The training objective is:
+
+                 XLM-R
+                /     \
+               /       \
+              v         v
+        parent loss   child losses
+              \         /
+               \       /
+                v     v
+                 shared encoder
+
+It is Shared XLM-R → every parent-specific expert → each expert predicts its own children.
