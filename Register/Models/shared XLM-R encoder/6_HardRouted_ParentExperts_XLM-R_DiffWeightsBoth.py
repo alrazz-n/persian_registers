@@ -130,7 +130,7 @@
 #    Expert    Expert    Expert    Expert    Expert   Expert
 #       │         │         │         │         │        │
 #    ne sr nb     re    en ra dtp  rv ob rs av ds ed     it
-                           fi lt
+#                           fi lt
 
 
 
@@ -1529,7 +1529,7 @@ class HierarchicalHardRoutedXLMR(nn.Module):
 
             device=h.device,
 
-            dtype=h.dtype,
+            dtype=parent_logits.dtype,
 
         )
 
@@ -1541,7 +1541,7 @@ class HierarchicalHardRoutedXLMR(nn.Module):
         child_offset = 0
 
 
-        routing_information = {}
+        #routing_information = {}
 
 
         for parent_index, (
@@ -1557,9 +1557,9 @@ class HierarchicalHardRoutedXLMR(nn.Module):
 
             if len(child_list) == 0:
 
-                routing_information[parent] = {
-                    "active_examples": 0
-                }
+                #routing_information[parent] = {
+                    #"active_examples": 0
+                #}
 
                 continue
 
@@ -1585,12 +1585,12 @@ class HierarchicalHardRoutedXLMR(nn.Module):
             )
 
 
-            routing_information[parent] = {
+            #routing_information[parent] = {
 
-                "active_examples":
-                    num_active
+            #    "active_examples":
+            #        num_active
 
-            }
+            #}
 
 
             # ------------------------------------------------
@@ -1655,7 +1655,7 @@ class HierarchicalHardRoutedXLMR(nn.Module):
                 child_offset:
                 child_offset + len(child_list)
 
-            ] = routed_child_logits
+            ] = routed_child_logits.to(child_logits.dtype)
 
 
             # ------------------------------------------------
@@ -1905,8 +1905,8 @@ class HierarchicalHardRoutedXLMR(nn.Module):
             # Useful for debugging routing.
             #
             # Do not use this for metrics.
-            "routing_information":
-                routing_information,
+            #"routing_information":
+            #    routing_information,
 
         }
 
