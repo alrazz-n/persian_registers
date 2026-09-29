@@ -132,6 +132,28 @@
 #    ne sr nb     re    en ra dtp  rv ob rs av ds ed     it
 #                           fi lt
 
+#here  training routing is gold-routed, while validation/test routing is prediction-routed:
+
+#TRAIN:
+#gold IN = 1
+#    ↓
+#IN expert
+
+#TEST:
+#predicted IN >= .5
+#    ↓
+#IN expert
+#solves the "wrong parent prevents child learning" problem.
+#However, it creates a train/test routing distribution difference.
+#For example, during training:
+#gold IN = 1
+#→ IN expert definitely gets the example
+#but at test:
+#IN predicted = 0.48
+#→ IN expert does not get the example
+#→ all IN children forced to zero
+#Therefore a parent false negative automatically becomes a child false negative.
+
 
 
 # ============================================================
@@ -407,7 +429,7 @@ DATASET_ROOT = Path(
 
 RESULTS_ROOT = (
     DATASET_ROOT
-    / "_MultiCore_HardRouted_ParentExperts_XLM-R_DiffWeightsBoth"
+    / "_MultiCore_HardRouted_goldrouting_ParentExperts_XLM-R_DiffWeightsBoth"
 )
 
 
