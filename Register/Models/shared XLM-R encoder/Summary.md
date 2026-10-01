@@ -620,11 +620,11 @@ Mixture-of-experts hierarchy
 
 | Model                                  | Micro-F1 | Macro-F1 | Parent Micro-F1 | Parent Macro-F1 | Child Micro-F1 | Child Macro-F1 | Parameters |
 |----------------------------------------|----------|----------|-----------------|-----------------|----------------|----------------|------------|
-| Flat XLM-R                             | 0.77     | 0.76     | 0.78               | 0.74               | 0.66              | 0.66              | -          |
-| Hierarchical Multitask XLM-R           | 0.77     | 0.76     | 0.80            | 0.78            | 0.73           | 0.75           | -          |
-| Parent-Conditioned Hierarchical XLM-R  | 0.74     | 0.71     | 0.76               | 0.68               | 0.71              |  0.73             | -          |
-| Parent-Specific Expert XLM-R            | 0.73     | 0.63     | 0.80            | 0.78            | 0.71           | 0.73           | -          |
-| GoldRoute Hierarchical Expert XLM-R     | 0.76        | 0.75        | 0.79               | 0.78               | 0.59              | 0.54              | -          |
+| Flat XLM-R                             | 0.77     | 0.76     | 0.79               | 0.77               | 0.73              | 0.75              | -          |
+| Hierarchical Multitask XLM-R           | 0.77     | 0.77     | 0.80            | 0.78            | 0.73           | 0.76           | -          |
+| Parent-Conditioned Hierarchical XLM-R  | 0.76     | 0.75     | 0.78               | 0.76               | 0.73              |  0.74             | -          |
+| Parent-Specific Expert XLM-R            | 0.76     | 0.74     | 0.80            | 0.79            | 0.69           | 0.72           | -          |
+| GoldRoute Hierarchical Expert XLM-R     | 0.76        | 0.75        | 0.78               | 0.76               | 0.73              | 0.74              | -          |
 | HardRoute Hierarchical Expert XLM-R     | 0.73     | 0.70     | 0.75            | 0.69            | 0.70           | 0.71           | -          |
 | SoftRoute Hierarchical Expert XLM-R     | 0.73     | 0.66     | 0.80            | 0.79            | 0.60           | 0.58           | -          |
 | Hierarchical Mixture-of-Experts XLM-R   | 0.35     | 0.21     | 0.61            | 0.39            | 0.13           | 0.11           | -          |
