@@ -9,7 +9,7 @@
  The dataset contains **25 labels**, organized into:
 
  - **9 parent categories** (Main-registers) representing broad semantic groups.
-- **16 child categories** (Sub-registers) representing more specific subcategories.
+ - **16 child categories** (Sub-registers) representing more specific subcategories.
 
  Unlike ordinary multilabel classification, the labels are not independent. They follow parent-child relationships:
 
@@ -322,7 +322,7 @@ One child classifier
  [9 parent logits]                     │ Expert │ Child classifier      │ Output          │
  MT LY SP ID NA HI IN OP IP            ├────────┼───────────────────────┼─────────────────┤
         |                              │ SP     │ 256→1                 │ it              │
-        |                              │ NA     │ 256→3                 │ ne sr nb       │
+        |                              │ NA     │ 256→3                 │ ne sr nb        │
         |                              │ HI     │ 256→1                 │ re              │
         |                              │ IN     │ 256→5                 │ en ra dtp fi lt │
         |                              │ OP     │ 256→4                 │ rv ob rs av     │
@@ -483,7 +483,205 @@ Child prediction fails
 
 ---
 
- # 7\. Experiment 6: Soft Training Routing and Hard Inference Routing
+ # 6.1\. Experiment 4: Gold-Routed Trainind - Hard-Routed Evaluation Hierarchical Experts
+
+
+```
+                          XLM-R encoder (shared)
+                                  │
+                                  v
+                       h = CLS embedding [1024]
+                                  │
+              ┌───────────────────┴────────────────────┐
+              │                                        │
+              v                                        │
+      ┌───────────────────┐                            │
+      │    PARENT HEAD    │                            │
+      │ Linear 1024→256   │                            │
+      │      + GELU       │                            │
+      └─────────┬─────────┘                            │
+                │                                      │
+                v                                      │
+         Linear 256→9                                  │
+         9 parent logits                               │
+      (MT LY SP ID NA HI IN OP IP)                     │
+                │                                      │
+       ┌────────┴──────────────────┐                   │
+       │                           │                   │
+   TRAINING                    EVAL / TEST             │
+   (labels given)             (dev + final test)       │
+       │                           │                   │
+       v                           v                   │
+  GOLD PARENTS               PREDICTED PARENTS         │
+  parent annotated          sigmoid(logit) ≥ 0.5       │
+  positive OR                                          │
+  any child annotated                                  │
+  positive                                             │
+       │                           │                   │
+       └──────────────┬────────────┘                   │
+                      v                                │
+          ACTIVE PARENT MASK [batch, 9]                │
+          (multi-label: several can be 1)              │
+                      │                                │
+                      │  Example:                      │
+                      │  Gold parents = {NA, IN}       │
+                      │  mask = [0,0,0,0,1,0,1,0,0]    │
+                      │                 ↑     ↑        │
+                      │                NA    IN        │
+                      │                                │
+                      │  → NA + IN experts activated   │
+                      │  → same example → both experts │
+                      │                                │
+                      │  Evaluation example:           │
+                      │  P(NA)=0.91 → active           │
+                      │  P(IN)=0.87 → active           │
+                      │  P(OP)=0.12 → inactive         │
+                      │                                │
+                      └──────────────┬─────────────────┘
+                                     v
+              For each parent with children:
+              h_sel = h[rows where mask = 1]
+              (only rows selected; h is unchanged)
+                                     │
+       ┌────────┬────────┬───────────┼────────┬────────┬────────┐
+       v        v        v           v        v        v
+      SP       NA       HI          IN       OP       IP
+       │        │        │           │        │        │
+       v        v        v           v        v        v
+                    Parent-specific Expert MLP
+             separate weights for each parent
+       │        │        │           │        │        │
+       │        │        │           │        │        │
+       └────────┴────────┴───────────┴────────┴────────┘
+                                     │
+                    Linear 1024→256 → GELU
+                                     │
+                                  Dropout
+                                     │
+                    Linear 256→256 → GELU
+                                     │
+       ┌────────┬────────┬───────────┼────────┬────────┬────────┐
+       v        v        v           v        v        v
+    256→1    256→3    256→1       256→5    256→4    256→2
+       │        │        │           │        │        │
+      it     ne sr nb     re       en ra    rv ob     ds ed
+                                  dtp fi     rs av
+                                  lt
+```
+
+```
+             MT, LY, ID: parent-only
+                   no expert / no children
+                                     │
+                                     v
+                  SCATTER into full child tensor
+                                     │
+                 child_logits = [batch, 16], -20
+                                     │
+              routed positions ← expert outputs
+              inactive positions remain at -20
+                        sigmoid(-20) ≈ 0
+                                     │
+                                     v
+             [ 9 parent logits | 16 child logits ]
+                                     │
+                                     v
+                              25 output logits
+
+```
+
+```
+LOSS (only when labels are given)
+
+  parent_loss = BCE(9 parent logits, parent labels)       all examples
+  child_loss  = mean over active experts of
+                BCE(that expert's child logits,
+                    that expert's child labels)           routed rows only
+  total       = w_parent · parent_loss + w_child · child_loss
+```
+
+Example for h_sel:
+
+```
+
+h = [example 1
+     example 2
+     example 3
+     example 4]
+
+NA mask = [1, 0, 1, 0]
+
+h_sel(NA) = [example 1
+             example 3]
+
+```
+  Routing in the loss: gold in train mode, predicted in eval mode.
+---
+
+# 6.2\. Experiment 5: Hard-Routed Trainind - Hard-Routed Evaluation Hierarchical Experts
+
+```
+
+XLM-R encoder
+    │
+    ▼
+h = first-token (<s>) representation [1024]
+    │
+    ├─────────────────────────────────┐
+    │                                 ▼
+    │                            Parent head
+    │              Linear(1024→256) → GELU → Linear(256→9)
+    │                                 │
+    │                                 ▼
+    │                         Parent logits [9] ───────────┬────────────────┐
+    │                                 │                    │                │
+    │                                 ▼                    ▼                │
+    │                  Sigmoid → Threshold ≥ 0.5      Parent BCE            │
+    │                                 │            (vs gold parents [9])    │
+    │                                 ▼                                     │
+    │                        Active parent mask                             │
+    │                 (no gradient through threshold)                       │
+    │                                 │                                     │
+    │      For each parent with children (SP, NA, HI, IN, OP, IP):          │
+    │                        ┌────────┴────────┐                            │
+    │                   mask = 1           mask = 0                         │
+    │                        │                 │                            │
+    │                        ▼                 │                            │
+    └──────────────────► Expert MLP(h)         │                            │
+                             │                 │                            │
+                             ▼                 │                            │
+                        Child head             │                            │
+                             │                 │                            │
+                             ▼                 ▼                            │
+                      Routed child       child logits = -20                 │
+                         logits          (inactive slots)                   │
+                             │                 │                            │
+                             └────────┬────────┘                            │
+                                      ▼                                     │
+                             Child logits [16] ──────► Child BCE            │
+                                      │         (per expert, on its own     │
+                                      │          children and routed        │
+                                      │          examples; mean over        │
+                                      │          active experts)            │
+                                      ▼                                     │
+                          ┌─────────────────────┐                           │
+                          │     CONCATENATE     │◄──────────────────────────┘
+                          │[parent 9]+[child 16]│
+                          └──────────┬──────────┘
+                                     │
+                                     ▼
+                             Output logits [25]
+                         (used for predictions/metrics)
+
+```
+
+```
+Total loss:
+    L = w_parent · Parent BCE + w_child · Child BCE
+```
+
+---
+ # 7\. Experiment 6: Soft-Routed Trainind - Hard-Routed Evaluation Hierarchical Experts
 
  The next architecture combined the benefits of differentiability and specialization.
 
@@ -541,6 +739,125 @@ NA = inactive
 
  Only selected experts contribute.
 
+```
+GOLD LABELS: 25 = 9 parents + 16 children
+(parent = 1 if explicitly annotated OR any child = 1)
+
+B = batch size
+
+                 XLM-R ENCODER (shared)
+                           │
+                           ▼
+            h = last_hidden_state[:, 0]
+                     [B, hidden]
+                           │
+             ┌─────────────┴─────────────────────────────┐
+             ▼                                           ▼
+      PARENT BRANCH                              6 PARENT EXPERTS
+      (all 9 parents)                            (take h)
+                                                 SP(1) NA(3) HI(1)
+      Linear(hidden → 256)                       IN(5) OP(4) IP(2)
+             │                                   MT, LY, ID: no expert
+            GELU                                 (parent logits only)
+             │                                          │
+      Linear(256 → 9)                        each expert:
+             │                               Linear(hidden → 256)
+             ▼                                          │
+      parent_logits [B,9]                              GELU
+             │                                          │
+             ├────────► Parent BCE loss            Dropout(0.1)
+             │                                          │
+             ▼                                   Linear(256 → 256)
+          sigmoid                                       │
+             │                                         GELU
+             ▼                                          │
+    p(parent) [B,9]                                     ▼
+             │                                   child classifier
+             │                                   Linear(256 → n_children)
+             │                                          │
+             └──────────────────┬───────────────────────┘
+                                ▼
+                 child_logits initialized to -5.0
+                           [B,16]
+                                │
+                  ┌─────────────┴──────────────┐
+                  ▼                            ▼
+        TRAINING: SOFT ROUTING        DEV / TEST: HARD ROUTING
+                  │                            │
+        Every expert runs on          For each parent:
+        every example.                p(parent) >= 0.5 ?
+                  │                            │
+                  │                      ┌─────┴─────┐
+                  │                     YES           NO
+                  │                      │            │
+                  ▼                      ▼            ▼
+        expert_logits × p(parent)   Expert runs   Block remains
+                  │                 on selected    at -5.0
+        p is NOT detached           examples only  (~0.007 prob.)
+        → child loss flows               │
+          into parent head               ▼
+                  │                Write raw expert logits
+        NOTE: logit × p → 0        into selected positions
+        means probability 0.5,     (NO × p)
+        not 0                            │
+                  │                Several parents can be
+                  ▼                active at the same time
+        Write weighted logits            │
+        into child_logits                │
+                  │                      │
+                  └───────────┬──────────┘
+                              ▼
+                    child_logits [B,16]
+                              │
+                 ┌────────────┴────────────┐
+                 ▼                         ▼
+          Child BCE loss          concat [parent 9 | child 16]
+                 │                 = all_logits [B,25]
+                 ▼                         │
+          TOTAL LOSS                       ▼
+          = parent_weight ×              sigmoid
+            parent BCE                     │
+          + child_weight ×         ┌───────┴────────┐
+            child BCE              ▼                ▼
+                                parent prediction  child prediction
+          (computed whenever         │                │
+           labels are given;     threshold 0.5    threshold 0.5
+           optimised only in         │                │
+           training)                 └───────┬────────┘
+                                             ▼
+                                       F1 metrics /
+                                       saved logits
+
+          NOTE: per-epoch validation (early stopping, best model on
+          eval_child_macro_f1) also uses the HARD routing path,
+          although the weights are trained with SOFT routing.
+```
+
+
+IMPORTANT TRAINING GRADIENT PATH:
+
+```
+        Child BCE
+           ↓
+        child logits
+           ↓
+        expert logits × p(parent)
+                         ↓
+                  parent classifier
+
+        Therefore child loss also trains
+        the parent classifier.
+
+```
+
+EVALUATION:
+```
+
+
+        parent probabilities → hard routing
+        → inactive child logits remain -5
+        → sigmoid(-5) ≈ 0.0067
+```
 ---
 
  # 8\. Experiment 7: Parent-Specific Mixture-of-Experts
@@ -603,6 +920,110 @@ $$
 - experts learn parent-specific information,
 - the router determines which expertise is useful.
 
+
+
+```
+
+    XLM-R encoder
+          │
+    h = last_hidden_state[:, 0]   (1024)
+          │
+     ┌────┴───────────────────────────────┐
+     │                                     │
+     ▼                                     ▼
+ PARENT HEAD                         6 PARENT-SPECIFIC
+ Linear 1024→256                     EXPERTS
+      │                              SP, NA, HI, IN, OP, IP
+    GELU                                  │
+      │                                   │
+ Linear 256→9                             │
+      │                              each expert:
+      ▼                              Linear 1024→256
+ parent logits (9)                        │
+      │                                  GELU
+ sigmoid                                  │
+      │                               Dropout(0.1)
+      ▼                                   │
+ parent probabilities p (9)           Linear 256→256
+      │                                  │
+      │                                 GELU
+      │                                  │
+      │                                  ▼
+      │                           expert representation
+      │                              (256 each)
+      │                                  │
+      ├───────────────┐                  │
+      │               │                  │
+      ▼               ▼                  │
+ TRAINING          EVAL / TEST           │
+ w = p             w = 1[p ≥ 0.5]        │
+      │               │                  │
+      │               │                  │
+      └───────┬───────┘                  │
+              │                          │
+              ▼                          │
+   Zero weights for parents              │
+   without experts:                      │
+   MT, LY, ID                            │
+              │                          │
+              ▼                          │
+      normalize weights                  │
+          w / Σw                         │
+      (Σw clamped ≥ 1e-6)                │
+              │                          │
+              └──────────┬───────────────┘
+                         ▼
+                  WEIGHTED MIXTURE
+                  h_mix = Σ w_p E_p(h)
+                         │
+                         ▼
+               Shared child classifier
+                    Linear 256→16
+                         │
+                         ▼
+                  child logits (16)
+                         │
+             ┌───────────┴───────────┐
+             │                       │
+             ▼                       ▼
+       parent logits             child logits
+             │                       │
+             └───────────┬───────────┘
+                         ▼
+                 25 total logits
+                         │
+             ┌───────────┴────────────┐
+             ▼                        ▼
+        TRAINING                 EVAL / TEST
+             │                        │
+       BCE(parent)              parents:
+             │                  sigmoid ≥ 0.5
+       BCE(child)                    │
+             │                  children:
+       parent_weight ×           sigmoid ≥ 0.5
+       parent BCE               independently
+             +                       │
+       child_weight ×                │
+       child BCE                     │
+             │                       │
+             ▼                       ▼
+          LOSS                  PREDICTIONS
+```
+
+IMPORTANT:
+- Child loss can backpropagate through soft routing
+  into the parent probabilities / parent head.
+- Hard routing is used only when self.training == False.
+- Children are NOT masked by predicted parents.
+- All 6 experts are computed for every example.
+- If no expert parent has p ≥ 0.5 at inference:
+      w = 0 for every expert
+      h_mix = 0
+      child logits = child-classifier bias
+- routing_* metrics report the fraction of examples
+  for which each parent exceeds the routing threshold.
+
+
 ---
 
  # 9\. Evolution of the Models
@@ -619,7 +1040,7 @@ Separate parent and child tasks
 Parent-conditioned child prediction
       |
       v
-Parent-specific experts
+Parent-specific experts (Gold-Route)
       |
       v
 Hard expert routing
@@ -642,7 +1063,7 @@ Mixture-of-experts hierarchy
 | Flat XLM-R | Predict all labels independently | None |
 | Hierarchical multitask | Separate parent and child objectives | Loss-level hierarchy |
 | Parent-conditioned model | Child receives parent representation | Feature-level hierarchy |
-| Expert model | Separate classifiers per parent | Parameter specialization |
+| Expert model (Gold-Route) | Separate classifiers per parent | Parameter specialization |
 | Hard routing model | Activate only relevant experts | Conditional computation |
 | Soft routing model | Parent probabilities weight experts | Differentiable hierarchy |
 | Hierarchical MoE | Learn weighted expert mixtures | Full hierarchical representation learning |
@@ -694,7 +1115,7 @@ Mixture-of-experts hierarchy
 | Flat XLM-R baseline | No | Single classifier predicts all labels | No | None | No explicit hierarchy |
 | Hierarchical multitask XLM-R (Exp. 1) | Separate parent head | Separate child head | No | None | Parent and child learned with separate losses |
 | Parent-conditioned XLM-R (Exp. 2) | Parent representation learned | Child classifier receives parent representation | No | Soft feature conditioning | Parent information influences child prediction |
-| Parent-specific experts (Exp. 3) | Parent classifier | Separate child expert per parent | Yes | No routing | Each parent group learns specialized transformations |
+| Parent-specific experts (Gold-Route) (Exp. 3) | Parent classifier | Separate child expert per parent | Yes | No routing | Each parent group learns specialized transformations |
 | Hard-routed experts (Exp. 4/5) | Parent classifier decides active groups | Only selected experts predict children | Yes | Hard routing | Explicit conditional computation |
 | Soft-routing experts (Exp. 6) | Parent probabilities act as weights | Weighted expert representations | Yes | Differentiable soft routing | Parent confidence controls expert contribution |
 | Hierarchical MoE (Exp. 7) | Parent classifier acts as router | Shared child classifier uses mixed expert representation | Yes | Mixture-of-experts | Full parent-aware representation learning |
@@ -706,7 +1127,7 @@ Mixture-of-experts hierarchy
 | Flat classifier | Simple, stable, no routing errors | Ignores label hierarchy |
 | Multitask hierarchy | Easy way to introduce hierarchy | Child classifier does not directly use parents |
 | Parent-conditioned model | Uses parent information while remaining differentiable | Still has shared child classifier |
-| Expert model | Allows specialization | More parameters |
+| Expert model (Gold-Route) | Allows specialization | More parameters |
 | Hard routing | Efficient and interpretable | Parent errors propagate to children |
 | Soft routing | Fully trainable end-to-end | More computational cost |
 | Hierarchical MoE | Flexible parent-aware representations | More complex architecture |
@@ -719,7 +1140,7 @@ Mixture-of-experts hierarchy
 | Flat XLM-R                             | 0.77     | 0.76     | 0.79               | 0.77               | 0.73              | 0.75              |
 | Hierarchical Multitask XLM-R           | 0.77     | 0.77     | 0.80            | 0.78            | 0.73           | 0.76           |
 | Parent-Conditioned Hierarchical XLM-R  | 0.76     | 0.75     | 0.78               | 0.76               | 0.73              |  0.74             |
-| Parent-Specific Expert XLM-R            | 0.76     | 0.74     | 0.80            | 0.79            | 0.69           | 0.72           |
+| Parent-Specific Expert XLM-R             | 0.76     | 0.74     | 0.80            | 0.79            | 0.69           | 0.72           |
 | GoldRoute Hierarchical Expert XLM-R     | 0.76        | 0.75        | 0.78               | 0.76               | 0.73              | 0.74              |
 | HardRoute Hierarchical Expert XLM-R     | 0.73     | 0.70     | 0.75            | 0.69            | 0.70           | 0.71           |
 | SoftRoute Hierarchical Expert XLM-R     | 0.73     | 0.66     | 0.80            | 0.79            | 0.60           | 0.58           |
@@ -1676,8 +2097,6 @@ parent → expert → child
  Therefore, models that use hierarchy as an auxiliary signal perform better than models that enforce hierarchy as a hard computational constraint.
 
 ---
-
- This interpretation gives you a strong discussion section because it explains **why the simpler hierarchical model works while the more complex routing models fail**. It frames the results as an investigation of the limits of hierarchical modeling rather than just a list of scores.
 
 
 
