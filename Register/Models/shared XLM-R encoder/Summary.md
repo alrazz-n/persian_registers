@@ -1,19 +1,15 @@
-I see that you have developed **seven related hierarchical XLM-R architectures**, each one adding a different way of exploiting the parent-child label structure. A good summary should not explain each experiment separately in isolation; it should show the **research progression**: starting from a flat baseline, introducing hierarchy, then increasing the level of specialization and routing.
-
- Here is a unified summary you can use for a thesis, paper, presentation, or experiment discussion.
-
----
-
  # Summary of Hierarchical XLM-R Experiments for Multilabel Classification
+ The XLM-R model is the [TurkuNLP's register identification model](https://huggingface.co/TurkuNLP/web-register-classification-multilingual), which in these experiments fine-tuned on the Persian data.
 
  ## 1\. Research Objective
 
  The goal of these experiments was to investigate whether explicitly modeling label hierarchy can improve multilingual multilabel text classification.
+ Moreover, we want to do error analysis on model's output. To see whether there is a pattern on miss-classification between main-registers or a miss-classification on the main-register that led to not classifiying the sub-resiter.
 
  The dataset contains **25 labels**, organized into:
 
- - **9 parent categories** representing broad semantic groups.
-- **16 child categories** representing more specific subcategories.
+ - **9 parent categories** (Main-registers) representing broad semantic groups.
+- **16 child categories** (Sub-registers) representing more specific subcategories.
 
  Unlike ordinary multilabel classification, the labels are not independent. They follow parent-child relationships:
 
@@ -35,13 +31,28 @@ OP
  ├── ob
  ├── rs
  └── av
+
+IP
+ ├── ds
+ └── ed
+
+ SP
+ ├── it
+
+ ID
+ ├── - (no sub registers)
+
+LY
+ ├── - (no sub registers)
+
+MT
+ ├── - (no sub registers)
+
+
 ```
 
  A document can belong to multiple parent categories and multiple child categories simultaneously, making the task a **hierarchical multilabel classification problem**.
 
- The central research question was:
-
- > Can incorporating the known hierarchy between labels improve the representation learning and prediction of fine-grained categories compared with a flat multilabel classifier?
 
 ---
 
@@ -73,23 +84,7 @@ $$
 y = sigmoid(Wh+b)
 $$
 
- Each label is treated independently:
-
-```
-MT
-LY
-SP
-ID
-NA
-HI
-IN
-OP
-IP
-it
-ne
-sr
-...
-```
+ Each label is treated independently.
 
  The model learns:
 
@@ -130,17 +125,45 @@ rv → OP
  Architecture:
 
 ```
-                 XLM-R
-                    |
-          Shared representation
-                    |
-        -------------------------
-        |                       |
-        v                       v
+                    Pretrained XLM-R Encoder
+                             |
+                             v
+                    Shared representation
+                       h = X[:, 0, :] (<s>)
+                             |
+                  -------------------------
+                  |                       |
+                  v                       v
+          Parent classifier       Child classifier
+             Linear(H → 9)          Linear(H → 16)
+                  |                       |
+                  v                       v
+             9 parent logits        16 child logits
+                  |                       |
+                  -----------+-------------
+                             |
+                             v
+                    25 total logits
+                    (9 parents + 16 children)
 
- Parent classifier       Child classifier
 
-   9 labels                16 labels
+ parent_logits (9)                 child_logits (16)
+      |                                  |
+      |  vs parent_labels                |  vs child_labels
+      v                                  v
+  Parent BCE                         Child BCE
+      |                                  |
+      v                                  v
+ parent_weight × parent_loss      child_weight × child_loss
+      |                                  |
+      +----------------+-----------------+
+                       |
+                       v
+                     loss
+
+Loss = (parent_weight × parent_loss)
+     + (child_weight  × child_loss)
+
 ```
 
  The encoder is shared, but two classification objectives are used.
@@ -183,23 +206,49 @@ $$
  Architecture:
 
 ```
-                 XLM-R
-                    |
-                    |
-             Representation h
-                    |
-          --------------------
-          |                  |
-          v                  |
- Parent representation      |
-          |                  |
-          v                  |
- Parent classifier           |
-                             |
-          --------------------
-                    |
-                    v
-             Child classifier
+                 XLM-R encoder
+                       |
+              h = <s> hidden state (1024-d) (last_hidden_state[:, 0])
+                       |
+          -------------------------------
+          |                             |
+          v                             |
+  parent_projection (Linear 1024→256)   |
+  + GELU                                |
+          |                             |
+     parent_hidden (256-d)              |
+          |                             |
+     ----------------                   |
+     |              |                   |
+     v              +------> concat <---+
+ parent_classifier            [h ; parent_hidden] (1280-d)
+ (Linear 256→9)                         |
+     |                                  v
+ parent_logits                  child_classifier
+                                 (Linear 1280→num_children (16))
+                                       |
+                                  child_logits
+                             
+ 
+
+ parent_logits (9)                 child_logits (16)
+      |                                  |
+      |  vs parent_labels                |  vs child_labels
+      v                                  v
+  Parent BCE                         Child BCE
+      |                                  |
+      v                                  v
+ parent_weight × parent_loss      child_weight × child_loss
+      |                                  |
+      +----------------+-----------------+
+                       |
+                       v
+                     loss
+
+
+(For joint output / evaluation / prediction only)
+all_logits = [parent_logits ; child_logits]  (25-d)
+
 ```
 
  A parent representation is learned:
@@ -248,18 +297,65 @@ One child classifier
  separate experts were created:
 
 ```
-             XLM-R
+                        XLM-R encoder
+                             |
+                             v
+                    h  <s> hidden state (1024-d)
+                       (last_hidden_state[:, 0])
+                             |
+        ---------------------|-----------------------
+        |                                           |
+        v                                           v
+ PARENT BRANCH                         PARENT-SPECIFIC EXPERTS
+ Linear 1024→256 + GELU                (all 6 run on every sample, no routing,
+        |                                each reads the same h)
+        |
+        |                                inside each expert (separate weights):
+        |                                h [1024] → Linear 1024→256 → GELU
+        |                                → Dropout(0.1) → Linear 256→256 → GELU
+        |                                → [256-d expert hidden]
+        |                                → Child classifier (256→k) → k child logits
+        |
+ Linear 256→9
+ (parent classifier)                                  |
+        |                              ┌────────┬───────────────────────┬─────────────────┐
+ [9 parent logits]                     │ Expert │ Child classifier      │ Output          │
+ MT LY SP ID NA HI IN OP IP            ├────────┼───────────────────────┼─────────────────┤
+        |                              │ SP     │ 256→1                 │ it              │
+        |                              │ NA     │ 256→3                 │ ne sr nb       │
+        |                              │ HI     │ 256→1                 │ re              │
+        |                              │ IN     │ 256→5                 │ en ra dtp fi lt │
+        |                              │ OP     │ 256→4                 │ rv ob rs av     │
+        |                              │ IP     │ 256→2                 │ ds ed           │
+        |                              └────────┴───────────────────────┴─────────────────┘
+        |                                               |
+        |                                          concat → [16 child logits]
+        |                                               |
+        ------------------------------------------------
+                             |
+                             v
+                  Concatenate [9 parent | 16 child]
+                             |
+                             v
+                          [25 logits]
 
-                |
 
-      ---------------------
-      |          |        |
 
-   NA expert  IN expert OP expert
 
-      |          |        |
 
-   ne sr nb  en ra...  rv ob...
+Parent_logits (9)                 child_logits (16)
+      |                                  |
+      |  vs parent_labels                |  vs child_labels
+      v                                  v
+  Parent BCE                         Child BCE
+      |                                  |
+      v                                  v
+ parent_weight × parent_loss      child_weight × child_loss
+      |                                  |
+      +----------------+-----------------+
+                       |
+                       v
+                     loss
 ```
 
  Each expert specializes in one parent category.
@@ -618,16 +714,16 @@ Mixture-of-experts hierarchy
 
  ### 4\. Results table (if you have metrics)
 
-| Model                                  | Micro-F1 | Macro-F1 | Parent Micro-F1 | Parent Macro-F1 | Child Micro-F1 | Child Macro-F1 | Parameters |
-|----------------------------------------|----------|----------|-----------------|-----------------|----------------|----------------|------------|
-| Flat XLM-R                             | 0.77     | 0.76     | 0.79               | 0.77               | 0.73              | 0.75              | -          |
-| Hierarchical Multitask XLM-R           | 0.77     | 0.77     | 0.80            | 0.78            | 0.73           | 0.76           | -          |
-| Parent-Conditioned Hierarchical XLM-R  | 0.76     | 0.75     | 0.78               | 0.76               | 0.73              |  0.74             | -          |
-| Parent-Specific Expert XLM-R            | 0.76     | 0.74     | 0.80            | 0.79            | 0.69           | 0.72           | -          |
-| GoldRoute Hierarchical Expert XLM-R     | 0.76        | 0.75        | 0.78               | 0.76               | 0.73              | 0.74              | -          |
-| HardRoute Hierarchical Expert XLM-R     | 0.73     | 0.70     | 0.75            | 0.69            | 0.70           | 0.71           | -          |
-| SoftRoute Hierarchical Expert XLM-R     | 0.73     | 0.66     | 0.80            | 0.79            | 0.60           | 0.58           | -          |
-| Hierarchical Mixture-of-Experts XLM-R   | 0.35     | 0.21     | 0.61            | 0.39            | 0.13           | 0.11           | -          |
+| Model                                  | Micro-F1 | Macro-F1 | Parent Micro-F1 | Parent Macro-F1 | Child Micro-F1 | Child Macro-F1 |
+|----------------------------------------|----------|----------|-----------------|-----------------|----------------|----------------|
+| Flat XLM-R                             | 0.77     | 0.76     | 0.79               | 0.77               | 0.73              | 0.75              |
+| Hierarchical Multitask XLM-R           | 0.77     | 0.77     | 0.80            | 0.78            | 0.73           | 0.76           |
+| Parent-Conditioned Hierarchical XLM-R  | 0.76     | 0.75     | 0.78               | 0.76               | 0.73              |  0.74             |
+| Parent-Specific Expert XLM-R            | 0.76     | 0.74     | 0.80            | 0.79            | 0.69           | 0.72           |
+| GoldRoute Hierarchical Expert XLM-R     | 0.76        | 0.75        | 0.78               | 0.76               | 0.73              | 0.74              |
+| HardRoute Hierarchical Expert XLM-R     | 0.73     | 0.70     | 0.75            | 0.69            | 0.70           | 0.71           |
+| SoftRoute Hierarchical Expert XLM-R     | 0.73     | 0.66     | 0.80            | 0.79            | 0.60           | 0.58           |
+| Hierarchical Mixture-of-Experts XLM-R   | 0.35     | 0.21     | 0.61            | 0.39            | 0.13           | 0.11           |
 
 
 Baseline:
@@ -652,7 +748,7 @@ Expert-based models:
 | Experiment 1 | Hierarchical Multitask XLM-R | Separate parent and child classification heads trained jointly with a weighted parent-child loss. |
 | Experiment 2 | Parent-Conditioned Hierarchical XLM-R | Child classifier receives a learned parent representation in addition to the original XLM-R representation. |
 | Experiment 3 | Hierarchical Parent-Specific Expert XLM-R | Separate expert networks are created for each parent category, with each expert predicting its own child labels. |
-| Experiment 4 | Hierarchical Hard-Routed Expert XLM-R | Parent predictions determine which child experts are activated. Uses hard routing. |
+| Experiment 4 | Hierarchical Hard-Routed Expert XLM-R (GoldRoute) | Parent predictions determine which child experts are activated. Uses hard routing. |
 | Experiment 5 | Hierarchical Parent-Based Hard Routing XLM-R | Same general idea as Experiment 4, emphasizing predicted parent routing and parent-child pipeline behavior. |
 | Experiment 6 | Hierarchical Soft-Routed Expert XLM-R | Parent probabilities are used as differentiable routing weights during training and hard routing during inference. |
 | Experiment 7 | Hierarchical Parent-Specific Mixture-of-Experts XLM-R (Hierarchical MoE XLM-R) | Parent probabilities create a weighted mixture of expert representations before child classification. |
