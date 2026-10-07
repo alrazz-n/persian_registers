@@ -1,110 +1,122 @@
 #Soft/differentiable routing
-#TRAIN
-#parent probabilities
-#       ↓
-#soft routing
-#       ↓
-#experts
-
-#DEV/TEST
-#parent probabilities
-#       ↓
-#hard routing
-#       ↓
-#experts
-
 
 
 """
-Hierarchical XLM-R with differentiable soft routing
-during training and hard routing during inference.
+B = batch size
 
-TRAINING
---------
-Parent probabilities determine the contribution of each
-parent-specific expert.
+                 XLM-R ENCODER (shared)
+                           │
+                           ▼
+            h = last_hidden_state[:, 0]
+                     [B, hidden]
+                           │
+             ┌─────────────┴─────────────────────────────┐
+             ▼                                           ▼
+      PARENT BRANCH                              6 PARENT EXPERTS
+      (all 9 parents)                            (take h)
+                                                 SP(1) NA(3) HI(1)
+      Linear(hidden → 256)                       IN(5) OP(4) IP(2)
+             │                                   MT, LY, ID: no expert
+            GELU                                 (parent logits only)
+             │                                          │
+      Linear(256 → 9)                        each expert:
+             │                               Linear(hidden → 256)
+             ▼                                          │
+      parent_logits [B,9]                              GELU
+             │                                          │
+             ├────────► Parent BCE loss            Dropout(0.1)
+             │                                          │
+             ▼                                   Linear(256 → 256)
+          sigmoid                                       │
+             │                                         GELU
+             ▼                                          │
+    p(parent) [B,9]                                     ▼
+             │                                   child classifier
+             │                                   Linear(256 → n_children)
+             │                                          │
+             └──────────────────┬───────────────────────┘
+                                ▼
+                 child_logits initialized to -5.0
+                           [B,16]
+                                │
+                  ┌─────────────┴──────────────┐
+                  ▼                            ▼
+        TRAINING: SOFT ROUTING        DEV / TEST: HARD ROUTING
+                  │                            │
+        Every expert runs on          For each parent:
+        every example.                p(parent) >= 0.5 ?
+                  │                            │
+                  │                      ┌─────┴─────┐
+                  │                     YES           NO
+                  │                      │            │
+                  ▼                      ▼            ▼
+        expert_logits × p(parent)   Expert runs   Block remains
+                  │                 on selected    at -5.0
+        p is NOT detached           examples only  (~0.007 prob.)
+        → child loss flows               │
+          into parent head               ▼
+                  │                Write raw expert logits
+        NOTE: logit × p → 0        into selected positions
+        means probability 0.5,     (NO × p)
+        not 0                            │
+                  │                Several parents can be
+                  ▼                active at the same time
+        Write weighted logits            │
+        into child_logits                │
+                  │                      │
+                  └───────────┬──────────┘
+                              ▼
+                    child_logits [B,16]
+                              │
+                 ┌────────────┴────────────┐
+                 ▼                         ▼
+          Child BCE loss          concat [parent 9 | child 16]
+                 │                 = all_logits [B,25]
+                 ▼                         │
+          TOTAL LOSS                       ▼
+          = parent_weight ×              sigmoid
+            parent BCE                     │
+          + child_weight ×         ┌───────┴────────┐
+            child BCE              ▼                ▼
+                                parent prediction  child prediction
+          (computed whenever         │                │
+           labels are given;     threshold 0.5    threshold 0.5
+           optimised only in         │                │
+           training)                 └───────┬────────┘
+                                             ▼
+                                       F1 metrics /
+                                       saved logits
 
-Example:
-
-    predicted parents:
-
-        NA = 0.91
-        IN = 0.87
-        OP = 0.12
-
-    soft routing:
-
-        NA expert -> weight 0.91
-        IN expert -> weight 0.87
-        OP expert -> weight 0.12
+          NOTE: per-epoch validation (early stopping, best model on
+          eval_child_macro_f1) also uses the HARD routing path,
+          although the weights are trained with SOFT routing.
 
 
-DEV / TEST
-----------
-Parent probabilities determine hard routing.
 
-    NA = 0.91 -> active
-    IN = 0.87 -> active
-    OP = 0.12 -> inactive
-
-IMPORTANT
----------
-During training, child loss can backpropagate through
-the parent probabilities into the parent classifier.
-
-During evaluation/test, hard routing is used.
-
-------------
-Training
-                 XLM-R
-                   │
-                   ▼
-            parent classifier
-                   │
-             sigmoid probs
-                   │
-        ┌──────────┼──────────┐
-        ▼          ▼          ▼
-      NA p        IN p       OP p
-        │          │          │
-        ▼          ▼          ▼
-    NA expert   IN expert   OP expert
-        │          │          │
-       ×p         ×p         ×p
-        │          │          │
-        ▼          ▼          ▼
-    NA child     IN child    OP child
-      logits       logits      logits
-        │          │          │
-        └──────────┼──────────┘
-                   ▼
-               child loss
-
-               
-Dev/test
-
-                 XLM-R
-                   │
-                   ▼
-            parent classifier
-                   │
-             sigmoid probs
-                   │
-             threshold 0.5
-                   │
-        ┌──────────┼──────────┐
-        ▼          ▼          ▼
-      NA=1        IN=1       OP=0
-        │          │
-        ▼          ▼
-    NA expert   IN expert
-        │          │
-        ▼          ▼
-    NA children IN children
+IMPORTANT TRAINING GRADIENT PATH:
 
 
-    
-soft training + hard inference routing.
+        Child BCE
+           ↓
+        child logits
+           ↓
+        expert logits × p(parent)
+                         ↓
+                  parent classifier
+
+        Therefore child loss also trains
+        the parent classifier.
+
+
+
+EVALUATION:
+
+
+
+        parent probabilities → hard routing
+        → inactive child logits remain -5
+        → sigmoid(-5) ≈ 0.0067
+
 """
 
 

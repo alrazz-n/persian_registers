@@ -1,26 +1,68 @@
 # ============================================================
-# Model 3
-# Hierarchical XLM-R + Parent-Specific Shared Experts
 #
 # Architecture:
 #
-#                         XLM-R
-#                           |
-#                           v
-#                   shared representation h
-#                           |
-#             +-------------+-------------+
-#             |                           |
-#             v                           v
-#      Parent projection             Parent experts
-#             |                           |
-#             v                  +--------+--------+--------+
-#      parent_hidden             |        |        |        |
-#             |                  v        v        v        v
-#             v                 NA       HI       IN       OP ...
-#      Parent classifier         |        |        |        |
-#             |                  v        v        v        v
-#             v               ne sr nb   re    en ra ...  rv ...
+'''
+                        XLM-R encoder
+                             |
+                             v
+                    h  <s> hidden state (1024-d)
+                       (last_hidden_state[:, 0])
+                             |
+        ---------------------|-----------------------
+        |                                           |
+        v                                           v
+ PARENT BRANCH                         PARENT-SPECIFIC EXPERTS
+ Linear 1024→256 + GELU                (all 6 run on every sample, no routing,
+        |                                each reads the same h)
+        |
+        |                                inside each expert (separate weights):
+        |                                h [1024] → Linear 1024→256 → GELU
+        |                                → Dropout(0.1) → Linear 256→256 → GELU
+        |                                → [256-d expert hidden]
+        |                                → Child classifier (256→k) → k child logits
+        |
+ Linear 256→9
+ (parent classifier)                                  |
+        |                              ┌────────┬───────────────────────┬─────────────────┐
+ [9 parent logits]                     │ Expert │ Child classifier      │ Output          │
+ MT LY SP ID NA HI IN OP IP            ├────────┼───────────────────────┼─────────────────┤
+        |                              │ SP     │ 256→1                 │ it              │
+        |                              │ NA     │ 256→3                 │ ne sr nb        │
+        |                              │ HI     │ 256→1                 │ re              │
+        |                              │ IN     │ 256→5                 │ en ra dtp fi lt │
+        |                              │ OP     │ 256→4                 │ rv ob rs av     │
+        |                              │ IP     │ 256→2                 │ ds ed           │
+        |                              └────────┴───────────────────────┴─────────────────┘
+        |                                               |
+        |                                          concat → [16 child logits]
+        |                                               |
+        ------------------------------------------------
+                             |
+                             v
+                  Concatenate [9 parent | 16 child]
+                             |
+                             v
+                          [25 logits]
+
+
+
+
+
+Parent_logits (9)                 child_logits (16)
+      |                                  |
+      |  vs parent_labels                |  vs child_labels
+      v                                  v
+  Parent BCE                         Child BCE
+      |                                  |
+      v                                  v
+ parent_weight × parent_loss      child_weight × child_loss
+      |                                  |
+      +----------------+-----------------+
+                       |
+                       v
+                     loss
+'''
 #       9 parent logits
 #
 #
@@ -49,27 +91,7 @@
 #     16 child logits
 #     =
 #     25 logits
-#
-#
-# Loss:
-#
-#     L =
-#         parent_weight * parent_loss
-#         +
-#         child_weight * child_loss
-#
-# Optuna optimizes:
-#
-#     learning_rate
-#     weight_decay
-#     warmup_ratio
-#     parent_weight
-#     child_weight
-#     gradient accumulation
-#
-# The optimization metric is:
-#
-#     child macro-F1
+
 #
 # ============================================================
 

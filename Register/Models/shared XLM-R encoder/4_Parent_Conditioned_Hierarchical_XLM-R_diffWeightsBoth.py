@@ -1,127 +1,52 @@
 #===============================
 
-#Child classifier will get
+#Architecture
 
-#                    ┌─────────────────┐
-#                    │                 │
-#                    ▼                 │
-#                  h (1024)            │
-#                    │                 │
-#                    │          parent_hidden (256)
-#                    │                 │
-#                    └────────┬────────┘
-#                             ▼
-#                       child_input
-#                         1280 dim
-#                             │
-#                             ▼
-#                      Child classifier
-#                             │
-#                             ▼
-#                         16 logits
+'''
+                 XLM-R encoder
+                       |
+              h = <s> hidden state (1024-d) (last_hidden_state[:, 0])
+                       |
+          -------------------------------
+          |                             |
+          v                             |
+  parent_projection (Linear 1024→256)   |
+  + GELU                                |
+          |                             |
+     parent_hidden (256-d)              |
+          |                             |
+     ----------------                   |
+     |              |                   |
+     v              +------> concat <---+
+ parent_classifier            [h ; parent_hidden] (1280-d)
+ (Linear 256→9)                         |
+     |                                  v
+ parent_logits                  child_classifier
+                                 (Linear 1280→num_children (16))
+                                       |
+                                  child_logits
+                             
+ 
 
-# And the whole thing looks like:
+ parent_logits (9)                 child_logits (16)
+      |                                  |
+      |  vs parent_labels                |  vs child_labels
+      v                                  v
+  Parent BCE                         Child BCE
+      |                                  |
+      v                                  v
+ parent_weight × parent_loss      child_weight × child_loss
+      |                                  |
+      +----------------+-----------------+
+                       |
+                       v
+                     loss
 
-#                         XLM-R
-#                           │
-#                           ▼
-#                           h
-#                           │
-#                  ┌────────┴────────┐
-#                  │                 │
-#                  ▼                 │
-#          parent representation     │
-#                  │                 │
-#                  ▼                 │
-#           Parent classifier        │
-#                  │                 │
-#                  ▼                 │
-#            parent predictions      │
-#                                    │
-#                  ┌─────────────────┘
-#                  ▼
-#            Child classifier
 
-#Or in big picture
+(For joint output / evaluation / prediction only)
+all_logits = [parent_logits ; child_logits]  (25-d)
 
-#                     Text
-#                      │
-#                      ▼
-#                    XLM-R
-#                      │
-#                      ▼
-#                      h
-#                      │
-#             ┌────────┴─────────┐
-#             │                  │
-#             ▼                  ▼
-#      Parent projection       original h
-#             │                  │
-#             ▼                  │
-#      parent_hidden             │
-#             │                  │
-#             ▼                  │
-#      Parent classifier         │
-#             │                  │
-#             ▼                  │
-#       Parent logits            │
-#                                │
-#             ┌──────────────────┘
-#             │
-#             ▼
-#      concatenate(h,
-#                  parent_hidden)
-#             │
-#             ▼
-#       Child classifier
-#             │
-#             ▼
-#        Child logits
-
-# ============================================================
-# Hierarchical XLM-R Multilabel Classification
-#
-# Architecture:
-#
-#                         XLM-R Encoder
-#                               |
-#                               v
-#                         shared representation h
-#                               |
-#                     +---------+---------+
-#                     |                   |
-#                     v                   |
-#              Parent projection          |
-#                     |                   |
-#                     v                   |
-#               parent_hidden             |
-#                  /        \              |
-#                 /          \             |
-#                v            v            |
-#       Parent classifier   concatenate <--+
-#                |            |
-#                v            v
-#         9 parent logits   Child classifier
-#                               |
-#                               v
-#                         16 child logits
-#
-#
-# Total output labels = 25
-#
-# Parent labels:
-# MT LY SP ID NA HI IN OP IP
-#
-# Child labels:
-# it ne sr nb re en ra dtp fi lt
-# rv ob rs av ds ed
-#
-#
-# Loss:
-#
-#   L = parent_weight * parent_loss
-#       +
-#       child_weight * child_loss
+'''
 #
 # Both parent_weight and child_weight are optimized by Optuna.
 #

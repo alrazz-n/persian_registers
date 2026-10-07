@@ -1,75 +1,63 @@
+# Hard Route
 """
-Hierarchical XLM-R with fully predicted multi-label hard routing.
 
-TRAINING
---------
-Predicted parent probabilities determine which experts
-are activated for each example.
+XLM-R encoder
+    │
+    ▼
+h = first-token (<s>) representation [1024]
+    │
+    ├─────────────────────────────────┐
+    │                                 ▼
+    │                            Parent head
+    │              Linear(1024→256) → GELU → Linear(256→9)
+    │                                 │
+    │                                 ▼
+    │                         Parent logits [9] ───────────┬────────────────┐
+    │                                 │                    │                │
+    │                                 ▼                    ▼                │
+    │                  Sigmoid → Threshold ≥ 0.5      Parent BCE            │
+    │                                 │            (vs gold parents [9])    │
+    │                                 ▼                                     │
+    │                        Active parent mask                             │
+    │                 (no gradient through threshold)                       │
+    │                                 │                                     │
+    │      For each parent with children (SP, NA, HI, IN, OP, IP):          │
+    │                        ┌────────┴────────┐                            │
+    │                   mask = 1           mask = 0                         │
+    │                        │                 │                            │
+    │                        ▼                 │                            │
+    └──────────────────► Expert MLP(h)         │                            │
+                             │                 │                            │
+                             ▼                 │                            │
+                        Child head             │                            │
+                             │                 │                            │
+                             ▼                 ▼                            │
+                      Routed child       child logits = -20                 │
+                         logits          (inactive slots)                   │
+                             │                 │                            │
+                             └────────┬────────┘                            │
+                                      ▼                                     │
+                             Child logits [16] ──────► Child BCE            │
+                                      │         (per expert, on its own     │
+                                      │          children and routed        │
+                                      │          examples; mean over        │
+                                      │          active experts)            │
+                                      ▼                                     │
+                          ┌─────────────────────┐                           │
+                          │     CONCATENATE     │◄──────────────────────────┘
+                          │[parent 9]+[child 16]│
+                          └──────────┬──────────┘
+                                     │
+                                     ▼
+                             Output logits [25]
+                         (used for predictions/metrics)
 
-Example:
-
-    predicted parents:
-        NA = 0.91
-        IN = 0.87
-        OP = 0.12
-
-    routing:
-        NA expert -> active
-        IN expert -> active
-        OP expert -> inactive
 
 
-EVALUATION / TEST
------------------
-The same predicted parent probabilities and the same
-hard routing threshold are used.
 
-Therefore:
+Total loss:
+    L = w_parent · Parent BCE + w_child · Child BCE
 
-    TRAIN:
-        predicted parents
-             ↓
-        hard routing
-             ↓
-          experts
-
-    DEV/TEST:
-        predicted parents
-             ↓
-        hard routing
-             ↓
-          experts
-
-This makes the routing mechanism identical between
-training and inference.
-
-IMPORTANT
----------
-The threshold operation is non-differentiable.
-
-Therefore, child loss does not backpropagate through
-the hard routing decision into the parent classifier.
-
-A child cannot be predicted unless its parent was routed.
-------------------------------------------------------
-
-                    TRAIN
-                      │
-                 XLM-R encoder
-                      │
-                parent logits
-                      │
-             sigmoid probabilities
-                      │
-                 threshold
-                      │
-              predicted parents
-                      │
-                hard routing
-                      │
-                   experts
-                      │
-                child logits
 
 """
 

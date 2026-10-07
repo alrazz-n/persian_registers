@@ -2,79 +2,92 @@
 Hierarchical XLM-R with a Parent-Specific
 Mixture-of-Experts (MoE).
 
-The model uses the predicted parent distribution to
-combine representations produced by parent-specific
-experts.
-
-Parent-specific experts are all applied to the shared XLM-R representation. The parent classifier acts as a router that determines how much each expert contributes to a shared mixture representation, which is then passed to a single shared child classifier.
-
 Architecture
-------------
-
-                         XLM-R
-                           │
-                           ▼
-                    shared representation h
-                           │
-             ┌─────────────┴─────────────┐
-             │                           │
-             ▼                           ▼
-      Parent classifier             Parent experts
-             │                    ┌──────┼──────┐
-             ▼                    ▼      ▼      ▼
-      parent probabilities       SP     NA     IN ...
-             │                    │      │      │
-             │                    └──────┼──────┘
-             │                           │
-             └───────► router weights ◄──┘
-                           │
-                           ▼
-                    weighted mixture
+    XLM-R encoder
+          │
+    h = last_hidden_state[:, 0]   (1024)
+          │
+     ┌────┴───────────────────────────────┐
+     │                                     │
+     ▼                                     ▼
+ PARENT HEAD                         6 PARENT-SPECIFIC
+ Linear 1024→256                     EXPERTS
+      │                              SP, NA, HI, IN, OP, IP
+    GELU                                  │
+      │                                   │
+ Linear 256→9                             │
+      │                              each expert:
+      ▼                              Linear 1024→256
+ parent logits (9)                        │
+      │                                  GELU
+ sigmoid                                  │
+      │                               Dropout(0.1)
+      ▼                                   │
+ parent probabilities p (9)           Linear 256→256
+      │                                  │
+      │                                 GELU
+      │                                  │
+      │                                  ▼
+      │                           expert representation
+      │                              (256 each)
+      │                                  │
+      ├───────────────┐                  │
+      │               │                  │
+      ▼               ▼                  │
+ TRAINING          EVAL / TEST           │
+ w = p             w = 1[p ≥ 0.5]        │
+      │               │                  │
+      │               │                  │
+      └───────┬───────┘                  │
+              │                          │
+              ▼                          │
+   Zero weights for parents              │
+   without experts:                      │
+   MT, LY, ID                            │
+              │                          │
+              ▼                          │
+      normalize weights                  │
+          w / Σw                         │
+      (Σw clamped ≥ 1e-6)                │
+              │                          │
+              └──────────┬───────────────┘
+                         ▼
+                  WEIGHTED MIXTURE
                   h_mix = Σ w_p E_p(h)
-                           │
-                           ▼
-                  shared child classifier
-                           │
-                           ▼
-                     child logits
-
-
-
-
-The important distinction from the previous routing
-experiment is that the experts are combined into a
-mixture representation before child prediction.
-
-The parent classifier acts as the router.
-
-For an input x:
-
-    h = XLM-R(x)
-
-    p = sigmoid(parent_classifier(h))
-
-    e_parent = expert_parent(h)
-
-    h_mix = Σ p_parent * e_parent
-
-$w_p = \mathbb{I}[p \ge 0.5] \sum_j \mathbb{I}[p_j \ge 0.5]$
-wp = 1[pp >= 0.5] * sum_j 1[pj >= 0.5]
-w_p = 1[p ≥ 0.5] × Σ_j 1[p_j ≥ 0.5]
-
-h_mix = sum_p (w_p E_p(h))
-
- 
-E_p is the expert for parent p
-
-
-The child classifier operates on the resulting
-mixture representation:
-
-    child_logits = child_classifier(h_mix)
-
-Thus, the model learns which parent-specific experts
-should contribute to the final representation for
-each example.
+                         │
+                         ▼
+               Shared child classifier
+                    Linear 256→16
+                         │
+                         ▼
+                  child logits (16)
+                         │
+             ┌───────────┴───────────┐
+             │                       │
+             ▼                       ▼
+       parent logits             child logits
+             │                       │
+             └───────────┬───────────┘
+                         ▼
+                 25 total logits
+                         │
+             ┌───────────┴────────────┐
+             ▼                        ▼
+        TRAINING                 EVAL / TEST
+             │                        │
+       BCE(parent)              parents:
+             │                  sigmoid ≥ 0.5
+       BCE(child)                    │
+             │                  children:
+       parent_weight ×           sigmoid ≥ 0.5
+       parent BCE               independently
+             +                       │
+       child_weight ×                │
+       child BCE                     │
+             │                       │
+             ▼                       ▼
+          LOSS                  PREDICTIONS
+```
 """
 
 

@@ -1,159 +1,141 @@
 # ============================================================
 # Model 4
-# Hard routing
+# GoldRout 
 #
 # Architecture:
-#
-#                  XLM-R
-#                    │
-#                    ▼
-#              shared h
-#                    │
-#                    ▼
-#            Parent classifier
-#                    │
-#              multi-label
-#                    │
-#          ┌─────────┼─────────┐
-##         ▼         ▼         ▼
-#        NA        IN        LY
-#          │         │         │
-#       ACTIVE     ACTIVE     no expert
-#          │         │
-#       NA expert  IN expert
-#          │         │
-#      ne/sr/nb   en/ra/dtp/fi/lt
 
 
-# if parent predictions:
+'''
+                          XLM-R encoder (shared)
+                                  │
+                                  v
+                       h = CLS embedding [1024]
+                                  │
+              ┌───────────────────┴────────────────────┐
+              │                                        │
+              v                                        │
+      ┌───────────────────┐                            │
+      │    PARENT HEAD    │                            │
+      │ Linear 1024→256   │                            │
+      │      + GELU       │                            │
+      └─────────┬─────────┘                            │
+                │                                      │
+                v                                      │
+         Linear 256→9                                  │
+         9 parent logits                               │
+      (MT LY SP ID NA HI IN OP IP)                     │
+                │                                      │
+       ┌────────┴──────────────────┐                   │
+       │                           │                   │
+   TRAINING                    EVAL / TEST             │
+   (labels given)             (dev + final test)       │
+       │                           │                   │
+       v                           v                   │
+  GOLD PARENTS               PREDICTED PARENTS         │
+  parent annotated          sigmoid(logit) ≥ 0.5       │
+  positive OR                                          │
+  any child annotated                                  │
+  positive                                             │
+       │                           │                   │
+       └──────────────┬────────────┘                   │
+                      v                                │
+          ACTIVE PARENT MASK [batch, 9]                │
+          (multi-label: several can be 1)              │
+                      │                                │
+                      │  Example:                      │
+                      │  Gold parents = {NA, IN}       │
+                      │  mask = [0,0,0,0,1,0,1,0,0]    │
+                      │                 ↑     ↑        │
+                      │                NA    IN        │
+                      │                                │
+                      │  → NA + IN experts activated   │
+                      │  → same example → both experts │
+                      │                                │
+                      │  Evaluation example:           │
+                      │  P(NA)=0.91 → active           │
+                      │  P(IN)=0.87 → active           │
+                      │  P(OP)=0.12 → inactive         │
+                      │                                │
+                      └──────────────┬─────────────────┘
+                                     v
+              For each parent with children:
+              h_sel = h[rows where mask = 1]
+              (only rows selected; h is unchanged)
+                                     │
+       ┌────────┬────────┬───────────┼────────┬────────┬────────┐
+       v        v        v           v        v        v
+      SP       NA       HI          IN       OP       IP
+       │        │        │           │        │        │
+       v        v        v           v        v        v
+                    Parent-specific Expert MLP
+             separate weights for each parent
+       │        │        │           │        │        │
+       │        │        │           │        │        │
+       └────────┴────────┴───────────┴────────┴────────┘
+                                     │
+                    Linear 1024→256 → GELU
+                                     │
+                                  Dropout
+                                     │
+                    Linear 256→256 → GELU
+                                     │
+       ┌────────┬────────┬───────────┼────────┬────────┬────────┐
+       v        v        v           v        v        v
+    256→1    256→3    256→1       256→5    256→4    256→2
+       │        │        │           │        │        │
+      it     ne sr nb     re       en ra    rv ob     ds ed
+                                  dtp fi     rs av
+                                  lt
+```
 
-#NA = 0.91 → active
-#IN = 0.83 → active
-#LY = 0.88 → active, but no children
-#OP = 0.12 → inactive
+```
+             MT, LY, ID: parent-only
+                   no expert / no children
+                                     │
+                                     v
+                  SCATTER into full child tensor
+                                     │
+                 child_logits = [batch, 16], -20
+                                     │
+              routed positions ← expert outputs
+              inactive positions remain at -20
+                        sigmoid(-20) ≈ 0
+                                     │
+                                     v
+             [ 9 parent logits | 16 child logits ]
+                                     │
+                                     v
+                              25 output logits
 
-#Then only accrivate NA expert IN expert
-
-#training process is
 
 
-#                       XLM-R
-#                         │
-#                         ▼
-#                   shared h
-#                         │
-#            ┌────────────┴────────────┐
-#            │                         │
-#            ▼                         ▼
-#      Parent classifier          GOLD PARENTS
-#            │                         │
-#            ▼                         │
-#       parent loss                   │
-#                                      │
-#                         ┌────────────┼────────────┐
-#                         ▼            ▼            ▼
-#                        NA           IN           LY
-#                         │            │             │
-#                         ▼            ▼             │
-#                    NA expert    IN expert          │
-#                         │            │             │
-#                         ▼            ▼             │
-#                      children     children         │
-#                         │            │
-#                         └─────┬──────┘
-#                               ▼
-#                          child loss
 
-#avoids the problem where
+LOSS (only when labels are given)
 
-#parent prediction wrong
-#        ↓
-#expert not activated
-#        ↓
-#child cannot learn
+  parent_loss = BCE(9 parent logits, parent labels)       all examples
+  child_loss  = mean over active experts of
+                BCE(that expert's child logits,
+                    that expert's child labels)           routed rows only
+  total       = w_parent · parent_loss + w_child · child_loss
 
-#During validation/test, it becomes genuinely hard-routed
 
-#                       XLM-R
-#                         │
-#                         ▼
-#                   shared h
-#                         │
-#                         ▼
-#                 Parent classifier
-#                         │
-#                         ▼
-#                  sigmoid(parent)
-#                         │
-#                  threshold = .5
-#                         │
-#             ┌───────────┼───────────┐
-#             ▼           ▼           ▼
-#            NA          IN          LY
-#             │           │           │
-#           active      active      no expert
-#             │           │
-#             ▼           ▼
-#         NA expert    IN expert
-#             │           │
-#             ▼           ▼
-#
-# 
-#
-#           children    children
+Example for h_sel:
 
-#final architecture of this experiment:
 
-#                         XLM-R
-#                           │
-#                           ▼
-#                  Shared representation h
-#                           │
-#                           ▼
-#                  Multi-label parent classifier
-#                           │
-#                  ┌────────┴────────┐
-#                  │                 │
-#              TRAINING          TEST/DEV
-#                  │                 │
-#           GOLD parent labels   predicted parents
-#                  │                 │
-#                  └────────┬────────┘
-#                           │
-#                    HARD ROUTING
-#                           │
-#       ┌─────────┬─────────┼─────────┬─────────┐
-#       ▼         ▼         ▼         ▼         ▼
-#      NA        HI        IN        OP        IP       SP
-#       │         │         │         │         │        │
-#       ▼         ▼         ▼         ▼         ▼        ▼
-#    Expert    Expert    Expert    Expert    Expert   Expert
-#       │         │         │         │         │        │
-#    ne sr nb     re    en ra dtp  rv ob rs av ds ed     it
-#                           fi lt
 
-#here  training routing is gold-routed, while validation/test routing is prediction-routed:
+h = [example 1
+     example 2
+     example 3
+     example 4]
 
-#TRAIN:
-#gold IN = 1
-#    ↓
-#IN expert
+NA mask = [1, 0, 1, 0]
 
-#TEST:
-#predicted IN >= .5
-#    ↓
-#IN expert
-#solves the "wrong parent prevents child learning" problem.
-#However, it creates a train/test routing distribution difference.
-#For example, during training:
-#gold IN = 1
-#→ IN expert definitely gets the example
-#but at test:
-#IN predicted = 0.48
-#→ IN expert does not get the example
-#→ all IN children forced to zero
-#Therefore a parent false negative automatically becomes a child false negative.
+h_sel(NA) = [example 1
+             example 3]
 
+
+  Routing in the loss: gold in train mode, predicted in eval mode.
+'''
 
 
 # ============================================================

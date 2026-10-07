@@ -2,17 +2,49 @@
 # Hierarchical XLM-R Multilabel Classification
 #
 # Architecture:
-#
-#                 XLM-R Encoder
-#                       |
-#                shared representation
-#                       |
-#              +--------+--------+
-#              |                 |
-#              v                 v
-#        Parent classifier   Child classifier
-#           9 labels            16 labels
-#
+
+'''
+                    Pretrained XLM-R Encoder
+                             |
+                             v
+                    Shared representation
+                       h = X[:, 0, :] (<s>)
+                             |
+                  -------------------------
+                  |                       |
+                  v                       v
+          Parent classifier       Child classifier
+             Linear(H → 9)          Linear(H → 16)
+                  |                       |
+                  v                       v
+             9 parent logits        16 child logits
+                  |                       |
+                  -----------+-------------
+                             |
+                             v
+                    25 total logits
+                    (9 parents + 16 children)
+
+
+ parent_logits (9)                 child_logits (16)
+      |                                  |
+      |  vs parent_labels                |  vs child_labels
+      v                                  v
+  Parent BCE                         Child BCE
+      |                                  |
+      v                                  v
+ parent_weight × parent_loss      child_weight × child_loss
+      |                                  |
+      +----------------+-----------------+
+                       |
+                       v
+                     loss
+
+Loss = (parent_weight × parent_loss)
+     + (child_weight  × child_loss)
+
+     parent_weight = 1 in this variation
+'''
 # Total output labels = 25
 #
 # Parent labels:
