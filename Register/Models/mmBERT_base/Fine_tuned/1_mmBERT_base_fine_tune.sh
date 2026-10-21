@@ -1,16 +1,16 @@
 #!/bin/bash
-#SBATCH --job-name=AriaBERT
+#SBATCH --job-name=mmBERT
 #SBATCH --account=project_462001491
 #SBATCH --partition=standard-g
 
 #SBATCH --array=0-3%4
 
-#SBATCH --time=1:00:00
+#SBATCH --time=4:00:00
 #SBATCH --nodes=1
 #SBATCH --gpus-per-node=1
 
-#SBATCH --output=AriaBERT_%A_%a.out
-#SBATCH --error=AriaBERT_%A_%a.err
+#SBATCH --output=mmBERT_%A_%a.out
+#SBATCH --error=mmBERT_%A_%a.err
 
 
 module purge
@@ -47,7 +47,7 @@ echo "Running fine-tuning"
 echo "================================================"
 
 
-python3 1_AriaBERT_fine_tune.py
+python3 1_mmBERT_base_fine_tune.py
 
 EXIT_CODE=$?
 

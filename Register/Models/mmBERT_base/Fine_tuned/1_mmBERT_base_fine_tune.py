@@ -49,7 +49,7 @@ MODEL_ID = "jhu-clsp/mmBERT-base"
 
 MAX_LENGTH = 1024 #up to 8192
 
-THRESHOLD = 0.5 #0.35
+THRESHOLD = 0.5 
 
 HF_CACHE = Path(
     f"/scratch/project_462001491/nima/hf_test_{os.environ['SLURM_JOB_ID']}"
