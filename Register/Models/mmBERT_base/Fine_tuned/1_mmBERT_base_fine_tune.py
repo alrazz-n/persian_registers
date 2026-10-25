@@ -8,9 +8,16 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+import os
+
+os.environ["TORCHINDUCTOR_COMPILE_THREADS"] = "1"
+os.environ["TORCHDYNAMO_VERBOSE"] = "1"
+
 import torch
 import optuna
 import random
+import types
 
 from sklearn.metrics import (
     f1_score,
@@ -36,6 +43,29 @@ random.seed(42)
 np.random.seed(42)
 torch.manual_seed(42)
 torch.cuda.manual_seed_all(42)
+
+#disable_modernbert_compilation
+
+
+
+import torch
+import types
+
+
+def disable_modernbert_compilation(model):
+    """
+    Force ModernBERT to use its eager embedding, MLP,
+    and attention paths rather than compiled helpers.
+    """
+    for module in model.modules():
+        config = getattr(module, "config", None)
+
+        if config is not None and hasattr(config, "reference_compile"):
+            config.reference_compile = False
+
+    return model
+
+
 
 #Configs/paths
 DATASET_ROOT = Path(
@@ -179,17 +209,28 @@ id2label = {
     for i, label in enumerate(model_labels)
 }
 
+
+
+
+import inspect
+import transformers.models.modernbert.modeling_modernbert as modernbert
+
+print(inspect.getsource(modernbert.ModernBertEmbeddings.forward))
+
 # Load model
 
 print("\nLoading pretrained model...")
 
-model = AutoModelForSequenceClassification.from_pretrained(
+model = disable_modernbert_compilation(
+    AutoModelForSequenceClassification.from_pretrained(
     MODEL_ID,
     num_labels=len(model_labels),
     problem_type="multi_label_classification",
     id2label=id2label,
     label2id=label2id,
     cache_dir=str(HF_CACHE),
+    attn_implementation="sdpa",
+    )
 )
 
 print(
@@ -409,17 +450,34 @@ def objective(trial):
 
     grad_accum = trial.suggest_categorical("grad_accum", [4, 8])
 
-    model = AutoModelForSequenceClassification.from_pretrained(
+    model = disable_modernbert_compilation(
+        AutoModelForSequenceClassification.from_pretrained(
         MODEL_ID,
         num_labels=len(model_labels),
         problem_type="multi_label_classification",
         id2label=id2label,
         label2id=label2id,
         cache_dir=str(HF_CACHE),
+        attn_implementation="sdpa",
+        )
     )
 
 
     # CHECK MODEL
+
+    print(
+    "reference_compile:",
+    getattr(model.config, "reference_compile", "not defined"),
+)
+
+    for module in model.modules():
+        if module.__class__.__name__ == "ModernBertEmbeddings":
+            print(
+                "Embedding reference_compile:",
+                getattr(module.config, "reference_compile", "not defined"),
+            )
+            break
+        
     print(
         f"Trial {trial.number}: "
         f"embedding = "
@@ -535,13 +593,16 @@ with open(
 
 print("\nFinal/best training...")
 
-best_model = AutoModelForSequenceClassification.from_pretrained(
+best_model = disable_modernbert_compilation(
+    AutoModelForSequenceClassification.from_pretrained(
     MODEL_ID,
     num_labels=len(model_labels),
     problem_type="multi_label_classification",
     id2label=id2label,
     label2id=label2id,
     cache_dir=str(HF_CACHE),
+    attn_implementation="sdpa",
+    )
 )
 
 final_args = TrainingArguments(
